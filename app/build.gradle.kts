@@ -42,5 +42,6 @@ dependencies {
     with(libs) {
         implementation(androidCore)
         implementation(bundles.compose)
+        implementation(bundles.koin)
     }
 }

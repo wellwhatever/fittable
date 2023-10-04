@@ -39,6 +39,9 @@ composeCoil = "2.4.0"
 composeDestinations = "1.9.53"
 composeNavigation = "2.7.3"
 
+# Koin
+koin = "3.5.0"
+
 # Testing
 junit = "4.13.2"
 junitExt = "1.1.5"
@@ -77,6 +80,12 @@ compose-uiUtil = { module = "androidx.compose.ui:ui-util" }
 compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "composeViewmodel" }
 compose-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 compose-coil = { module = "io.coil-kt:coil-compose", version.ref = "composeCoil" }
+
+# Koin
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-multiplatform = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 
 # Compose Navigation
 compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
@@ -149,6 +158,13 @@ compose = [
     "compose-viewmodel",
     "compose-uiTooling",
     "compose-uiUtil"
+]
+
+koin = [
+    "koin-android",
+    "koin-compose",
+    "koin-multiplatform",
+    "koin-navigation"
 ]
 
 unitTesting = [
