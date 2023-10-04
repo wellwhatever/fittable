@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1045593098422",
+    "project_id": "fittable-2a2c4",
+    "storage_bucket": "fittable-2a2c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045593098422:android:0a9854f7b7fc5f23c47e17",
+        "android_client_info": {
+          "package_name": "cz.cvut.fit.fittable"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD11tY4NQbbdMolMxlRk5mKFsSA4QPmfNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
