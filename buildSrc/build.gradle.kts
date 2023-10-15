@@ -39,10 +39,13 @@ gradlePlugin {
             id = "fittable.android.firebase"
             implementationClass = "AndroidApplicationFirebaseConventionPlugin"
         }
-
         register("androidNavigationCompose") {
             id = "fittable.android.navigation"
             implementationClass = "AndroidComposeNavigationConventionPlugin"
+        }
+        register("kotlinMultiplatform") {
+            id = "fittable.kotlin.multiplatform.library"
+            implementationClass = "KotlinMultiplatformLibraryConventionPlugin"
         }
     }
 }

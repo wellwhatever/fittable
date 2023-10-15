@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fit_cvut_oauth_authorize_endpoint">https://auth.fit.cvut.cz/oauth/oauth/authorize</string>
+    <string name="fit_cvut_oauth_token_endpoint">https://auth.fit.cvut.cz/oauth/oauth/token</string>
+</resources>

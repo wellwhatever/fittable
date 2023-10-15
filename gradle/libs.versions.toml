@@ -42,6 +42,9 @@ composeNavigation = "2.7.3"
 # Koin
 koin = "3.5.0"
 
+# Authentication
+appAuth = "0.11.1"
+
 # Testing
 junit = "4.13.2"
 junitExt = "1.1.5"
@@ -63,7 +66,7 @@ desugaring = "2.0.3"
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 firebase-gradlePlugin = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseGradlePlugin" }
-android-gms = { module = "classpath 'com.google.gms:google-services", version.ref = "gms" }
+android-gms = { module = "com.google.gms:google-services", version.ref = "gms" }
 
 # AndroidX
 androidCore = { module = "androidx.core:core-ktx", version.ref = "androidCore" }
@@ -86,6 +89,9 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-multiplatform = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+
+# Authentication
+appAuth = { module = "net.openid:appauth", version.ref = "appAuth" }
 
 # Compose Navigation
 compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
@@ -135,6 +141,7 @@ android-tools = { id = "com.android.tools.build.gradle", version.ref = "androidG
 android-gms = { id = "com.google.gms.google-services", version.ref = "gms" }
 
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

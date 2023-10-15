@@ -1,5 +1,6 @@
 rootProject.name = "Fittable"
 include(":app")
+include(":multiplatform")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
@@ -11,7 +12,7 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
     repositories {
         google()
         mavenCentral()

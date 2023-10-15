@@ -16,6 +16,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        manifestPlaceholders["appAuthRedirectScheme"] = "fit-timetable"
     }
 
     signingConfigs {
@@ -41,7 +42,12 @@ android {
 dependencies {
     with(libs) {
         implementation(androidCore)
-        implementation(bundles.compose)
+        implementation(appAuth)
+        implementation(android.gms)
         implementation(bundles.koin)
+        implementation(bundles.compose)
+        implementation("com.wu-man:android-oauth-client:0.4.5")
     }
+
+    implementation(project(":multiplatform"))
 }
