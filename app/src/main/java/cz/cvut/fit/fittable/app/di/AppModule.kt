@@ -1,4 +1,4 @@
-package cz.cvut.fit.fittable
+package cz.cvut.fit.fittable.app.di
 
 import org.koin.dsl.module
 

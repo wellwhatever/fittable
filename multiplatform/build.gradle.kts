@@ -30,7 +30,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                // put your multiplatform dependencies here
+                implementation(libs.bundles.koin)
             }
         }
         val commonTest by getting {
