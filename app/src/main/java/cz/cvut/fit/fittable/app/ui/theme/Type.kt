@@ -1,4 +1,4 @@
-package cz.cvut.fit.fittable.ui.theme
+package cz.cvut.fit.fittable.app.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
