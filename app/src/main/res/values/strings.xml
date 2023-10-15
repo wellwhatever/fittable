@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Fittable</string>
+
+    <!--Authorization-->
+    <string name="authorization_screen_title">UniTable</string>
+    <string name="authorization_screen_message">Log into your personal university time table with your CTU account</string>
+    <string name="authorization_button_label">Login with your CTU account</string>
+    <string name="authorization_logo_description">CTU logo</string>
 </resources>
