@@ -30,6 +30,8 @@ okhttp = "4.11.0"
 # Room
 room = "2.5.2"
 
+datastore = "1.1.0-alpha05"
+
 # Compose
 composeBom = "2023.09.02"
 composeCompiler = "1.5.3"
@@ -115,6 +117,8 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
+
+datastore = {module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore"}
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
