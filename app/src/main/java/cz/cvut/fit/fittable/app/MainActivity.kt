@@ -13,10 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import cz.cvut.fit.fittable.app.di.androidModule
+import cz.cvut.fit.fittable.app.di.appModule
 import cz.cvut.fit.fittable.app.ui.navigation.AppNavigationGraph
 import cz.cvut.fit.fittable.app.ui.theme.FittableTheme
-import cz.cvut.fit.fittable.authorization.di.authorizationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -27,7 +26,7 @@ class MainActivity : ComponentActivity() {
         startKoin {
             androidLogger()
             androidContext(this@MainActivity)
-            modules(androidModule, authorizationModule)
+            modules(appModule)
         }
         setContent {
             FittableTheme {
@@ -64,34 +63,6 @@ fun rememberFittableAppState(
 class FittableAppState(
     val navController: NavHostController,
 )
-
-// @Composable
-// fun Test() {
-//    val context = LocalContext.current
-//    val serviceConfig = AuthorizationServiceConfiguration(
-//        Uri.parse("https://auth.fit.cvut.cz/oauth/oauth/authorize"), // authorization endpoint
-//        Uri.parse("https://auth.fit.cvut.cz/oauth/oauth/token"), // token endpoint
-//    )
-//    val clientId = "69be8dc8-2117-4735-adc0-19102e8ef456"
-//    val redirectUri = Uri.parse("fit-timetable://oauth/callback")
-//
-//    val authService = AuthorizationService(context)
-//
-//    val result = remember { mutableStateOf<AuthorizationResponse?>(null) }
-//    val launcher =
-//        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-//            val data: String = it.data?.data?.fragment ?: ""
-//            if (data != null) {
-//                // Parse token response!!!
-//            }
-//        }
-//    Button(
-//        onClick = {
-// //            launcher.launch(authIntent)
-//        },
-//        content = { Text(Greeting().greet()) },
-//    )
-// }
 
 @Preview(showBackground = true)
 @Composable

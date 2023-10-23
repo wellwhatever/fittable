@@ -1,9 +1,9 @@
 package cz.cvut.fit.fittable.authorization.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cz.cvut.fit.fittable.authorization.data.AuthorizationRepository
+import cz.cvut.fit.fittable.authorization.domain.CreateLoginRequestUseCase
+import cz.cvut.fit.fittable.authorization.domain.SaveAuthorizationTokenUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -15,20 +15,27 @@ interface AuthorizationScreenActions {
     fun onReceiveTokenError(error: String)
 }
 
-class AuthorizationViewModel(
-    private val authorizationRepository: AuthorizationRepository,
+class AuthorizationViewModel internal constructor(
+    private val createLoginRequestUseCase: CreateLoginRequestUseCase,
+    private val saveAuthorizationTokenUseCase: SaveAuthorizationTokenUseCase,
 ) : ViewModel(), AuthorizationScreenActions {
     private val _navigateToAuthorization = Channel<AuthorizationRequest>(Channel.CONFLATED)
     val navigateToAuthorization = _navigateToAuthorization.receiveAsFlow()
+
+    private val _navigateToTimetableScreen = Channel<String>(Channel.CONFLATED)
+    val navigateToTimetableScreen = _navigateToTimetableScreen.receiveAsFlow()
+
     override fun onAuthorizeClick() {
         viewModelScope.launch {
-            _navigateToAuthorization.send(authorizationRepository.composeAuthorizationRequest())
+            _navigateToAuthorization.send(createLoginRequestUseCase())
         }
     }
 
     override fun onReceiveTokenSuccess(data: String) {
-        val token = authorizationRepository.extractAuthorizationToken(data)
-        Log.e("onReceiveTokenSuccess:", "token:$token")
+        viewModelScope.launch {
+            saveAuthorizationTokenUseCase(data)
+            _navigateToTimetableScreen.send(data)
+        }
     }
 
     override fun onReceiveTokenError(error: String) {

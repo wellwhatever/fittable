@@ -34,6 +34,7 @@ import org.koin.compose.koinInject
 
 @Composable
 fun AuthorizationScreen(
+    onSuccessfulTokenReceive: () -> Unit,
     authorizationService: AuthorizationService = koinInject(),
     viewModel: AuthorizationViewModel = getViewModel(),
 ) {
@@ -45,6 +46,12 @@ fun AuthorizationScreen(
         viewModel.navigateToAuthorization.collect { request ->
             val intent = authorizationService.getAuthorizationRequestIntent(request)
             launcher.launch(intent)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigateToTimetableScreen.collect {
+            onSuccessfulTokenReceive()
         }
     }
     AuthorizationContent(onAuthorizeClick = viewModel::onAuthorizeClick)

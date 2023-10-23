@@ -23,14 +23,15 @@ kotlin {
         iosSimulatorArm64(),
     ).forEach {
         it.binaries.framework {
-            baseName = "mulfiplatform"
+            baseName = "shared"
         }
     }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(libs.bundles.koin)
+                implementation(libs.koin.multiplatform)
+                implementation(libs.datastore)
             }
         }
         val commonTest by getting {
@@ -42,7 +43,7 @@ kotlin {
 }
 
 android {
-    namespace = "cz.cvut.fit.fittable.multiplatform"
+    namespace = "cz.cvut.fit.fittable.shared"
     compileSdk = libs.versions.compileSdk.get().toString().toInt()
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toString().toInt()

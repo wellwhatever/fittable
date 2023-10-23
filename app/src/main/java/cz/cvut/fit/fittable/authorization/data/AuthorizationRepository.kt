@@ -2,6 +2,7 @@ package cz.cvut.fit.fittable.authorization.data
 
 import android.net.Uri
 import cz.cvut.fit.fittable.app.di.AuthorizationConfiguration
+import cz.cvut.fit.fittable.shared.authorization.data.AuthorizationLocalDataSource
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
@@ -9,7 +10,10 @@ import net.openid.appauth.ResponseTypeValues
 class AuthorizationRepository(
     private val authorizationConfiguration: AuthorizationConfiguration,
     private val authorizationServiceConfiguration: AuthorizationServiceConfiguration,
+    private val authorizationLocalDataSource: AuthorizationLocalDataSource,
 ) {
+    fun getAuthorizationToken() =
+        authorizationLocalDataSource.authorizationTokenFlow
 
     fun extractAuthorizationToken(data: String) = getAccessTokenFromUri(data)
     fun composeAuthorizationRequest(): AuthorizationRequest =

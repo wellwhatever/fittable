@@ -46,8 +46,8 @@ dependencies {
         implementation(android.gms)
         implementation(bundles.koin)
         implementation(bundles.compose)
-        implementation("com.wu-man:android-oauth-client:0.4.5")
+        implementation(datastore)
     }
 
-    implementation(project(":multiplatform"))
+    implementation(project(":shared"))
 }
