@@ -15,6 +15,7 @@ fun NavController.navigateToAuthorizationNavGraph(navOptions: NavOptions? = null
 }
 
 fun NavGraphBuilder.authorizationNavGraph(
+    onSuccessfulTokenReceive: () -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit = {},
 ) {
     navigation(
@@ -22,7 +23,7 @@ fun NavGraphBuilder.authorizationNavGraph(
         startDestination = AUTHORIZATION_ROUTE,
     ) {
         composable(route = AUTHORIZATION_ROUTE) {
-            AuthorizationScreen()
+            AuthorizationScreen(onSuccessfulTokenReceive = onSuccessfulTokenReceive)
         }
         nestedGraphs()
     }
