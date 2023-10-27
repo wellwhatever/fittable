@@ -1,14 +1,15 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+
 // TODO extract this to convention plugins
 
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("com.android.library")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    targetHierarchy.default()
-
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -17,6 +18,7 @@ kotlin {
         }
     }
 
+    val xcf = XCFramework()
     listOf(
         iosX64(),
         iosArm64(),
@@ -24,6 +26,8 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "shared"
+            isStatic = true
+            xcf.add(this)
         }
     }
 
@@ -32,11 +36,35 @@ kotlin {
             dependencies {
                 implementation(libs.koin.multiplatform)
                 implementation(libs.datastore)
+                implementation(libs.bundles.ktor.multiplatform)
+                implementation(libs.kotlin.coroutinesCore)
+                implementation(libs.kotlin.serialization)
             }
         }
+
         val commonTest by getting {
             dependencies {
                 // test libraries
+            }
+        }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.ktor.android)
+            }
+        }
+
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+
+        val iosMain by creating {
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
+            dependencies {
+                implementation(libs.ktor.ios)
             }
         }
     }

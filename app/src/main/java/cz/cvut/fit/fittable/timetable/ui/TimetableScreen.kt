@@ -14,7 +14,11 @@ fun TimetableScreen(
 ) {
     val state = timetableViewModel.uiState.collectAsStateWithLifecycle()
     Column(modifier = Modifier.fillMaxWidth()) {
-        TimetableContent(token = state.value.orEmpty())
+        state.value?.events?.joinToString(separator = ", ") { it.eventType }?.let {
+            TimetableContent(
+                token = it,
+            )
+        }
     }
 }
 

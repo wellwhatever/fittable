@@ -3,6 +3,7 @@ plugins {
     id("fittable.android.application.compose")
     id("fittable.android.firebase")
     id("fittable.android.navigation")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -47,6 +48,8 @@ dependencies {
         implementation(bundles.koin)
         implementation(bundles.compose)
         implementation(datastore)
+        implementation(kotlin.serialization)
+        implementation(libs.kotlin.coroutinesAndroid)
     }
 
     implementation(project(":shared"))
