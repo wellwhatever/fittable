@@ -1,9 +1,9 @@
 package cz.cvut.fit.fittable.shared.timetable.data
 
-import cz.cvut.fit.fittable.shared.timetable.remote.EventsService
+import cz.cvut.fit.fittable.shared.timetable.remote.EventsRoute
 
-class TimetableRepository(
-    private val eventsService: EventsService,
+class TimetableRepository internal constructor(
+    private val eventsRoute: EventsRoute,
 ) {
-    suspend fun getEvents() = eventsService.getEvents()
+    suspend fun getEvents() = eventsRoute.getAllEvents()
 }
