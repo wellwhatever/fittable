@@ -1,10 +1,10 @@
 package cz.cvut.fit.fittable.timetable.domain
 
-import cz.cvut.fit.fittable.timetable.domain.model.CalendarGridHour
+import cz.cvut.fit.fittable.timetable.domain.model.TimetableGridHour
 
 class GenerateHoursGridUseCase {
     private val hourRange = 7..21
-    operator fun invoke(): List<CalendarGridHour> = hourRange.map { hour ->
-        CalendarGridHour("$hour:00")
+    operator fun invoke(): List<TimetableGridHour> = hourRange.map { hour ->
+        TimetableGridHour("$hour:00")
     }
 }

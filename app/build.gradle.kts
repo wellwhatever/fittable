@@ -30,6 +30,10 @@ android {
         }
     }
 
+    packagingOptions {
+        resources.excludes.add("META-INF/versions/9/previous-compilation-data.bin")
+    }
+
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")
@@ -50,6 +54,7 @@ dependencies {
         implementation(datastore)
         implementation(kotlin.serialization)
         implementation(libs.kotlin.coroutinesAndroid)
+        implementation(libs.kotlin.datetime)
     }
 
     implementation(project(":shared"))

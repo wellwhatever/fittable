@@ -39,6 +39,7 @@ kotlin {
                 implementation(libs.bundles.ktor.multiplatform)
                 implementation(libs.kotlin.coroutinesCore)
                 implementation(libs.kotlin.serialization)
+                implementation(libs.kotlin.datetime)
             }
         }
 
