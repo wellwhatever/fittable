@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableGridHour
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,7 +17,7 @@ class TimetableViewModel(
     private val generateHoursGrid: GenerateHoursGridUseCase,
     private val getDayEvents: GetDayEventsGridUseCase
 ) : ViewModel() {
-    private val hours = MutableStateFlow<List<TimetableGridHour>?>(null)
+    private val hours = MutableStateFlow<List<TimetableHour>?>(null)
     private val events = MutableStateFlow<List<TimetableItem>?>(null)
 
     val uiState = combine(events, hours) { events, hours ->

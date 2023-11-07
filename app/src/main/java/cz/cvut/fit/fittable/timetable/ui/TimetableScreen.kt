@@ -12,16 +12,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,14 +29,15 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.fittable.app.ui.theme.md_theme_light_outline
+import cz.cvut.fit.fittable.core.ui.HorizontalGridDivider
+import cz.cvut.fit.fittable.core.ui.VerticalGridDivider
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableGridHour
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSpacer
 import org.koin.androidx.compose.getViewModel
@@ -71,58 +70,13 @@ fun TimetableScreen(
 
 @Composable
 internal fun TimetableInternal(
-    hoursGrid: List<TimetableGridHour>,
+    hoursGrid: List<TimetableHour>,
     events: List<TimetableItem>,
     onEventClick: (event: TimetableEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val stateGrid = rememberLazyListState()
     val stateTimetable = rememberLazyListState()
-    CompositionLocalProvider(
-        LocalOverscrollConfiguration provides null
-    ) {
-        Box(
-            modifier = modifier
-        ) {
-            VerticalDivider(modifier = Modifier.padding(start = 100.dp))
-            LazyColumn(
-                state = stateGrid,
-                userScrollEnabled = false,
-                contentPadding = PaddingValues(vertical = 16.dp)
-            ) {
-                items(items = hoursGrid, key = { item -> item.hour }) {
-                    HourGridItem(hour = it.hour)
-                }
-            }
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                state = stateTimetable,
-                contentPadding = PaddingValues(vertical = 16.dp)
-            ) {
-                // TODO fix key of this item
-                items(
-                    items = events,
-                ) {
-                    when (it) {
-                        is TimetableEvent -> {
-                            EventItem(
-                                event = it,
-                                modifier = Modifier
-                                    .padding(start = 100.dp)
-                                    .fillMaxWidth(),
-                                onEventClick = onEventClick
-                            )
-                        }
-
-                        is TimetableSpacer -> {
-                            EventSpacer(eventSpacer = it)
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     val timetableOffset =
         snapshotFlow {
@@ -143,6 +97,72 @@ internal fun TimetableInternal(
                 density = density
             )
             stateGrid.scrollToItem(0, totalOffset)
+        }
+    }
+
+    CompositionLocalProvider(
+        LocalOverscrollConfiguration provides null
+    ) {
+        Box(
+            modifier = modifier
+        ) {
+            VerticalGridDivider(modifier = Modifier.padding(start = 100.dp))
+            TimetableHoursGrid(hours = hoursGrid, state = stateGrid)
+            TimetableEventsGrid(
+                events = events,
+                state = stateTimetable,
+                onEventClick = onEventClick,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+private fun TimetableEventsGrid(
+    events: List<TimetableItem>,
+    state: LazyListState,
+    onEventClick: (event: TimetableEvent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier,
+        state = state,
+        contentPadding = PaddingValues(vertical = 16.dp)
+    ) {
+        // TODO fix key of this item
+        items(items = events) {
+            when (it) {
+                is TimetableEvent -> {
+                    EventItem(
+                        event = it,
+                        modifier = Modifier
+                            .padding(start = 100.dp)
+                            .fillMaxWidth(),
+                        onEventClick = onEventClick
+                    )
+                }
+
+                is TimetableSpacer -> EventSpacer(eventSpacer = it)
+            }
+        }
+    }
+}
+
+@Composable
+private fun TimetableHoursGrid(
+    hours: List<TimetableHour>,
+    state: LazyListState,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier,
+        state = state,
+        userScrollEnabled = false,
+        contentPadding = PaddingValues(vertical = 16.dp)
+    ) {
+        items(items = hours, key = { item -> item.hour }) {
+            HourGridItem(hour = it.hour)
         }
     }
 }
@@ -202,28 +222,6 @@ private fun HourGridItem(
             text = hour,
             color = md_theme_light_outline
         )
-        Divider(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            thickness = 1.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = DIVIDER_ALPHA)
-        )
+        HorizontalGridDivider()
     }
-}
-
-private const val DIVIDER_ALPHA = 0.12f
-
-@Composable
-fun VerticalDivider(
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DIVIDER_ALPHA),
-    thickness: Dp = 1.dp
-) {
-    Box(
-        modifier
-            .fillMaxHeight()
-            .width(thickness)
-            .background(color = color)
-    )
 }

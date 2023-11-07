@@ -10,7 +10,6 @@ sealed interface TimetableItem {
         ((duration.inWholeMinutes / 60f) * hourHeight).roundToInt()
 }
 
-
 data class TimetableEvent(
     val title: String,
     val room: String,
@@ -23,6 +22,6 @@ data class TimetableSpacer(
     override val duration: Duration
 ) : TimetableItem
 
-data class TimetableGridHour(
+data class TimetableHour(
     val hour: String,
 )
