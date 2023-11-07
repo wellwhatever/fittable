@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,12 +32,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cz.cvut.fit.fittable.R
 import cz.cvut.fit.fittable.app.ui.theme.md_theme_light_outline
 import cz.cvut.fit.fittable.core.ui.HorizontalGridDivider
 import cz.cvut.fit.fittable.core.ui.VerticalGridDivider
+import cz.cvut.fit.fittable.shared.core.extensions.formatAsHoursAndMinutes
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
@@ -54,14 +59,19 @@ fun TimetableScreen(
         modifier = Modifier.fillMaxWidth()
     ) {
         with(state.value) {
-            if (this is TimetableContent) {
-                TimetableInternal(
+            when (this) {
+                is TimetableUiState.Content -> TimetableInternal(
                     hoursGrid = hoursGrid,
                     events = events,
                     onEventClick = timetableViewModel::onEventClick
                 )
-            } else {
-                CircularProgressIndicator()
+
+                is TimetableUiState.Error -> TimetableError(
+                    error = error,
+                    onReloadClick = timetableViewModel::onReloadClick
+                )
+
+                TimetableUiState.Loading -> CircularProgressIndicator()
             }
         }
 
@@ -182,9 +192,32 @@ private fun EventItem(
             .clickable(onClick = { onEventClick(event) })
             .padding(8.dp)
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = event.title,
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.titleMedium
+            )
+            val startFormatted = event.start.formatAsHoursAndMinutes()
+            val endFormatted = event.end.formatAsHoursAndMinutes()
+            Text(
+                text = stringResource(
+                    R.string.timetable_time_duration,
+                    startFormatted,
+                    endFormatted
+                ),
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.labelMedium
+            )
+        }
         Text(
-            text = event.title,
-            color = MaterialTheme.colorScheme.onPrimary
+            text = event.room,
+            color = MaterialTheme.colorScheme.onPrimary,
+            style = MaterialTheme.typography.labelMedium
         )
     }
 }
@@ -223,5 +256,22 @@ private fun HourGridItem(
             color = md_theme_light_outline
         )
         HorizontalGridDivider()
+    }
+}
+
+@Composable
+private fun TimetableError(
+    error: String,
+    onReloadClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(error)
+        Button(onClick = onReloadClick) {
+            Text(stringResource(id = R.string.timetable_reload_button_hint))
+        }
     }
 }

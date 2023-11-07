@@ -3,6 +3,8 @@ package cz.cvut.fit.fittable.shared.timetable.remote
 import cz.cvut.fit.fittable.shared.core.remote.NetworkClient
 import cz.cvut.fit.fittable.shared.timetable.remote.model.Events
 import io.ktor.http.HttpMethod
+import io.ktor.util.StringValues
+import kotlinx.datetime.Instant
 
 internal class EventsRoute(
     private val client: NetworkClient,
@@ -17,10 +19,19 @@ internal class EventsRoute(
         method = HttpMethod.Get,
     )
 
-    suspend fun getPersonEvents(username: String): Events = client.request(
-        path = "$peopleRoute/$username/$eventsRoute",
-        method = HttpMethod.Get,
-    )
+    suspend fun getPersonEvents(username: String, from: Instant, to: Instant): Events =
+        client.request(
+            path = "$peopleRoute/$username/$eventsRoute",
+            method = HttpMethod.Get,
+        ) {
+            url {
+                val values = StringValues.build {
+                    append("from", from.toString())
+                    append("to", to.toString())
+                }
+                parameters.appendAll(values)
+            }
+        }
 
     suspend fun getTeachersRoute(username: String): Events = client.request(
         path = "$teachersRoute/$username/$eventsRoute",

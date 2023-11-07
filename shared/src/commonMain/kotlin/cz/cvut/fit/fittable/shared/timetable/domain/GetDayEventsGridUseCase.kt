@@ -13,8 +13,9 @@ import kotlin.time.Duration.Companion.hours
 class GetDayEventsGridUseCase(
     private val getUserEventsUseCase: GetUserEventsUseCase
 ) {
-    suspend operator fun invoke(): List<TimetableItem> =
-        createTimetableWithSpacers(getUserEventsUseCase())
+    suspend operator fun invoke(from: Instant, to: Instant): List<TimetableItem> {
+        return createTimetableWithSpacers(getUserEventsUseCase(from, to))
+    }
 
     private fun createTimetableWithSpacers(events: List<TimetableEvent>): List<TimetableItem> {
         val now: Instant = Clock.System.now()

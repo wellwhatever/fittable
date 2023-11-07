@@ -2,6 +2,7 @@ package cz.cvut.fit.fittable.timetable.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cz.cvut.fit.fittable.shared.core.remote.HttpException
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
@@ -12,6 +13,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Duration.Companion.hours
 
 class TimetableViewModel(
     private val generateHoursGrid: GenerateHoursGridUseCase,
@@ -20,16 +26,18 @@ class TimetableViewModel(
     private val hours = MutableStateFlow<List<TimetableHour>?>(null)
     private val events = MutableStateFlow<List<TimetableItem>?>(null)
 
-    val uiState = combine(events, hours) { events, hours ->
-        if (hours.isNullOrEmpty() || events.isNullOrEmpty()) {
-            TimetableLoading
-        } else {
-            TimetableContent(hoursGrid = hours, events = events)
+    private val error = MutableStateFlow<String?>(null)
+
+    val uiState = combine(events, hours, error) { events, hours, error ->
+        when {
+            error != null -> TimetableUiState.Error(error)
+            hours.isNullOrEmpty() || events.isNullOrEmpty() -> TimetableUiState.Loading
+            else -> TimetableUiState.Content(hoursGrid = hours, events = events)
         }
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
-        null,
+        TimetableUiState.Loading,
     )
 
     init {
@@ -39,14 +47,32 @@ class TimetableViewModel(
 
     private fun fetchEvents() {
         viewModelScope.launch {
-            events.value = getDayEvents()
+            try {
+                val from = Clock.System.now()
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                    .date
+                    .atStartOfDayIn(TimeZone.currentSystemDefault())
+                val to = from + 24.hours
+
+                events.value = getDayEvents(from, to)
+            } catch (exception: HttpException) {
+                error.value = exception.message
+            }
         }
     }
 
     private fun fetchHoursGrid() {
         viewModelScope.launch {
-            hours.value = generateHoursGrid()
+            try {
+                hours.value = generateHoursGrid()
+            } catch (exception: HttpException) {
+                error.value = exception.message
+            }
         }
+    }
+
+    fun onReloadClick() {
+        // TODO handle reload click
     }
 
     fun onEventClick(event: TimetableEvent) {

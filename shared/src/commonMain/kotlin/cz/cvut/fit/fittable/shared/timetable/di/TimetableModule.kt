@@ -14,7 +14,7 @@ import org.koin.dsl.module
 internal val timetableModule = module {
     single {
         NetworkClient(
-            baseUrl = "https://sirius.fit.cvut.cz/api/v1",
+            baseUrl = "https://sirius.fit.cvut.cz/api/v1/",
             httpClient = get(named("api")),
         )
     }

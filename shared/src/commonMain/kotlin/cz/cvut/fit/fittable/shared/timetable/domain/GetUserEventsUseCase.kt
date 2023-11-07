@@ -12,10 +12,12 @@ class GetUserEventsUseCase(
     private val timetableRepository: TimetableRepository,
     private val eventsConverterRemote: EventsConverterRemote
 ) {
-    suspend operator fun invoke(): List<TimetableEvent> {
-//        val events = timetableRepository.getEvents()
-//        return eventsConverterRemote.toDomain(events)
+    suspend operator fun invoke(from: Instant, to: Instant): List<TimetableEvent> {
+        val events = timetableRepository.getUserEventsForDay(from, to)
+        return eventsConverterRemote.toDomain(events)
+    }
 
+    private fun generateFakeEvents(): List<TimetableEvent> {
         // TODO faked for now, remove after testing
         val now: Instant = Clock.System.now()
         val event1start = now - 15.hours
