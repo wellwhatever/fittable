@@ -2,6 +2,10 @@ package cz.cvut.fit.fittable.shared.timetable.di
 
 import cz.cvut.fit.fittable.shared.core.remote.NetworkClient
 import cz.cvut.fit.fittable.shared.timetable.data.TimetableRepository
+import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.GetUserEventsUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
 import cz.cvut.fit.fittable.shared.timetable.remote.EventsRoute
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
@@ -16,4 +20,8 @@ internal val timetableModule = module {
     }
     singleOf(::TimetableRepository)
     singleOf(::EventsRoute)
+    singleOf(::GenerateHoursGridUseCase)
+    singleOf(::GetUserEventsUseCase)
+    singleOf(::GetDayEventsGridUseCase)
+    singleOf(::EventsConverterRemote)
 }

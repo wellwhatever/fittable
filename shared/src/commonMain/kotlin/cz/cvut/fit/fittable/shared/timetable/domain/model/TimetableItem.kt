@@ -1,6 +1,6 @@
-package cz.cvut.fit.fittable.timetable.domain.model
+package cz.cvut.fit.fittable.shared.timetable.domain.model
 
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.Instant
 import kotlin.math.roundToInt
 import kotlin.time.Duration
 
@@ -13,7 +13,9 @@ sealed interface TimetableItem {
 
 data class TimetableEvent(
     val title: String,
-    val start: LocalDateTime,
+    val room: String,
+    val start: Instant,
+    val end: Instant,
     override val duration: Duration
 ) : TimetableItem
 

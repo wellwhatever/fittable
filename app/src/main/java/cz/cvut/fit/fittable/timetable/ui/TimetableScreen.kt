@@ -32,14 +32,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.fittable.app.ui.theme.md_theme_light_outline
-import cz.cvut.fit.fittable.timetable.domain.model.TimetableEvent
-import cz.cvut.fit.fittable.timetable.domain.model.TimetableGridHour
-import cz.cvut.fit.fittable.timetable.domain.model.TimetableItem
-import cz.cvut.fit.fittable.timetable.domain.model.TimetableSpacer
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableGridHour
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSpacer
 import org.koin.androidx.compose.getViewModel
 import kotlin.math.roundToInt
 
@@ -96,7 +97,8 @@ internal fun TimetableInternal(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth(),
-                state = stateTimetable
+                state = stateTimetable,
+                contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 // TODO fix key of this item
                 items(
@@ -121,13 +123,26 @@ internal fun TimetableInternal(
             }
         }
     }
-    val offset =
-        snapshotFlow { stateTimetable.firstVisibleItemIndex to stateTimetable.firstVisibleItemScrollOffset }
 
+    val timetableOffset =
+        snapshotFlow {
+            TimetableStateOffset(
+                stateTimetable.firstVisibleItemIndex,
+                stateTimetable.firstVisibleItemScrollOffset
+            )
+        }
 
+    val density = LocalDensity.current
     LaunchedEffect(Unit) {
-        offset.collect {
-            stateGrid.scrollToItem(it.first, it.second)
+        timetableOffset.collect {
+            val totalOffset = TimetableItemOffsetCalculator.calculateItemOffsetFromStart(
+                items = events,
+                firstVisibleItemIndex = it.firstVisibleItemIndex,
+                firstVisibleItemOffset = it.firstVisibleItemScrollOffset,
+                defaultHourHeight = defaultHourHeight.value.roundToInt(),
+                density = density
+            )
+            stateGrid.scrollToItem(0, totalOffset)
         }
     }
 }
@@ -140,8 +155,8 @@ private fun EventItem(
 ) {
     Column(
         modifier = modifier
-            .padding(4.dp)
             .height(event.convertToHeight(defaultHourHeight.value.roundToInt()).dp)
+            .padding(1.dp)
             .clip(MaterialTheme.shapes.small)
             .background(color = MaterialTheme.colorScheme.primary)
             .clickable(onClick = { onEventClick(event) })

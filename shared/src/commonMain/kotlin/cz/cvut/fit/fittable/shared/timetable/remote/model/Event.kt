@@ -1,5 +1,7 @@
 package cz.cvut.fit.fittable.shared.timetable.remote.model
 
+import cz.cvut.fit.fittable.shared.timetable.remote.serializer.InstantAsStringSerializer
+import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,7 +12,8 @@ data class Event(
     @SerialName("deleted")
     val deleted: Boolean,
     @SerialName("ends_at")
-    val endsAt: String,
+    @Serializable(with = InstantAsStringSerializer::class)
+    val endsAt: Instant,
     @SerialName("event_type")
     val eventType: String,
     @SerialName("id")
@@ -28,5 +31,6 @@ data class Event(
     @SerialName("sequence_number")
     val sequenceNumber: Int,
     @SerialName("starts_at")
-    val startsAt: String,
+    @Serializable(with = InstantAsStringSerializer::class)
+    val startsAt: Instant,
 )

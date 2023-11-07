@@ -148,6 +148,7 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 # Desugaring
 desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaring" }
+animation-graphics-android = { group = "androidx.compose.animation", name = "animation-graphics-android", version = "1.5.4" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

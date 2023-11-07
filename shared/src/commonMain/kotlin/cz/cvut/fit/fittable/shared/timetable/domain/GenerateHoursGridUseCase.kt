@@ -1,6 +1,6 @@
-package cz.cvut.fit.fittable.timetable.domain
+package cz.cvut.fit.fittable.shared.timetable.domain
 
-import cz.cvut.fit.fittable.timetable.domain.model.TimetableGridHour
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableGridHour
 
 class GenerateHoursGridUseCase {
     private val hourRange = 7..21
