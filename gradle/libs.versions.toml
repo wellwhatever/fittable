@@ -63,6 +63,7 @@ desugaring = "2.0.3"
 
 # Other
 kotlinDatetime = "0.4.1"
+calendar = "2.4.0"
 
 [libraries]
 
@@ -149,6 +150,9 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 # Desugaring
 desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaring" }
 animation-graphics-android = { group = "androidx.compose.animation", name = "animation-graphics-android", version = "1.5.4" }
+
+# Calendar
+calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "calendar" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

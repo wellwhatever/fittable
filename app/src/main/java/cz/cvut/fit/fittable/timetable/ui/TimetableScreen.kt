@@ -45,6 +45,9 @@ import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSpacer
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.getViewModel
 import kotlin.math.roundToInt
 
@@ -58,6 +61,13 @@ fun TimetableScreen(
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
+        val now = Clock.System.now()
+        val currentMonth = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        CalendarHeader(
+            startMonth = currentMonth,
+            endMonth = currentMonth,
+            currentMonth = currentMonth
+        )
         with(state.value) {
             when (this) {
                 is TimetableUiState.Content -> TimetableInternal(

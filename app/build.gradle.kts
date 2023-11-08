@@ -55,6 +55,7 @@ dependencies {
         implementation(kotlin.serialization)
         implementation(libs.kotlin.coroutinesAndroid)
         implementation(libs.kotlin.datetime)
+        implementation(libs.calendar)
     }
 
     implementation(project(":shared"))
