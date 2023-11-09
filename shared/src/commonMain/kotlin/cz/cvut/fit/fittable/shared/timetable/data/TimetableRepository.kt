@@ -9,7 +9,7 @@ class TimetableRepository internal constructor(
 ) {
     suspend fun getEvents() = eventsRoute.getAllEvents()
 
-    suspend fun getUserEventsForDay(from: LocalDate, to: LocalDate): Events {
+    suspend fun getUserEvents(from: LocalDate, to: LocalDate): Events {
         // TODO hardcoded for now until appManager will give permission to fetch username
         val username = "petrool2"
         return eventsRoute.getPersonEvents(username, from, to)

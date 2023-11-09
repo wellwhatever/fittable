@@ -14,7 +14,7 @@ class GetUserEventsUseCase(
     private val eventsConverterRemote: EventsConverterRemote
 ) {
     suspend operator fun invoke(from: LocalDate, to: LocalDate): List<TimetableEvent> {
-        val events = timetableRepository.getUserEventsForDay(from, to)
+        val events = timetableRepository.getUserEvents(from, to)
         return eventsConverterRemote.toDomain(events)
     }
 
