@@ -8,4 +8,5 @@
     <string name="authorization_logo_description">CTU logo</string>
 
     <string name="timetable_reload_button_hint">Reload</string>
+    <string name="timetable_header_title_description">Expand calendar title</string>
 </resources>
