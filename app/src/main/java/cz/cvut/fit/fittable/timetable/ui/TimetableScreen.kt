@@ -45,9 +45,7 @@ import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSpacer
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.LocalDate
 import org.koin.androidx.compose.getViewModel
 import kotlin.math.roundToInt
 
@@ -55,41 +53,59 @@ private val defaultHourHeight = 64.dp
 
 @Composable
 fun TimetableScreen(
+    modifier: Modifier = Modifier,
     timetableViewModel: TimetableViewModel = getViewModel(),
 ) {
     val state = timetableViewModel.uiState.collectAsStateWithLifecycle()
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        val now = Clock.System.now()
-        val currentMonth = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
-        CalendarHeader(
-            startMonth = currentMonth,
-            endMonth = currentMonth,
-            currentMonth = currentMonth
-        )
-        with(state.value) {
-            when (this) {
-                is TimetableUiState.Content -> TimetableInternal(
-                    hoursGrid = hoursGrid,
-                    events = events,
-                    onEventClick = timetableViewModel::onEventClick
-                )
+    with(state.value) {
+        when (this) {
+            is TimetableUiState.Content -> TimetableInternal(
+                modifier = modifier,
+                hoursGrid = hoursGrid,
+                events = events,
+                headerState = header,
+                onEventClick = timetableViewModel::onEventClick,
+                onDayClick = timetableViewModel::onDayClick
+            )
 
-                is TimetableUiState.Error -> TimetableError(
-                    error = error,
-                    onReloadClick = timetableViewModel::onReloadClick
-                )
+            is TimetableUiState.Error -> TimetableError(
+                modifier = modifier,
+                error = error,
+                onReloadClick = timetableViewModel::onReloadClick
+            )
 
-                TimetableUiState.Loading -> CircularProgressIndicator()
-            }
+            TimetableUiState.Loading -> CircularProgressIndicator()
         }
-
     }
 }
 
 @Composable
 internal fun TimetableInternal(
+    hoursGrid: List<TimetableHour>,
+    events: List<TimetableItem>,
+    onEventClick: (event: TimetableEvent) -> Unit,
+    onDayClick: (day: LocalDate) -> Unit,
+    headerState: HeaderState,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        CalendarHeader(
+            startMonth = headerState.today,
+            endMonth = headerState.today,
+            today = headerState.today,
+            selected = headerState.selectedDate,
+            onDayClick = onDayClick
+        )
+        TimetableGrid(
+            hoursGrid = hoursGrid,
+            events = events,
+            onEventClick = onEventClick
+        )
+    }
+}
+
+@Composable
+private fun TimetableGrid(
     hoursGrid: List<TimetableHour>,
     events: List<TimetableItem>,
     onEventClick: (event: TimetableEvent) -> Unit,

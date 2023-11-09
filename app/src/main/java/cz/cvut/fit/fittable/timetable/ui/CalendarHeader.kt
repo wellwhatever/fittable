@@ -5,11 +5,13 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,7 +22,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -41,7 +45,9 @@ import java.util.Locale
 internal fun CalendarHeader(
     startMonth: LocalDate,
     endMonth: LocalDate,
-    currentMonth: LocalDate,
+    today: LocalDate,
+    selected: LocalDate,
+    onDayClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -50,10 +56,9 @@ internal fun CalendarHeader(
         modifier = modifier
             .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.primary),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val monthDisplayName =
-            currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+            today.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
         CalendarTitle(title = monthDisplayName, onClick = {
             expanded.value = expanded.value.not()
         })
@@ -61,8 +66,10 @@ internal fun CalendarHeader(
             CalendarHeaderInternal(
                 startMonth = startMonth,
                 endMonth = endMonth,
-                currentMonth = currentMonth,
-                daysOfWeek = daysOfWeek.value
+                today = today,
+                selected = selected,
+                daysOfWeek = daysOfWeek.value,
+                onDayClick = onDayClick,
             )
         }
     }
@@ -107,14 +114,16 @@ internal fun CalendarTitle(
 internal fun CalendarHeaderInternal(
     startMonth: LocalDate,
     endMonth: LocalDate,
-    currentMonth: LocalDate,
+    today: LocalDate,
+    selected: LocalDate,
     daysOfWeek: List<DayOfWeek>,
+    onDayClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state = rememberCalendarState(
         startMonth = startMonth.toJavaLocalDate().yearMonth,
         endMonth = endMonth.toJavaLocalDate().yearMonth,
-        firstVisibleMonth = currentMonth.toJavaLocalDate().yearMonth,
+        firstVisibleMonth = today.toJavaLocalDate().yearMonth,
         firstDayOfWeek = daysOfWeek.first()
     )
     Column(
@@ -123,21 +132,50 @@ internal fun CalendarHeaderInternal(
         DaysOfWeekTitle(daysOfWeek = daysOfWeek) // Use the title here
         HorizontalCalendar(
             state = state,
-            dayContent = { Day(it) }
+            dayContent = {
+                if (it.date.month.value == today.month.value) {
+                    Day(
+                        day = it,
+                        onClick = onDayClick,
+                        isSelected = it.date == selected.toJavaLocalDate(),
+                        isCurrentDay = today.toJavaLocalDate() == it.date
+                    )
+                }
+            }
         )
     }
 }
 
 @Composable
-fun Day(day: CalendarDay, modifier: Modifier = Modifier) {
+fun BoxScope.Day(
+    day: CalendarDay,
+    isSelected: Boolean,
+    isCurrentDay: Boolean,
+    onClick: (LocalDate) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val (backgroundColor, contentColor) = when {
+        isCurrentDay -> MaterialTheme.colorScheme.secondary to MaterialTheme.colorScheme.onSecondary
+        isSelected -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.7f) to MaterialTheme.colorScheme.onTertiary
+        else -> Color.Transparent to MaterialTheme.colorScheme.onPrimary
+    }
+
     Box(
         modifier = modifier
-            .aspectRatio(1f), // This is important for square sizing!
+            .align(Alignment.Center)
+            .size(36.dp)
+            .background(color = backgroundColor, shape = CircleShape)
+            .clip(CircleShape)
+            .clickable {
+                with(day.date) {
+                    onClick(LocalDate(year, month, dayOfMonth))
+                }
+            },
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = day.date.dayOfMonth.toString(),
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = contentColor,
             style = MaterialTheme.typography.labelMedium
         )
     }

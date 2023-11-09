@@ -1,12 +1,16 @@
 package cz.cvut.fit.fittable.timetable.ui
 
+import androidx.compose.runtime.Stable
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
+import kotlinx.datetime.LocalDate
 
+@Stable
 sealed interface TimetableUiState {
     data class Content(
         val hoursGrid: List<TimetableHour>,
-        val events: List<TimetableItem>
+        val events: List<TimetableItem>,
+        val header: HeaderState
     ) : TimetableUiState
 
     data class Error(
@@ -15,3 +19,9 @@ sealed interface TimetableUiState {
 
     data object Loading : TimetableUiState
 }
+
+@Stable
+data class HeaderState(
+    val today: LocalDate,
+    val selectedDate: LocalDate,
+)

@@ -1,15 +1,11 @@
 package cz.cvut.fit.fittable.shared.timetable.domain.model
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 
-//interface CalendarItem {
-//    val date: LocalDate
-//}
-//
-//data class CalendarDay(
-//    override val date: LocalDate
-//) : CalendarItem {
-//    val dayOfWeek = date.dayOfWeek
-//}
-//
-//data class CalendarHeader(override val date: LocalDate) : CalendarItem
+data class CalendarHeaderItem(
+    val startMonth: LocalDate,
+    val endMonth: LocalDate,
+    val today: Instant,
+    val selected: Instant,
+)

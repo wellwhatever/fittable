@@ -12,8 +12,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
@@ -26,13 +28,24 @@ class TimetableViewModel(
     private val hours = MutableStateFlow<List<TimetableHour>?>(null)
     private val events = MutableStateFlow<List<TimetableItem>?>(null)
 
+    private val _selectedDate = MutableStateFlow(
+        Clock.System.now().toLocalDateTime(
+            TimeZone.currentSystemDefault()
+        ).date.let { today ->
+            HeaderState(
+                today,
+                today
+            )
+        }
+    )
+
     private val error = MutableStateFlow<String?>(null)
 
-    val uiState = combine(events, hours, error) { events, hours, error ->
+    val uiState = combine(events, hours, error, _selectedDate) { events, hours, error, header ->
         when {
             error != null -> TimetableUiState.Error(error)
             hours.isNullOrEmpty() || events.isNullOrEmpty() -> TimetableUiState.Loading
-            else -> TimetableUiState.Content(hoursGrid = hours, events = events)
+            else -> TimetableUiState.Content(hoursGrid = hours, events = events, header = header)
         }
     }.stateIn(
         viewModelScope,
@@ -77,5 +90,11 @@ class TimetableViewModel(
 
     fun onEventClick(event: TimetableEvent) {
         // TODO handle event click
+    }
+
+    fun onDayClick(day: LocalDate) {
+        viewModelScope.launch {
+            _selectedDate.update { it.copy(selectedDate = day) }
+        }
     }
 }
