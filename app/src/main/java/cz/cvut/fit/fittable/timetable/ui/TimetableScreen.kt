@@ -2,6 +2,12 @@
 
 package cz.cvut.fit.fittable.timetable.ui
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.background
@@ -161,25 +167,46 @@ private fun TimetableEventsGrid(
     onEventClick: (event: TimetableEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier,
-        state = state,
-        contentPadding = PaddingValues(vertical = 16.dp)
-    ) {
-        // TODO fix key of this item
-        items(items = events) {
-            when (it) {
-                is TimetableEvent -> {
-                    EventItem(
-                        event = it,
-                        modifier = Modifier
-                            .padding(start = 100.dp)
-                            .fillMaxWidth(),
-                        onEventClick = onEventClick
-                    )
-                }
+    AnimatedContent(
+        targetState = events,
+        label = "Timetable",
+        transitionSpec = {
+            val item = targetState.filterIsInstance<TimetableEvent>().firstOrNull()
+            val prevItem = initialState.filterIsInstance<TimetableEvent>().firstOrNull()
+            when {
+                item == null || prevItem == null -> fadeIn() togetherWith fadeOut()
+                item.day > prevItem.day -> slideInHorizontally(
+                    initialOffsetX = { it }) + fadeIn() togetherWith slideOutHorizontally(
+                    targetOffsetX = { -it }) + fadeOut()
 
-                is TimetableSpacer -> EventSpacer(eventSpacer = it)
+                else -> slideInHorizontally(
+                    initialOffsetX = { -it }) + fadeIn() togetherWith slideOutHorizontally(
+                    targetOffsetX = { it }) + fadeOut()
+            }
+
+        }
+    ) {
+        LazyColumn(
+            modifier = modifier,
+            state = state,
+            contentPadding = PaddingValues(vertical = 16.dp)
+        ) {
+            items(
+                items = it,
+                key = { item -> item.id }) {
+                when (it) {
+                    is TimetableEvent -> {
+                        EventItem(
+                            event = it,
+                            modifier = Modifier
+                                .padding(start = 100.dp)
+                                .fillMaxWidth(),
+                            onEventClick = onEventClick
+                        )
+                    }
+
+                    is TimetableSpacer -> EventSpacer(eventSpacer = it)
+                }
             }
         }
     }

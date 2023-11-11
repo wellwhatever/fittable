@@ -10,7 +10,8 @@ class EventsConverterRemote {
             room = remoteEvent.links?.room.orEmpty(),
             duration = remoteEvent.endsAt - remoteEvent.startsAt,
             start = remoteEvent.startsAt,
-            end = remoteEvent.endsAt
+            end = remoteEvent.endsAt,
+            id = remoteEvent.id.toString()
         )
     }
 }

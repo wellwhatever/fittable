@@ -39,21 +39,24 @@ class GetUserEventsUseCase(
                 room = "T9-301",
                 start = event1start,
                 end = event1end,
-                duration = duration1
+                duration = duration1,
+                id = "1",
             ),
             TimetableEvent(
                 title = "Bi-AMP",
                 room = "T9-202",
                 start = event2start,
                 end = event2end,
-                duration = event2duration
+                duration = event2duration,
+                id = "2",
             ),
             TimetableEvent(
                 title = "Bi-AMP",
                 room = "T9-202",
                 start = event3start,
                 end = event3end,
-                duration = event3duration
+                duration = event3duration,
+                id = "3",
             )
         )
     }

@@ -51,12 +51,22 @@ class GetDayEventsGridUseCase(
                 val nextEvent = eventsIterator.next()
                 val eventStart = nextEvent.start
                 if (currentTime < eventStart) {
-                    timetable.add(TimetableSpacer(duration = eventStart - currentTime))
+                    timetable.add(
+                        TimetableSpacer(
+                            duration = eventStart - currentTime,
+                            id = "spacer_${timetable.lastIndex + 1}"
+                        )
+                    )
                 }
                 timetable.add(nextEvent)
                 currentTime = eventStart + nextEvent.duration
             } else {
-                timetable.add(TimetableSpacer(duration = endTime - currentTime))
+                timetable.add(
+                    TimetableSpacer(
+                        duration = endTime - currentTime,
+                        id = "spacer_${timetable.lastIndex + 1}"
+                    )
+                )
                 break
             }
         }

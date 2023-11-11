@@ -23,10 +23,10 @@ android {
     signingConfigs {
         create("release") {
             // TODO Extract to env variables
-            keyAlias = "key"
-            keyPassword = "keypassword"
+            keyAlias = "key-fittable"
+            keyPassword = "asdqlwrhjljdfn12312jl34n"
             storeFile = File("$rootDir/keys/keystore.jks")
-            storePassword = "keypassword"
+            storePassword = "asdqlwrhjljdfn12312jl34n"
         }
     }
 
