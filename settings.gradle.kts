@@ -1,6 +1,6 @@
 rootProject.name = "Fittable"
 include(":app")
-include(":multiplatform")
+include(":shared")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

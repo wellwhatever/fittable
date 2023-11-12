@@ -17,18 +17,19 @@ lifecycle = "2.6.2"
 # Kotlin
 kotlin = "1.9.10"
 coroutines = "1.7.1"
-serializationJson = "1.4.1"
 
 # KSP
 ksp = "1.9.10-1.0.13"
 
 # Network
-retrofit = "2.9.0"
-retrofitSerializationConverter = "0.8.0"
+ktor = "2.3.5"
 okhttp = "4.11.0"
+serialization = "1.6.0"
 
 # Room
 room = "2.5.2"
+
+datastore = "1.1.0-alpha05"
 
 # Compose
 composeBom = "2023.09.02"
@@ -59,6 +60,10 @@ firebaseBom = "32.3.1"
 
 # Desugaring
 desugaring = "2.0.3"
+
+# Other
+kotlinDatetime = "0.4.1"
+calendar = "2.4.0"
 
 [libraries]
 
@@ -109,12 +114,24 @@ kotlin-core = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref 
 kotlin-coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlin-coroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlin-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+kotlin-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinDatetime" }
+
+ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
+ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-android = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-ios = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 
 # Room
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
+
+datastore = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
@@ -132,6 +149,10 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 # Desugaring
 desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaring" }
+animation-graphics-android = { group = "androidx.compose.animation", name = "animation-graphics-android", version = "1.5.4" }
+
+# Calendar
+calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "calendar" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -172,6 +193,14 @@ koin = [
     "koin-compose",
     "koin-multiplatform",
     "koin-navigation"
+]
+
+ktor-multiplatform = [
+    "ktor-core",
+    "ktor-negotiation",
+    "ktor-serialization",
+    "ktor-auth",
+    "ktor-logging"
 ]
 
 unitTesting = [

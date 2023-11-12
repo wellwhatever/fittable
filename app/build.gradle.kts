@@ -3,6 +3,7 @@ plugins {
     id("fittable.android.application.compose")
     id("fittable.android.firebase")
     id("fittable.android.navigation")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -22,11 +23,15 @@ android {
     signingConfigs {
         create("release") {
             // TODO Extract to env variables
-            keyAlias = "key"
-            keyPassword = "keypassword"
+            keyAlias = "key-fittable"
+            keyPassword = "asdqlwrhjljdfn12312jl34n"
             storeFile = File("$rootDir/keys/keystore.jks")
-            storePassword = "keypassword"
+            storePassword = "asdqlwrhjljdfn12312jl34n"
         }
+    }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/versions/9/previous-compilation-data.bin")
     }
 
     buildTypes {
@@ -46,8 +51,12 @@ dependencies {
         implementation(android.gms)
         implementation(bundles.koin)
         implementation(bundles.compose)
-        implementation("com.wu-man:android-oauth-client:0.4.5")
+        implementation(datastore)
+        implementation(kotlin.serialization)
+        implementation(libs.kotlin.coroutinesAndroid)
+        implementation(libs.kotlin.datetime)
+        implementation(libs.calendar)
     }
 
-    implementation(project(":multiplatform"))
+    implementation(project(":shared"))
 }
