@@ -29,9 +29,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
+import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.core.yearMonth
 import cz.cvut.fit.fittable.R
@@ -52,24 +54,35 @@ internal fun CalendarHeader(
 ) {
     val expanded = remember { mutableStateOf(false) }
     val daysOfWeek = remember { mutableStateOf(daysOfWeek()) }
+    val state = rememberCalendarState(
+        startMonth = startMonth.toJavaLocalDate().yearMonth,
+        endMonth = endMonth.toJavaLocalDate().yearMonth,
+        firstVisibleMonth = today.toJavaLocalDate().yearMonth,
+        firstDayOfWeek = daysOfWeek.value.first()
+    )
     Column(
         modifier = modifier
             .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.primary),
     ) {
         val monthDisplayName =
-            today.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
-        CalendarTitle(title = monthDisplayName, onClick = {
-            expanded.value = expanded.value.not()
-        })
+            state.firstVisibleMonth.yearMonth.month.getDisplayName(
+                TextStyle.FULL,
+                Locale.getDefault()
+            )
+        CalendarTitle(
+            title = "$monthDisplayName ${state.firstVisibleMonth.yearMonth.year}",
+            onClick = {
+                expanded.value = expanded.value.not()
+            }
+        )
         AnimatedVisibility(visible = expanded.value) {
             CalendarHeaderInternal(
-                startMonth = startMonth,
-                endMonth = endMonth,
                 today = today,
-                selected = selected,
+                selectedDay = selected,
                 daysOfWeek = daysOfWeek.value,
                 onDayClick = onDayClick,
+                calendarState = state
             )
         }
     }
@@ -112,32 +125,25 @@ internal fun CalendarTitle(
 
 @Composable
 internal fun CalendarHeaderInternal(
-    startMonth: LocalDate,
-    endMonth: LocalDate,
     today: LocalDate,
-    selected: LocalDate,
+    calendarState: CalendarState,
+    selectedDay: LocalDate,
     daysOfWeek: List<DayOfWeek>,
     onDayClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val state = rememberCalendarState(
-        startMonth = startMonth.toJavaLocalDate().yearMonth,
-        endMonth = endMonth.toJavaLocalDate().yearMonth,
-        firstVisibleMonth = today.toJavaLocalDate().yearMonth,
-        firstDayOfWeek = daysOfWeek.first()
-    )
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
         DaysOfWeekTitle(daysOfWeek = daysOfWeek) // Use the title here
         HorizontalCalendar(
-            state = state,
+            state = calendarState,
             dayContent = {
-                if (it.date.month.value == today.month.value) {
+                if (it.position == DayPosition.MonthDate) {
                     Day(
                         day = it,
                         onClick = onDayClick,
-                        isSelected = it.date == selected.toJavaLocalDate(),
+                        isSelected = it.date == selectedDay.toJavaLocalDate(),
                         isCurrentDay = today.toJavaLocalDate() == it.date
                     )
                 }

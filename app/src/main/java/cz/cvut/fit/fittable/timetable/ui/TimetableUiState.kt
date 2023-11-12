@@ -22,6 +22,8 @@ sealed interface TimetableUiState {
 
 @Stable
 data class HeaderState(
+    val monthStart: LocalDate,
+    val monthEnd: LocalDate,
     val today: LocalDate,
     val selectedDate: LocalDate,
 )

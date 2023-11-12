@@ -4,6 +4,7 @@ import cz.cvut.fit.fittable.shared.core.remote.NetworkClient
 import cz.cvut.fit.fittable.shared.timetable.data.TimetableRepository
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetUserEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
 import cz.cvut.fit.fittable.shared.timetable.remote.EventsRoute
@@ -24,4 +25,5 @@ internal val timetableModule = module {
     singleOf(::GetUserEventsUseCase)
     singleOf(::GetDayEventsGridUseCase)
     singleOf(::EventsConverterRemote)
+    singleOf(::GetTimetableHeaderUseCase)
 }

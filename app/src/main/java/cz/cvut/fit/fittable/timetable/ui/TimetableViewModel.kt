@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import cz.cvut.fit.fittable.shared.core.remote.HttpException
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
@@ -16,24 +17,22 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 class TimetableViewModel(
     private val generateHoursGrid: GenerateHoursGridUseCase,
-    private val getDayEvents: GetDayEventsGridUseCase
+    private val getDayEvents: GetDayEventsGridUseCase,
+    getTimetableHeader: GetTimetableHeaderUseCase,
 ) : ViewModel() {
     private val hours = MutableStateFlow<List<TimetableHour>?>(null)
 
     private val _selectedDate = MutableStateFlow(
-        Clock.System.now().toLocalDateTime(
-            TimeZone.currentSystemDefault()
-        ).date.let { today ->
+        with(getTimetableHeader()) {
             HeaderState(
-                today,
-                today
+                monthStart = monthStart,
+                monthEnd = monthEnd,
+                today = today,
+                selectedDate = selectedDate
             )
         }
     )
@@ -58,16 +57,6 @@ class TimetableViewModel(
 
     init {
         fetchHoursGrid()
-        fetchEvents()
-    }
-
-    private fun fetchEvents() {
-        viewModelScope.launch {
-            try {
-            } catch (exception: HttpException) {
-                error.value = exception.message
-            }
-        }
     }
 
     private fun fetchHoursGrid() {

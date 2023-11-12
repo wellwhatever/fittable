@@ -96,8 +96,8 @@ internal fun TimetableInternal(
 ) {
     Column(modifier = modifier) {
         CalendarHeader(
-            startMonth = headerState.today,
-            endMonth = headerState.today,
+            startMonth = headerState.monthStart,
+            endMonth = headerState.monthEnd,
             today = headerState.today,
             selected = headerState.selectedDate,
             onDayClick = onDayClick
@@ -129,7 +129,7 @@ private fun TimetableGrid(
         }
 
     val density = LocalDensity.current
-    LaunchedEffect(Unit) {
+    LaunchedEffect(events) {
         timetableOffset.collect {
             val totalOffset = TimetableItemOffsetCalculator.calculateItemOffsetFromStart(
                 items = events,
