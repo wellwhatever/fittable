@@ -6,14 +6,15 @@ import cz.cvut.fit.fittable.shared.core.remote.HttpException
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,6 +25,9 @@ class TimetableViewModel(
     private val getDayEvents: GetDayEventsGridUseCase,
     getTimetableHeader: GetTimetableHeaderUseCase,
 ) : ViewModel() {
+    private val _navigateToEventDetail = Channel<String>(Channel.CONFLATED)
+    val navigateToEventDetail = _navigateToEventDetail.receiveAsFlow()
+
     private val hours = MutableStateFlow<List<TimetableHour>?>(null)
 
     private val _selectedDate = MutableStateFlow(
@@ -73,8 +77,10 @@ class TimetableViewModel(
         // TODO handle reload click
     }
 
-    fun onEventClick(event: TimetableEvent) {
-        // TODO handle event click
+    fun onEventClick(eventId: String) {
+        viewModelScope.launch {
+            _navigateToEventDetail.send(eventId)
+        }
     }
 
     fun onDayClick(day: LocalDate) {

@@ -2,6 +2,7 @@ package cz.cvut.fit.fittable.shared.timetable.data
 
 import cz.cvut.fit.fittable.shared.timetable.remote.EventsRoute
 import cz.cvut.fit.fittable.shared.timetable.remote.model.Event
+import cz.cvut.fit.fittable.shared.timetable.remote.model.EventDetail
 import cz.cvut.fit.fittable.shared.timetable.remote.model.Events
 import kotlinx.datetime.LocalDate
 
@@ -16,5 +17,5 @@ class EventsRepository internal constructor(
         return eventsRoute.getPersonEvents(username, from, to)
     }
 
-    suspend fun getEvent(eventId: String): Event = eventsRoute.getEvent(eventId)
+    suspend fun getEvent(eventId: String): EventDetail = eventsRoute.getEvent(eventId)
 }

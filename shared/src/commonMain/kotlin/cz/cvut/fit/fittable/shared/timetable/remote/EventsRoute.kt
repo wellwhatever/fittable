@@ -2,6 +2,7 @@ package cz.cvut.fit.fittable.shared.timetable.remote
 
 import cz.cvut.fit.fittable.shared.core.remote.NetworkClient
 import cz.cvut.fit.fittable.shared.timetable.remote.model.Event
+import cz.cvut.fit.fittable.shared.timetable.remote.model.EventDetail
 import cz.cvut.fit.fittable.shared.timetable.remote.model.Events
 import io.ktor.http.HttpMethod
 import io.ktor.util.StringValues
@@ -20,7 +21,7 @@ internal class EventsRoute(
         method = HttpMethod.Get,
     )
 
-    suspend fun getEvent(eventId: String): Event = client.request(
+    suspend fun getEvent(eventId: String): EventDetail = client.request(
         path = "$eventsRoute/$eventId",
         method = HttpMethod.Get
     )

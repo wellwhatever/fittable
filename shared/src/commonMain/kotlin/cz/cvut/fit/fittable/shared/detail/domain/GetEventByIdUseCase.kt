@@ -7,15 +7,15 @@ class GetEventByIdUseCase(
     private val eventsRepository: EventsRepository
 ) {
     suspend operator fun invoke(eventId: String): EventDetail =
-        with(eventsRepository.getEvent(eventId)) {
+        with(eventsRepository.getEvent(eventId).event) {
             EventDetail(
-                course = this.links?.course.orEmpty(),
-                room = this.links?.room.orEmpty(),
-                sequenceNumber = this.sequenceNumber.toString(),
-                capacity = this.capacity,
-                occupied = this.occupied,
-                eventType = this.eventType,
-                parallel = this.parallel
+                course = links?.course.orEmpty(),
+                room = links?.room.orEmpty(),
+                sequenceNumber = sequenceNumber.toString(),
+                capacity = capacity,
+                occupied = occupied,
+                eventType = eventType,
+                parallel = parallel,
             )
         }
 
