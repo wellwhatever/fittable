@@ -15,7 +15,7 @@ data class Event(
     @Serializable(with = InstantAsStringSerializer::class)
     val endsAt: Instant,
     @SerialName("event_type")
-    val eventType: String,
+    val eventType: EventType,
     @SerialName("id")
     val id: Int,
     @SerialName("links")

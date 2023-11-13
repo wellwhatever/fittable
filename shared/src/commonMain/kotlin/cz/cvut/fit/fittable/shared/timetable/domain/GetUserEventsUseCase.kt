@@ -1,6 +1,6 @@
 package cz.cvut.fit.fittable.shared.timetable.domain
 
-import cz.cvut.fit.fittable.shared.timetable.data.TimetableRepository
+import cz.cvut.fit.fittable.shared.timetable.data.EventsRepository
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
 import kotlinx.datetime.Clock
@@ -10,11 +10,11 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
 class GetUserEventsUseCase(
-    private val timetableRepository: TimetableRepository,
+    private val eventsRepository: EventsRepository,
     private val eventsConverterRemote: EventsConverterRemote
 ) {
     suspend operator fun invoke(from: LocalDate, to: LocalDate): List<TimetableEvent> {
-        val events = timetableRepository.getUserEvents(from, to)
+        val events = eventsRepository.getUserEvents(from, to)
         return eventsConverterRemote.toDomain(events)
     }
 

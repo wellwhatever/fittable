@@ -1,7 +1,7 @@
 package cz.cvut.fit.fittable.shared.timetable.di
 
 import cz.cvut.fit.fittable.shared.core.remote.NetworkClient
-import cz.cvut.fit.fittable.shared.timetable.data.TimetableRepository
+import cz.cvut.fit.fittable.shared.timetable.data.EventsRepository
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
@@ -19,7 +19,7 @@ internal val timetableModule = module {
             httpClient = get(named("api")),
         )
     }
-    singleOf(::TimetableRepository)
+    singleOf(::EventsRepository)
     singleOf(::EventsRoute)
     singleOf(::GenerateHoursGridUseCase)
     singleOf(::GetUserEventsUseCase)

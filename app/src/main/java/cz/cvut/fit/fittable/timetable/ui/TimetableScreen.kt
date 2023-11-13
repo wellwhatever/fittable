@@ -59,6 +59,7 @@ private val defaultHourHeight = 64.dp
 
 @Composable
 fun TimetableScreen(
+    onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
     timetableViewModel: TimetableViewModel = getViewModel(),
 ) {
