@@ -63,7 +63,8 @@ internal fun CalendarHeader(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.primary),
+            .background(color = MaterialTheme.colorScheme.primary)
+            .padding(horizontal = 8.dp),
     ) {
         val monthDisplayName =
             state.firstVisibleMonth.yearMonth.month.getDisplayName(
@@ -74,7 +75,7 @@ internal fun CalendarHeader(
             title = "$monthDisplayName ${state.firstVisibleMonth.yearMonth.year}",
             onClick = {
                 expanded.value = expanded.value.not()
-            }
+            },
         )
         AnimatedVisibility(visible = expanded.value) {
             CalendarHeaderInternal(
@@ -112,7 +113,7 @@ internal fun CalendarTitle(
             modifier = Modifier.padding(8.dp),
             text = title,
             color = MaterialTheme.colorScheme.onPrimary,
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.titleLarge
         )
         Icon(
             modifier = Modifier.rotate(iconRotation),

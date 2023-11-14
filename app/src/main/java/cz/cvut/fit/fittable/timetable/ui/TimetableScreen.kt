@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.fittable.R
 import cz.cvut.fit.fittable.app.ui.theme.md_theme_light_outline
 import cz.cvut.fit.fittable.core.ui.HorizontalGridDivider
+import cz.cvut.fit.fittable.core.ui.Loading
 import cz.cvut.fit.fittable.core.ui.VerticalGridDivider
 import cz.cvut.fit.fittable.shared.core.extensions.formatAsHoursAndMinutes
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
@@ -81,7 +81,7 @@ fun TimetableScreen(
                 onReloadClick = timetableViewModel::onReloadClick
             )
 
-            TimetableUiState.Loading -> CircularProgressIndicator()
+            TimetableUiState.Loading -> Loading()
         }
     }
 }
