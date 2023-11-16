@@ -163,7 +163,7 @@ fun BoxScope.Day(
 ) {
     val (backgroundColor, contentColor) = when {
         isCurrentDay -> MaterialTheme.colorScheme.secondary to MaterialTheme.colorScheme.onSecondary
-        isSelected -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.7f) to MaterialTheme.colorScheme.onTertiary
+        isSelected -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.7f) to MaterialTheme.colorScheme.onTertiary
         else -> Color.Transparent to MaterialTheme.colorScheme.onPrimary
     }
 
