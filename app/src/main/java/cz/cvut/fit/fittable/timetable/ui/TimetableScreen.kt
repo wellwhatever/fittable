@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -49,9 +48,8 @@ import cz.cvut.fit.fittable.core.ui.HorizontalGridDivider
 import cz.cvut.fit.fittable.core.ui.Loading
 import cz.cvut.fit.fittable.core.ui.VerticalGridDivider
 import cz.cvut.fit.fittable.shared.core.extensions.formatAsHoursAndMinutes
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableConflict
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableConflictItem
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEventContainer
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSingleEvent
@@ -177,8 +175,8 @@ private fun TimetableEventsGrid(
         targetState = events,
         label = "Timetable",
         transitionSpec = {
-            val item = targetState.filterIsInstance<TimetableSingleEvent>().firstOrNull()
-            val prevItem = initialState.filterIsInstance<TimetableSingleEvent>().firstOrNull()
+            val item = targetState.filterIsInstance<TimetableEventContainer>().firstOrNull()
+            val prevItem = initialState.filterIsInstance<TimetableEventContainer>().firstOrNull()
             when {
                 item == null || prevItem == null -> fadeIn() togetherWith fadeOut()
                 item.day > prevItem.day -> slideInHorizontally(
@@ -201,18 +199,8 @@ private fun TimetableEventsGrid(
                 items = it
             ) {
                 when (it) {
-                    is TimetableSingleEvent -> {
-                        EventItem(
-                            event = it,
-                            modifier = Modifier
-                                .padding(start = 100.dp)
-                                .fillMaxWidth(),
-                            onEventClick = onEventClick
-                        )
-                    }
-
                     is TimetableSpacer -> EventSpacer(eventSpacer = it)
-                    is TimetableConflict -> TimetableConflict(
+                    is TimetableEventContainer -> TimetableConflict(
                         modifier = Modifier.padding(start = 100.dp),
                         conflict = it,
                         onEventClick = onEventClick
@@ -230,7 +218,7 @@ private fun TimetableEventsGrid(
 
 @Composable
 private fun TimetableConflict(
-    conflict: TimetableConflict,
+    conflict: TimetableEventContainer,
     onEventClick: (event: TimetableEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -239,28 +227,21 @@ private fun TimetableConflict(
         modifier = modifier.height(height),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        conflict.conflictedEvents.forEach { event ->
-            when (event) {
-                is TimetableConflictItem -> {
-                    Column(
-                        modifier = Modifier
-                            .height(height)
-                            .weight(1f)
-                    ) {
-                        event.spacerStart?.let {
-                            EventSpacer(eventSpacer = it)
-                        }
-                        // fixme fix data classes!!!
-                        (event.event as? TimetableSingleEvent)?.let {
-                            EventItem(
-                                event = it,
-                                onEventClick = onEventClick
-                            )
-                        }
-                        event.spacerEnd?.let {
-                            EventSpacer(eventSpacer = it)
-                        }
-                    }
+        conflict.events.forEach { event ->
+            Column(
+                modifier = Modifier
+                    .height(height)
+                    .weight(1f)
+            ) {
+                event.spacerStart?.let {
+                    EventSpacer(eventSpacer = it)
+                }
+                EventItem(
+                    event = event.event,
+                    onEventClick = onEventClick
+                )
+                event.spacerEnd?.let {
+                    EventSpacer(eventSpacer = it)
                 }
             }
         }

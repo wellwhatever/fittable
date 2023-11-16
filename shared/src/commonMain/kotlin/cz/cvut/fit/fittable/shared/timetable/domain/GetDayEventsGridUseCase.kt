@@ -1,9 +1,11 @@
 package cz.cvut.fit.fittable.shared.timetable.domain
 
-import cz.cvut.fit.fittable.shared.core.util.DisjointSet
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableConflict
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableConflictItem
+import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterDomain
+import cz.cvut.fit.fittable.shared.timetable.domain.model.MergedEvents
+import cz.cvut.fit.fittable.shared.timetable.domain.model.RequestDateBounds
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableConflictContent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEventContainer
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSpacer
 import kotlinx.datetime.LocalDate
@@ -15,16 +17,18 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 
-class GetDayEventsGridUseCase(
-    private val getUserEventsUseCase: GetUserEventsUseCase
+class GetDayEventsGridUseCase internal constructor(
+    private val getUserEventsUseCase: GetUserEventsUseCase,
+    private val eventConflictCalculator: EventConflictCalculator,
+    private val eventsConverterDomain: EventsConverterDomain,
 ) {
     suspend operator fun invoke(day: LocalDate): List<TimetableItem> {
         val (startDate, endDate) = getRequestDataBounds(day)
         val events = getUserEventsUseCase(from = startDate, to = endDate)
 
         // We have to merge conflicted events as they're considered as single element
-        val mergedEvents = groupOverlappingEvents(events)
-        val mergedEventsWithSeparators = addSeparatorsToMergedEvents(mergedEvents)
+        val mergedEvents = eventConflictCalculator.groupOverlappingEvents(events)
+        val mergedEventsWithSeparators = composeTimetableItems(mergedEvents)
 
         return createTimetableWithSpacers(events = mergedEventsWithSeparators, day = day)
     }
@@ -41,61 +45,29 @@ class GetDayEventsGridUseCase(
         return RequestDateBounds(startDate, endDate)
     }
 
-    private fun addSeparatorsToMergedEvents(events: List<TimetableEvent>): List<TimetableEvent> {
+    private fun composeTimetableItems(events: List<MergedEvents>): List<TimetableEventContainer> {
         return events.map { event ->
-            if (event is TimetableConflict) {
-                val conflicts = event.conflictedEvents
-                val conflictsWithSpacers = conflicts.map { conflict ->
-                    val startDifference = event.start - conflict.start
-                    val endDifference = event.end - conflict.end
-                    val startSpacer =
-                        TimetableSpacer(startDifference).takeIf { startDifference != Duration.ZERO }
-                    val endSpacer =
-                        TimetableSpacer(endDifference).takeIf { endDifference != Duration.ZERO }
+            val conflicts = event.events
+            val conflictsWithSpacers = conflicts.map { conflict ->
+                val startDifference = event.start - conflict.start
+                val endDifference = event.end - conflict.end
+                val startSpacer =
+                    TimetableSpacer(startDifference).takeIf { startDifference != Duration.ZERO }
+                val endSpacer =
+                    TimetableSpacer(endDifference).takeIf { endDifference != Duration.ZERO }
 
-                    TimetableConflictItem(
-                        spacerStart = startSpacer,
-                        spacerEnd = endSpacer,
-                        event = conflict,
-                        start = event.start,
-                        end = event.end
-                    )
-                }
-                event.copy(conflictsWithSpacers)
-            } else {
-                event
+                TimetableConflictContent(
+                    spacerStart = startSpacer,
+                    spacerEnd = endSpacer,
+                    event = eventsConverterDomain.toTimetableItem(conflict)
+                )
             }
+            TimetableEventContainer(
+                events = conflictsWithSpacers, start = event.start, end = event.end
+            )
         }
     }
 
-    private fun groupOverlappingEvents(events: List<TimetableEvent>): List<TimetableEvent> {
-        val disjointSet = DisjointSet<TimetableEvent>()
-
-        events.forEachIndexed { i, currentEvent ->
-            events.subList(i + 1, events.size).forEach { otherEvent ->
-                if (currentEvent.overlap(otherEvent)) {
-                    disjointSet.union(currentEvent, otherEvent)
-                }
-            }
-        }
-
-        val groupedEvents = mutableMapOf<TimetableEvent, MutableList<TimetableEvent>>()
-
-        events.forEach { event ->
-            val root = disjointSet.find(event)
-            groupedEvents.getOrPut(root) { mutableListOf() }.add(event)
-        }
-
-        return groupedEvents.values.map { event ->
-            TimetableConflict(
-                conflictedEvents = event,
-                start = event.minOf { it.start },
-                end = event.maxOf { it.end })
-        }
-    }
-
-    private fun TimetableEvent.overlap(other: TimetableEvent) =
-        start < other.end && end > other.start
 
     private fun createTimetableWithSpacers(
         events: List<TimetableEvent>,
@@ -129,13 +101,7 @@ class GetDayEventsGridUseCase(
         return timetable
     }
 
-    private data class RequestDateBounds(
-        val from: LocalDate,
-        val to: LocalDate
-    )
-
     companion object {
-        private const val spacerIdPrefix = "spacer_"
         private val schoolDayStart = 7.hours
         private val schoolDayEnd = 21.hours
     }

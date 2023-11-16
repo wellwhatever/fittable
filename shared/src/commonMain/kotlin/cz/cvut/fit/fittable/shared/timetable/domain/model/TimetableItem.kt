@@ -18,30 +18,29 @@ abstract class TimetableEvent : TimetableItem {
     abstract val end: Instant
     override val duration: Duration
         get() = end - start
+
+    val day: Int
+        get() = start.toLocalDateTime(TimeZone.currentSystemDefault()).date.dayOfMonth
 }
 
-data class TimetableConflict(
-    val conflictedEvents: List<TimetableEvent>,
+data class TimetableEventContainer(
+    val events: List<TimetableConflictContent>,
     override val start: Instant,
     override val end: Instant,
 ) : TimetableEvent()
 
-data class TimetableConflictItem(
-    val spacerStart: TimetableSpacer?,
-    val spacerEnd: TimetableSpacer?,
-    val event: TimetableEvent,
-    override val start: Instant,
-    override val end: Instant
-) : TimetableEvent()
+data class TimetableConflictContent(
+    val spacerStart: TimetableSpacer? = null,
+    val spacerEnd: TimetableSpacer? = null,
+    val event: TimetableSingleEvent,
+)
 
 data class TimetableSingleEvent(
     val title: String,
     val room: String,
     override val start: Instant,
     override val end: Instant,
-) : TimetableEvent() {
-    val day = start.toLocalDateTime(TimeZone.currentSystemDefault()).date.dayOfMonth
-}
+) : TimetableEvent()
 
 data class TimetableSpacer(
     override val duration: Duration,

@@ -2,7 +2,7 @@ package cz.cvut.fit.fittable.shared.timetable.domain
 
 import cz.cvut.fit.fittable.shared.timetable.data.EventsRepository
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSingleEvent
+import cz.cvut.fit.fittable.shared.timetable.domain.model.EventDomain
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -13,13 +13,13 @@ class GetUserEventsUseCase(
     private val eventsRepository: EventsRepository,
     private val eventsConverterRemote: EventsConverterRemote
 ) {
-    suspend operator fun invoke(from: LocalDate, to: LocalDate): List<TimetableSingleEvent> {
+    suspend operator fun invoke(from: LocalDate, to: LocalDate): List<EventDomain> {
         val events = eventsRepository.getUserEvents(from, to)
 //        return eventsConverterRemote.toDomain(events)
         return generateFakeEvents()
     }
 
-    private fun generateFakeEvents(): List<TimetableSingleEvent> {
+    private fun generateFakeEvents(): List<EventDomain> {
         // TODO faked for now, remove after testing
         val now: Instant = Clock.System.now()
         val event1start = now - 8.hours
@@ -35,19 +35,19 @@ class GetUserEventsUseCase(
         val event3duration = event3end - event3start
 
         return listOf(
-            TimetableSingleEvent(
+            EventDomain(
                 title = "Bi-KSP",
                 room = "T9-301",
                 start = event1start,
                 end = event1end,
             ),
-            TimetableSingleEvent(
+            EventDomain(
                 title = "Bi-AMP",
                 room = "T9-202",
                 start = event2start,
                 end = event2end,
             ),
-            TimetableSingleEvent(
+            EventDomain(
                 title = "Bi-AMP",
                 room = "T9-202",
                 start = event3start,
