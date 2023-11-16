@@ -15,8 +15,7 @@ class GetUserEventsUseCase(
 ) {
     suspend operator fun invoke(from: LocalDate, to: LocalDate): List<EventDomain> {
         val events = eventsRepository.getUserEvents(from, to)
-//        return eventsConverterRemote.toDomain(events)
-        return generateFakeEvents()
+        return eventsConverterRemote.toDomain(events)
     }
 
     private fun generateFakeEvents(): List<EventDomain> {
