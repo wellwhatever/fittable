@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -207,8 +208,7 @@ private fun TimetableEventsGrid(
                     )
 
                     else -> {
-                        // fixme fix domain data structure!!!
-                        // no other items supported
+                        // no-op
                     }
                 }
             }
@@ -303,7 +303,8 @@ private fun EventItem(
                     endFormatted
                 ),
                 color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium,
+                textAlign = TextAlign.Start
             )
         }
         Text(
