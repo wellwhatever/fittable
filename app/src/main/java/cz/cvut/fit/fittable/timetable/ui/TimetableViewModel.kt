@@ -6,6 +6,7 @@ import cz.cvut.fit.fittable.shared.core.remote.HttpException
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import kotlinx.coroutines.channels.Channel
@@ -77,9 +78,10 @@ class TimetableViewModel(
         // TODO handle reload click
     }
 
-    fun onEventClick(eventId: String) {
+    fun onEventClick(event: TimetableEvent) {
         viewModelScope.launch {
-            _navigateToEventDetail.send(eventId)
+            // TODO  implement this
+            //_navigateToEventDetail.send(eventId)
         }
     }
 
