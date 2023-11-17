@@ -9,4 +9,9 @@
 
     <string name="timetable_reload_button_hint">Reload</string>
     <string name="timetable_header_title_description">Expand calendar title</string>
+    <string name="event_detail_parallel">parallel</string>
+    <string name="event_detail_capacity">capacity</string>
+    <string name="event_detail_students">students</string>
+    <string name="event_detail_location">Location</string>
+    <string name="event_detail_course">Course</string>
 </resources>

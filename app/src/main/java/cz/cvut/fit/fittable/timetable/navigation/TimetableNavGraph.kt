@@ -42,7 +42,6 @@ fun NavController.navigateToEventDetail(eventId: String) {
 }
 
 internal fun NavGraphBuilder.timetableNavGraph(
-    navController : NavController,
     onEventClick: (eventId: String) -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit = {},
 ) {
@@ -53,7 +52,7 @@ internal fun NavGraphBuilder.timetableNavGraph(
         composable(
             route = TIMETABLE_ROUTE,
         ) {
-            TimetableScreen(navController)
+            TimetableScreen(onEventClick = onEventClick)
         }
         composable(
             route = "$EVENT_DETAIL_ROUTE/{$EVENT_ID_ARG}",

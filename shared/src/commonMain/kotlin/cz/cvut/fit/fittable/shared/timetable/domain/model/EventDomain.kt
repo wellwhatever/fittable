@@ -5,6 +5,7 @@ import kotlinx.datetime.Instant
 data class EventDomain(
     val title: String,
     val room: String,
+    val id: String,
     val start: Instant,
     val end: Instant,
 )

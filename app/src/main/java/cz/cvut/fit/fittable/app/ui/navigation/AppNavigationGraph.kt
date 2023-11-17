@@ -26,7 +26,6 @@ fun AppNavigationGraph(
         )
         timetableNavGraph(
             onEventClick = navHostController::navigateToEventDetail,
-            navController = navHostController
         )
     }
 }

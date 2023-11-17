@@ -38,6 +38,7 @@ data class TimetableConflictContent(
 data class TimetableSingleEvent(
     val title: String,
     val room: String,
+    val id: String,
     override val start: Instant,
     override val end: Instant,
 ) : TimetableEvent()

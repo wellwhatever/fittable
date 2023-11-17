@@ -9,7 +9,8 @@ class EventsConverterDomain {
             title = title,
             room = room,
             start = start,
-            end = end
+            end = end,
+            id = id
         )
     }
 }

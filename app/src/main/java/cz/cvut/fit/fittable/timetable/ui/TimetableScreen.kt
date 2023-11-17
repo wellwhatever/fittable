@@ -42,7 +42,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import cz.cvut.fit.fittable.R
 import cz.cvut.fit.fittable.app.ui.theme.md_theme_light_outline
 import cz.cvut.fit.fittable.core.ui.HorizontalGridDivider
@@ -63,11 +62,12 @@ private val defaultHourHeight = 64.dp
 
 @Composable
 fun TimetableScreen(
-    navController: NavController,
+    onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
     timetableViewModel: TimetableViewModel = getViewModel(),
 ) {
     val state = timetableViewModel.uiState.collectAsStateWithLifecycle()
+
     with(state.value) {
         when (this) {
             is TimetableUiState.Content -> TimetableInternal(
@@ -75,7 +75,7 @@ fun TimetableScreen(
                 hoursGrid = hoursGrid,
                 events = events,
                 headerState = header,
-                onEventClick = timetableViewModel::onEventClick,
+                onEventClick = onEventClick,
                 onDayClick = timetableViewModel::onDayClick
             )
 
@@ -94,7 +94,7 @@ fun TimetableScreen(
 internal fun TimetableInternal(
     hoursGrid: List<TimetableHour>,
     events: List<TimetableItem>,
-    onEventClick: (event: TimetableEvent) -> Unit,
+    onEventClick: (eventId: String) -> Unit,
     onDayClick: (day: LocalDate) -> Unit,
     headerState: HeaderState,
     modifier: Modifier = Modifier,
@@ -119,7 +119,7 @@ internal fun TimetableInternal(
 private fun TimetableGrid(
     hoursGrid: List<TimetableHour>,
     events: List<TimetableItem>,
-    onEventClick: (event: TimetableEvent) -> Unit,
+    onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val stateGrid = rememberLazyListState()
@@ -169,7 +169,7 @@ private fun TimetableGrid(
 private fun TimetableEventsGrid(
     events: List<TimetableItem>,
     state: LazyListState,
-    onEventClick: (event: TimetableEvent) -> Unit,
+    onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AnimatedContent(
@@ -219,7 +219,7 @@ private fun TimetableEventsGrid(
 @Composable
 private fun TimetableConflict(
     conflict: TimetableEventContainer,
-    onEventClick: (event: TimetableEvent) -> Unit,
+    onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val height = conflict.convertToHeight(defaultHourHeight.value.roundToInt()).dp
@@ -269,7 +269,7 @@ private fun TimetableHoursGrid(
 @Composable
 private fun EventItem(
     event: TimetableSingleEvent,
-    onEventClick: (event: TimetableEvent) -> Unit,
+    onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
     eventHeight: Int? = null,
 ) {
@@ -281,7 +281,7 @@ private fun EventItem(
             .padding(1.dp)
             .clip(MaterialTheme.shapes.small)
             .background(color = MaterialTheme.colorScheme.primary)
-            .clickable(onClick = { onEventClick(event) })
+            .clickable(onClick = { onEventClick(event.id) })
             .padding(8.dp)
     ) {
         Row(
