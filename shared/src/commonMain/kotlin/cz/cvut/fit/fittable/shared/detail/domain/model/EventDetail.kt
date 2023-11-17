@@ -6,8 +6,9 @@ data class EventDetail(
     val course: String,
     val room: String,
     val sequenceNumber: String,
-    val capacity: Int?,
+    val capacity: Int,
     val occupied: Int,
     val eventType: EventType,
-    val parallel: String
+    val parallel: String,
+    val teacherUsernames: List<String>
 )

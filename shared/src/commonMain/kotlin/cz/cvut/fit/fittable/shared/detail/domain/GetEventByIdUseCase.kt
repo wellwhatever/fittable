@@ -12,10 +12,11 @@ class GetEventByIdUseCase(
                 course = links?.course.orEmpty(),
                 room = links?.room.orEmpty(),
                 sequenceNumber = sequenceNumber.toString(),
-                capacity = capacity,
+                capacity = capacity ?: 0,
                 occupied = occupied,
                 eventType = eventType,
                 parallel = parallel,
+                teacherUsernames = links?.teachers.orEmpty()
             )
         }
 

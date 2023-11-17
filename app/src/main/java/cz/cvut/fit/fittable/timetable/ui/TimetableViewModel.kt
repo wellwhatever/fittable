@@ -2,7 +2,7 @@ package cz.cvut.fit.fittable.timetable.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cz.cvut.fit.fittable.shared.core.remote.HttpException
+import cz.cvut.fit.fittable.shared.core.remote.HttpExceptionDomain
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
@@ -62,7 +62,7 @@ class TimetableViewModel(
         viewModelScope.launch {
             try {
                 hours.value = generateHoursGrid()
-            } catch (exception: HttpException) {
+            } catch (exception: HttpExceptionDomain) {
                 error.value = exception.message
             }
         }

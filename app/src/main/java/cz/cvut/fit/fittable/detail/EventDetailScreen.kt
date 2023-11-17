@@ -188,3 +188,11 @@ private fun Capacity(
         }
     }
 }
+
+@Composable
+private fun Teachers(
+    teachers: List<String>,
+    modifier: Modifier = Modifier,
+) {
+
+}
