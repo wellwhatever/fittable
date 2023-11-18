@@ -1,8 +1,8 @@
 package cz.cvut.fit.fittable.shared.timetable.domain
 
-import cz.cvut.fit.fittable.shared.timetable.data.TimetableRepository
+import cz.cvut.fit.fittable.shared.timetable.data.EventsRepository
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
+import cz.cvut.fit.fittable.shared.timetable.domain.model.EventDomain
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -10,22 +10,22 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
 class GetUserEventsUseCase(
-    private val timetableRepository: TimetableRepository,
+    private val eventsRepository: EventsRepository,
     private val eventsConverterRemote: EventsConverterRemote
 ) {
-    suspend operator fun invoke(from: LocalDate, to: LocalDate): List<TimetableEvent> {
-        val events = timetableRepository.getUserEvents(from, to)
+    suspend operator fun invoke(from: LocalDate, to: LocalDate): List<EventDomain> {
+        val events = eventsRepository.getUserEvents(from, to)
         return eventsConverterRemote.toDomain(events)
     }
 
-    private fun generateFakeEvents(): List<TimetableEvent> {
+    private fun generateFakeEvents(): List<EventDomain> {
         // TODO faked for now, remove after testing
         val now: Instant = Clock.System.now()
-        val event1start = now - 15.hours
+        val event1start = now - 8.hours
         val event1end = event1start + 1.hours + 30.minutes
         val duration1 = event1end - event1start
 
-        val event2start = event1end
+        val event2start = event1end - 1.hours
         val event2end = event2start + 1.hours + 30.minutes
         val event2duration = event2end - event2start
 
@@ -34,29 +34,26 @@ class GetUserEventsUseCase(
         val event3duration = event3end - event3start
 
         return listOf(
-            TimetableEvent(
+            EventDomain(
                 title = "Bi-KSP",
                 room = "T9-301",
                 start = event1start,
                 end = event1end,
-                duration = duration1,
-                id = "1",
+                id = "1"
             ),
-            TimetableEvent(
+            EventDomain(
                 title = "Bi-AMP",
                 room = "T9-202",
                 start = event2start,
                 end = event2end,
-                duration = event2duration,
-                id = "2",
+                id = "2"
             ),
-            TimetableEvent(
+            EventDomain(
                 title = "Bi-AMP",
                 room = "T9-202",
                 start = event3start,
                 end = event3end,
-                duration = event3duration,
-                id = "3",
+                id = "3"
             )
         )
     }

@@ -1,13 +1,16 @@
 package cz.cvut.fit.fittable.shared.timetable.di
 
 import cz.cvut.fit.fittable.shared.core.remote.NetworkClient
-import cz.cvut.fit.fittable.shared.timetable.data.TimetableRepository
+import cz.cvut.fit.fittable.shared.timetable.data.EventsRepository
+import cz.cvut.fit.fittable.shared.timetable.domain.EventConflictCalculator
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetUserEventsUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterDomain
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
 import cz.cvut.fit.fittable.shared.timetable.remote.EventsRoute
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -19,11 +22,16 @@ internal val timetableModule = module {
             httpClient = get(named("api")),
         )
     }
-    singleOf(::TimetableRepository)
+
+    singleOf(::EventsRepository)
     singleOf(::EventsRoute)
-    singleOf(::GenerateHoursGridUseCase)
-    singleOf(::GetUserEventsUseCase)
-    singleOf(::GetDayEventsGridUseCase)
-    singleOf(::EventsConverterRemote)
-    singleOf(::GetTimetableHeaderUseCase)
+
+    factoryOf(::GenerateHoursGridUseCase)
+    factoryOf(::GetUserEventsUseCase)
+    factoryOf(::GetDayEventsGridUseCase)
+    factoryOf(::GetTimetableHeaderUseCase)
+
+    factoryOf(::EventsConverterRemote)
+    factoryOf(::EventsConverterDomain)
+    factoryOf(::EventConflictCalculator)
 }

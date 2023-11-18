@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,17 +38,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.fittable.R
 import cz.cvut.fit.fittable.app.ui.theme.md_theme_light_outline
 import cz.cvut.fit.fittable.core.ui.HorizontalGridDivider
+import cz.cvut.fit.fittable.core.ui.Loading
 import cz.cvut.fit.fittable.core.ui.VerticalGridDivider
 import cz.cvut.fit.fittable.shared.core.extensions.formatAsHoursAndMinutes
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEventContainer
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSingleEvent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSpacer
 import kotlinx.datetime.LocalDate
 import org.koin.androidx.compose.getViewModel
@@ -59,10 +62,12 @@ private val defaultHourHeight = 64.dp
 
 @Composable
 fun TimetableScreen(
+    onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
     timetableViewModel: TimetableViewModel = getViewModel(),
 ) {
     val state = timetableViewModel.uiState.collectAsStateWithLifecycle()
+
     with(state.value) {
         when (this) {
             is TimetableUiState.Content -> TimetableInternal(
@@ -70,7 +75,7 @@ fun TimetableScreen(
                 hoursGrid = hoursGrid,
                 events = events,
                 headerState = header,
-                onEventClick = timetableViewModel::onEventClick,
+                onEventClick = onEventClick,
                 onDayClick = timetableViewModel::onDayClick
             )
 
@@ -80,7 +85,7 @@ fun TimetableScreen(
                 onReloadClick = timetableViewModel::onReloadClick
             )
 
-            TimetableUiState.Loading -> CircularProgressIndicator()
+            TimetableUiState.Loading -> Loading()
         }
     }
 }
@@ -89,7 +94,7 @@ fun TimetableScreen(
 internal fun TimetableInternal(
     hoursGrid: List<TimetableHour>,
     events: List<TimetableItem>,
-    onEventClick: (event: TimetableEvent) -> Unit,
+    onEventClick: (eventId: String) -> Unit,
     onDayClick: (day: LocalDate) -> Unit,
     headerState: HeaderState,
     modifier: Modifier = Modifier,
@@ -114,7 +119,7 @@ internal fun TimetableInternal(
 private fun TimetableGrid(
     hoursGrid: List<TimetableHour>,
     events: List<TimetableItem>,
-    onEventClick: (event: TimetableEvent) -> Unit,
+    onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val stateGrid = rememberLazyListState()
@@ -164,15 +169,15 @@ private fun TimetableGrid(
 private fun TimetableEventsGrid(
     events: List<TimetableItem>,
     state: LazyListState,
-    onEventClick: (event: TimetableEvent) -> Unit,
+    onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AnimatedContent(
         targetState = events,
         label = "Timetable",
         transitionSpec = {
-            val item = targetState.filterIsInstance<TimetableEvent>().firstOrNull()
-            val prevItem = initialState.filterIsInstance<TimetableEvent>().firstOrNull()
+            val item = targetState.filterIsInstance<TimetableEventContainer>().firstOrNull()
+            val prevItem = initialState.filterIsInstance<TimetableEventContainer>().firstOrNull()
             when {
                 item == null || prevItem == null -> fadeIn() togetherWith fadeOut()
                 item.day > prevItem.day -> slideInHorizontally(
@@ -192,20 +197,51 @@ private fun TimetableEventsGrid(
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
             items(
-                items = it,
-                key = { item -> item.id }) {
+                items = it
+            ) {
                 when (it) {
-                    is TimetableEvent -> {
-                        EventItem(
-                            event = it,
-                            modifier = Modifier
-                                .padding(start = 100.dp)
-                                .fillMaxWidth(),
-                            onEventClick = onEventClick
-                        )
-                    }
-
                     is TimetableSpacer -> EventSpacer(eventSpacer = it)
+                    is TimetableEventContainer -> TimetableConflict(
+                        modifier = Modifier.padding(start = 100.dp),
+                        conflict = it,
+                        onEventClick = onEventClick
+                    )
+
+                    else -> {
+                        // no-op
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TimetableConflict(
+    conflict: TimetableEventContainer,
+    onEventClick: (eventId: String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val height = conflict.convertToHeight(defaultHourHeight.value.roundToInt()).dp
+    Row(
+        modifier = modifier.height(height),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        conflict.events.forEach { event ->
+            Column(
+                modifier = Modifier
+                    .height(height)
+                    .weight(1f)
+            ) {
+                event.spacerStart?.let {
+                    EventSpacer(eventSpacer = it)
+                }
+                EventItem(
+                    event = event.event,
+                    onEventClick = onEventClick
+                )
+                event.spacerEnd?.let {
+                    EventSpacer(eventSpacer = it)
                 }
             }
         }
@@ -232,17 +268,20 @@ private fun TimetableHoursGrid(
 
 @Composable
 private fun EventItem(
-    event: TimetableEvent,
-    onEventClick: (event: TimetableEvent) -> Unit,
+    event: TimetableSingleEvent,
+    onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
+    eventHeight: Int? = null,
 ) {
+    val height =
+        eventHeight?.dp ?: event.convertToHeight(defaultHourHeight.value.roundToInt()).dp
     Column(
         modifier = modifier
-            .height(event.convertToHeight(defaultHourHeight.value.roundToInt()).dp)
+            .height(height)
             .padding(1.dp)
             .clip(MaterialTheme.shapes.small)
             .background(color = MaterialTheme.colorScheme.primary)
-            .clickable(onClick = { onEventClick(event) })
+            .clickable(onClick = { onEventClick(event.id) })
             .padding(8.dp)
     ) {
         Row(
@@ -264,7 +303,8 @@ private fun EventItem(
                     endFormatted
                 ),
                 color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium,
+                textAlign = TextAlign.Start
             )
         }
         Text(

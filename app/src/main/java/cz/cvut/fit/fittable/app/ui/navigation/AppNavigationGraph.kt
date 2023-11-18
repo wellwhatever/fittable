@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import cz.cvut.fit.fittable.authorization.ui.navigation.AUTHORIZATION_NAVIGATION_GRAPH
 import cz.cvut.fit.fittable.authorization.ui.navigation.authorizationNavGraph
+import cz.cvut.fit.fittable.timetable.navigation.navigateToEventDetail
 import cz.cvut.fit.fittable.timetable.navigation.navigateToTimetable
 import cz.cvut.fit.fittable.timetable.navigation.timetableNavGraph
 
@@ -23,6 +24,8 @@ fun AppNavigationGraph(
             onSuccessfulTokenReceive =
             navHostController::navigateToTimetable,
         )
-        timetableNavGraph()
+        timetableNavGraph(
+            onEventClick = navHostController::navigateToEventDetail,
+        )
     }
 }

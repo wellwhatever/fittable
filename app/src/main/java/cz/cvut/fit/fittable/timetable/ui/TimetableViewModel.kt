@@ -2,11 +2,10 @@ package cz.cvut.fit.fittable.timetable.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cz.cvut.fit.fittable.shared.core.remote.HttpException
+import cz.cvut.fit.fittable.shared.core.remote.HttpExceptionDomain
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import kotlinx.coroutines.flow.Flow
@@ -63,7 +62,7 @@ class TimetableViewModel(
         viewModelScope.launch {
             try {
                 hours.value = generateHoursGrid()
-            } catch (exception: HttpException) {
+            } catch (exception: HttpExceptionDomain) {
                 error.value = exception.message
             }
         }
@@ -71,10 +70,6 @@ class TimetableViewModel(
 
     fun onReloadClick() {
         // TODO handle reload click
-    }
-
-    fun onEventClick(event: TimetableEvent) {
-        // TODO handle event click
     }
 
     fun onDayClick(day: LocalDate) {

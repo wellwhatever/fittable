@@ -57,7 +57,7 @@ internal class NetworkClient(
         }
     }
 
-    private fun HttpResponse.toHttpException(): HttpException {
-        return HttpException(code = status.value)
+    private fun HttpResponse.toHttpException(): HttpExceptionDomain {
+        return HttpExceptionDomain(code = status.value)
     }
 }
