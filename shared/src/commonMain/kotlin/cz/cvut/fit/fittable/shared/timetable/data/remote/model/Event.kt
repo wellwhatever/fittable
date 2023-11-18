@@ -1,6 +1,6 @@
-package cz.cvut.fit.fittable.shared.timetable.remote.model
+package cz.cvut.fit.fittable.shared.timetable.data.remote.model
 
-import cz.cvut.fit.fittable.shared.timetable.remote.serializer.InstantAsStringSerializer
+import cz.cvut.fit.fittable.shared.timetable.data.remote.serializer.InstantAsStringSerializer
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

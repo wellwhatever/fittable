@@ -1,4 +1,4 @@
-package cz.cvut.fit.fittable.shared.timetable.remote.model
+package cz.cvut.fit.fittable.shared.timetable.data.remote.model
 
 
 import kotlinx.serialization.SerialName

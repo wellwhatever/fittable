@@ -1,4 +1,5 @@
-package cz.cvut.fit.fittable.shared.timetable.remote.model
+package cz.cvut.fit.fittable.shared.search.data.remote.model
+
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -10,5 +11,5 @@ data class Meta(
     @SerialName("limit")
     val limit: Int,
     @SerialName("offset")
-    val offset: Int,
+    val offset: Int
 )

@@ -9,7 +9,7 @@ import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetUserEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterDomain
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
-import cz.cvut.fit.fittable.shared.timetable.remote.EventsRoute
+import cz.cvut.fit.fittable.shared.timetable.data.remote.EventsRoute
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named

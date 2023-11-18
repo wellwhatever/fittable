@@ -53,12 +53,12 @@ class EventDetailViewModel(
         viewModelScope.launch {
             try {
                 eventDetail.value = getEventById(topicArgs.eventId).also { event ->
-                    val teachersAsync = event.teacherUsernames.map { username ->
-                        async {
-                            getTeacher(username)
-                        }
-                    }
-                    teachers.value = teachersAsync.awaitAll()
+//                    val teachersAsync = event.teacherUsernames.map { username ->
+//                        async {
+//                            getTeacher(username)
+//                        }
+//                    }
+//                    teachers.value = teachersAsync.awaitAll()
                 }
             } catch (exception: HttpExceptionDomain) {
                 error.value = exception.message

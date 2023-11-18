@@ -1,9 +1,9 @@
-package cz.cvut.fit.fittable.shared.timetable.remote
+package cz.cvut.fit.fittable.shared.timetable.data.remote
 
 import cz.cvut.fit.fittable.shared.core.remote.NetworkClient
-import cz.cvut.fit.fittable.shared.timetable.remote.model.EventDetail
-import cz.cvut.fit.fittable.shared.timetable.remote.model.Events
-import cz.cvut.fit.fittable.shared.timetable.remote.model.User
+import cz.cvut.fit.fittable.shared.timetable.data.remote.model.EventDetail
+import cz.cvut.fit.fittable.shared.timetable.data.remote.model.Events
+import cz.cvut.fit.fittable.shared.timetable.data.remote.model.User
 import io.ktor.http.HttpMethod
 import io.ktor.util.StringValues
 import kotlinx.datetime.LocalDate
@@ -11,11 +11,6 @@ import kotlinx.datetime.LocalDate
 internal class EventsRoute(
     private val client: NetworkClient,
 ) {
-    private val eventsRoute = "events"
-    private val peopleRoute = "people"
-    private val teachersRoute = "teachers"
-    private val roomsRoute = "rooms"
-
     suspend fun getEvent(eventId: String): EventDetail = client.request(
         path = "$eventsRoute/$eventId",
         method = HttpMethod.Get
@@ -30,6 +25,8 @@ internal class EventsRoute(
                 val values = StringValues.build {
                     append("from", from.toString())
                     append("to", to.toString())
+                    append("include", getEventsIncludeParams)
+                    append("deleted", true.toString())
                 }
                 parameters.appendAll(values)
             }
@@ -49,4 +46,12 @@ internal class EventsRoute(
         path = "$roomsRoute/$kosId/$eventsRoute",
         method = HttpMethod.Get,
     )
+
+    companion object {
+        private const val eventsRoute = "events"
+        private const val peopleRoute = "people"
+        private const val teachersRoute = "teachers"
+        private const val roomsRoute = "rooms"
+        private const val getEventsIncludeParams = "courses,teachers,schedule_exceptions"
+    }
 }

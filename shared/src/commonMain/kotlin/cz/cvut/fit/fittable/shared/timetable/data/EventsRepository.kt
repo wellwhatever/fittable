@@ -1,9 +1,9 @@
 package cz.cvut.fit.fittable.shared.timetable.data
 
-import cz.cvut.fit.fittable.shared.timetable.remote.EventsRoute
-import cz.cvut.fit.fittable.shared.timetable.remote.model.EventDetail
-import cz.cvut.fit.fittable.shared.timetable.remote.model.Events
-import cz.cvut.fit.fittable.shared.timetable.remote.model.User
+import cz.cvut.fit.fittable.shared.timetable.data.remote.EventsRoute
+import cz.cvut.fit.fittable.shared.timetable.data.remote.model.EventDetail
+import cz.cvut.fit.fittable.shared.timetable.data.remote.model.Events
+import cz.cvut.fit.fittable.shared.timetable.data.remote.model.User
 import kotlinx.datetime.LocalDate
 
 class EventsRepository internal constructor(
