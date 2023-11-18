@@ -11,5 +11,5 @@ data class SearchResultRemote(
     @SerialName("title")
     val title: String,
     @SerialName("type")
-    val type: String
+    val type: SearchResultType
 )

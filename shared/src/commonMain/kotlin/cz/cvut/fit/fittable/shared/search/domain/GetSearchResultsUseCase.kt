@@ -4,7 +4,7 @@ import cz.cvut.fit.fittable.shared.search.data.SearchRepository
 import cz.cvut.fit.fittable.shared.search.domain.converter.SearchResultRemoteConverter
 import cz.cvut.fit.fittable.shared.search.domain.model.SearchResult
 
-class SendSearchRequestUseCase(
+class GetSearchResultsUseCase(
     private val searchRepository: SearchRepository,
     private val searchResultConverter: SearchResultRemoteConverter
 ) {

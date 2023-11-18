@@ -14,6 +14,8 @@ import java.net.URLEncoder
 
 internal const val TIMETABLE_NAVIGATION_GRAPH = "timetable_nav_graph"
 internal const val TIMETABLE_ROUTE = "timetable_route"
+internal const val TIMETABLE_SEARCH_RESULT_ID = "search_result_id"
+internal const val TIMETABLE_SEARCH_RESULT_TYPE = "search_result_type"
 
 internal const val EVENT_DETAIL_ROUTE = "event_detail_route"
 internal const val EVENT_ID_ARG = "eventId"
@@ -28,7 +30,6 @@ internal class EventDetailArgs(val eventId: String) {
                 )
             )
 }
-
 
 fun NavController.navigateToTimetable() {
     this.navigate(TIMETABLE_ROUTE)
