@@ -5,11 +5,13 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -17,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -71,14 +74,23 @@ private fun SearchScreenInternal(
         active = true,
         trailingIcon = @Composable {
             Icon(
-                modifier = Modifier.clickable(onClick = onClearQueryClick),
+                modifier = Modifier.clickable(
+                    onClick = onClearQueryClick,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(bounded = false)
+                ),
                 painter = painterResource(id = R.drawable.ic_close_24),
                 contentDescription = stringResource(R.string.search_back)
             )
         },
         leadingIcon = @Composable {
             Icon(
-                modifier = Modifier.clickable(onClick = onBackClick),
+                modifier = Modifier
+                    .clickable(
+                        onClick = onBackClick,
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = rememberRipple(bounded = false)
+                    ),
                 painter = painterResource(id = R.drawable.ic_keyboard_backspace_24),
                 contentDescription = stringResource(R.string.search_back)
             )

@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -89,7 +91,11 @@ internal fun CalendarHeader(
                 onClick = { expanded.value = expanded.value.not() },
             )
             Icon(
-                modifier = Modifier.clickable(onClick = onSearchClick),
+                modifier = Modifier.clickable(
+                    onClick = onSearchClick,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(bounded = false)
+                ),
                 painter = painterResource(id = R.drawable.ic_search_24),
                 contentDescription = "Search",
                 tint = MaterialTheme.colorScheme.onPrimary
