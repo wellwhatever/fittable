@@ -14,7 +14,7 @@ class GetUserEventsUseCase(
     private val eventsConverterRemote: EventsConverterRemote
 ) {
     suspend operator fun invoke(from: LocalDate, to: LocalDate): List<EventDomain> {
-        val events = eventsRepository.getUserEvents(from, to)
+        val events = eventsRepository.getUserEvents(from = from, to = to)
         return eventsConverterRemote.toDomain(events)
     }
 

@@ -32,14 +32,42 @@ internal class EventsRoute(
             }
         }
 
+    suspend fun getRoomEvents(room: String, from: LocalDate, to: LocalDate): Events =
+        client.request(
+            path = "$roomsRoute/$room/$eventsRoute",
+            method = HttpMethod.Get,
+        ) {
+            url {
+                val values = StringValues.build {
+                    append("from", from.toString())
+                    append("to", to.toString())
+                    append("include", getEventsIncludeParams)
+                    append("deleted", true.toString())
+                }
+                parameters.appendAll(values)
+            }
+        }
+
+
+    suspend fun getCourseEvents(course: String, from: LocalDate, to: LocalDate): Events =
+        client.request(
+            path = "$coursesRoute/$course/$eventsRoute",
+            method = HttpMethod.Get,
+        ) {
+            url {
+                val values = StringValues.build {
+                    append("from", from.toString())
+                    append("to", to.toString())
+                    append("include", getEventsIncludeParams)
+                    append("deleted", true.toString())
+                }
+                parameters.appendAll(values)
+            }
+        }
+
     suspend fun getPersonInformation(username: String): User = client.request(
         path = "$peopleRoute/$username",
         method = HttpMethod.Get
-    )
-
-    suspend fun getTeachersEvents(username: String): Events = client.request(
-        path = "$teachersRoute/$username/$eventsRoute",
-        method = HttpMethod.Get,
     )
 
     suspend fun getRooms(kosId: String): Events = client.request(
@@ -52,6 +80,7 @@ internal class EventsRoute(
         private const val peopleRoute = "people"
         private const val teachersRoute = "teachers"
         private const val roomsRoute = "rooms"
+        private const val coursesRoute = "courses"
         private const val getEventsIncludeParams = "courses,teachers,schedule_exceptions"
     }
 }

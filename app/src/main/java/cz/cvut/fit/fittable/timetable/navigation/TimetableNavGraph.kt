@@ -1,6 +1,8 @@
 package cz.cvut.fit.fittable.timetable.navigation
 
+import androidx.compose.runtime.State
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -8,14 +10,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import cz.cvut.fit.fittable.detail.EventDetailScreen
+import cz.cvut.fit.fittable.shared.search.data.remote.model.SearchResultType
 import cz.cvut.fit.fittable.timetable.ui.TimetableScreen
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import java.net.URLDecoder
 import java.net.URLEncoder
 
 internal const val TIMETABLE_NAVIGATION_GRAPH = "timetable_nav_graph"
 internal const val TIMETABLE_ROUTE = "timetable_route"
-internal const val TIMETABLE_SEARCH_RESULT_ID = "search_result_id"
-internal const val TIMETABLE_SEARCH_RESULT_TYPE = "search_result_type"
+internal const val TIMETABLE_SEARCH_RESULT_ARG = "search_result_id"
 
 internal const val EVENT_DETAIL_ROUTE = "event_detail_route"
 internal const val EVENT_ID_ARG = "eventId"
@@ -29,6 +34,22 @@ internal class EventDetailArgs(val eventId: String) {
                     urlCharacterEncoding
                 )
             )
+}
+
+@Serializable
+class TimetableSearchResultArgs(
+    @SerialName("event_category")
+    val eventCategory: SearchResultType,
+    @SerialName("event_id")
+    val eventId: String,
+)
+
+class TimetableArgs(
+    val searchResult: TimetableSearchResultArgs
+) {
+    constructor(raw: String) : this(
+        Json.decodeFromString<TimetableSearchResultArgs>(raw)
+    )
 }
 
 fun NavController.navigateToTimetable() {
@@ -52,11 +73,28 @@ internal fun NavGraphBuilder.timetableNavGraph(
         startDestination = TIMETABLE_ROUTE,
     ) {
         composable(
-            route = TIMETABLE_ROUTE,
+            route = "$TIMETABLE_ROUTE?$TIMETABLE_SEARCH_RESULT_ARG={$TIMETABLE_SEARCH_RESULT_ARG}",
+            arguments = listOf(
+                navArgument(TIMETABLE_SEARCH_RESULT_ARG) {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )
         ) {
+            // TODO remove after bug with saved state handle will be resolved!!!
+            val searchResultFlow: State<String?> = it
+                .savedStateHandle
+                .getStateFlow(TIMETABLE_SEARCH_RESULT_ARG, null).collectAsStateWithLifecycle()
+
+            val args = searchResultFlow.value
             TimetableScreen(
                 onEventClick = onEventClick,
-                onSearchClick = onSearchClick
+                onSearchClick = onSearchClick,
+                searchResult = if (args != null) {
+                    TimetableArgs(args)
+                } else {
+                    null
+                }
             )
         }
         composable(

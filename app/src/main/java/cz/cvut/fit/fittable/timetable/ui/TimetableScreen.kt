@@ -57,6 +57,7 @@ import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSingleEvent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSpacer
+import cz.cvut.fit.fittable.timetable.navigation.TimetableArgs
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -69,12 +70,15 @@ private val defaultHourHeight = 64.dp
 
 @Composable
 fun TimetableScreen(
+    searchResult: TimetableArgs?,
     onSearchClick: () -> Unit,
     onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
     timetableViewModel: TimetableViewModel = getViewModel(),
 ) {
     val state = timetableViewModel.uiState.collectAsStateWithLifecycle()
+
+    searchResult?.let { timetableViewModel.setSearchResult(it) }
 
     with(state.value) {
         when (this) {

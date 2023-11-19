@@ -2,6 +2,7 @@ package cz.cvut.fit.fittable.shared.search.di
 
 import cz.cvut.fit.fittable.shared.search.data.SearchRepository
 import cz.cvut.fit.fittable.shared.search.data.remote.SearchRoute
+import cz.cvut.fit.fittable.shared.search.domain.GetFilteredDayEventsUseCase
 import cz.cvut.fit.fittable.shared.search.domain.GetSearchResultsUseCase
 import cz.cvut.fit.fittable.shared.search.domain.converter.SearchResultRemoteConverter
 import org.koin.core.module.dsl.factoryOf
@@ -13,5 +14,7 @@ internal val searchModule = module {
     singleOf(::SearchRoute)
 
     factoryOf(::GetSearchResultsUseCase)
+    factoryOf(::GetFilteredDayEventsUseCase)
+
     factoryOf(::SearchResultRemoteConverter)
 }

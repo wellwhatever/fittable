@@ -2,14 +2,17 @@ package cz.cvut.fit.fittable.shared.timetable.di
 
 import cz.cvut.fit.fittable.shared.core.remote.NetworkClient
 import cz.cvut.fit.fittable.shared.timetable.data.EventsRepository
-import cz.cvut.fit.fittable.shared.timetable.domain.EventConflictCalculator
+import cz.cvut.fit.fittable.shared.timetable.data.remote.EventsRoute
+import cz.cvut.fit.fittable.shared.timetable.domain.EventConflictMerger
+import cz.cvut.fit.fittable.shared.timetable.domain.EventsDayBoundsCalculator
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.GetCoursesEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.GetRoomEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetUserEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterDomain
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
-import cz.cvut.fit.fittable.shared.timetable.data.remote.EventsRoute
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
@@ -30,8 +33,12 @@ internal val timetableModule = module {
     factoryOf(::GetUserEventsUseCase)
     factoryOf(::GetDayEventsGridUseCase)
     factoryOf(::GetTimetableHeaderUseCase)
+    factoryOf(::GetRoomEventsUseCase)
+    factoryOf(::GetCoursesEventsUseCase)
 
     factoryOf(::EventsConverterRemote)
     factoryOf(::EventsConverterDomain)
-    factoryOf(::EventConflictCalculator)
+    factoryOf(::EventConflictMerger)
+    factoryOf(::EventsDayBoundsCalculator)
+    factoryOf(::EventConflictMerger)
 }

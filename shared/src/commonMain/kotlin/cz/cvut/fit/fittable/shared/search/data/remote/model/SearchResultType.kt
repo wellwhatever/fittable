@@ -9,5 +9,8 @@ enum class SearchResultType {
     COURSE,
 
     @SerialName("person")
-    PERSON
+    PERSON,
+
+    @SerialName("room")
+    ROOM
 }

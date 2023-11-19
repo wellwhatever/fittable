@@ -9,11 +9,13 @@ import cz.cvut.fit.fittable.authorization.ui.navigation.AUTHORIZATION_NAVIGATION
 import cz.cvut.fit.fittable.authorization.ui.navigation.authorizationNavGraph
 import cz.cvut.fit.fittable.search.navigation.navigateToSearch
 import cz.cvut.fit.fittable.search.navigation.searchNavGraph
-import cz.cvut.fit.fittable.timetable.navigation.TIMETABLE_SEARCH_RESULT_ID
-import cz.cvut.fit.fittable.timetable.navigation.TIMETABLE_SEARCH_RESULT_TYPE
+import cz.cvut.fit.fittable.timetable.navigation.TIMETABLE_SEARCH_RESULT_ARG
+import cz.cvut.fit.fittable.timetable.navigation.TimetableSearchResultArgs
 import cz.cvut.fit.fittable.timetable.navigation.navigateToEventDetail
 import cz.cvut.fit.fittable.timetable.navigation.navigateToTimetable
 import cz.cvut.fit.fittable.timetable.navigation.timetableNavGraph
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @ExperimentalMaterial3Api
 @Composable
@@ -37,10 +39,15 @@ fun AppNavigationGraph(
         searchNavGraph(
             onBackClick = navHostController::popBackStack,
             onSearchResultSelect = { id, type ->
-                navHostController.previousBackStackEntry?.savedStateHandle?.apply {
-                    set(TIMETABLE_SEARCH_RESULT_ID, id)
-                    set(TIMETABLE_SEARCH_RESULT_TYPE, type)
-                }
+                navHostController.previousBackStackEntry?.savedStateHandle?.set(
+                    key = TIMETABLE_SEARCH_RESULT_ARG,
+                    value = Json.encodeToString(
+                        TimetableSearchResultArgs(
+                            type,
+                            id
+                        )
+                    )
+                )
                 navHostController.popBackStack()
             }
         )
