@@ -34,6 +34,10 @@ class SearchViewModel(
     override fun onQueryChanged(query: String) {
         _searchQuery.value = query
     }
+
+    override fun onClearQueryClick() {
+        _searchQuery.value = ""
+    }
 }
 
 data class SearchScreenState(

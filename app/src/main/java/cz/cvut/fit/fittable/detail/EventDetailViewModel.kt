@@ -9,8 +9,6 @@ import cz.cvut.fit.fittable.shared.detail.domain.GetTeacherUseCase
 import cz.cvut.fit.fittable.shared.detail.domain.model.EventDetail
 import cz.cvut.fit.fittable.shared.detail.domain.model.Teacher
 import cz.cvut.fit.fittable.timetable.navigation.EventDetailArgs
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -34,10 +32,11 @@ class EventDetailViewModel(
         teachers,
         error
     ) { event, teachers, error ->
+        // TODO fix teachers when scopes will be received from CTU
         when {
             error != null -> EventDetailState.Error(error)
-            event == null || teachers == null -> EventDetailState.Loading
-            else -> EventDetailState.Content(event, teachers)
+            event == null -> EventDetailState.Loading
+            else -> EventDetailState.Content(event, emptyList())
         }
     }.stateIn(
         viewModelScope,
@@ -53,6 +52,7 @@ class EventDetailViewModel(
         viewModelScope.launch {
             try {
                 eventDetail.value = getEventById(topicArgs.eventId).also { event ->
+                    // TODO fix teachers when scopes will be received from CTU
 //                    val teachersAsync = event.teacherUsernames.map { username ->
 //                        async {
 //                            getTeacher(username)

@@ -35,11 +35,13 @@ fun AppNavigationGraph(
             onSearchClick = navHostController::navigateToSearch
         )
         searchNavGraph(
+            onBackClick = navHostController::popBackStack,
             onSearchResultSelect = { id, type ->
                 navHostController.previousBackStackEntry?.savedStateHandle?.apply {
                     set(TIMETABLE_SEARCH_RESULT_ID, id)
                     set(TIMETABLE_SEARCH_RESULT_TYPE, type)
                 }
+                navHostController.popBackStack()
             }
         )
     }

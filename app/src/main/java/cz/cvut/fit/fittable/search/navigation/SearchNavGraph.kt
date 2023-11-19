@@ -17,6 +17,7 @@ fun NavController.navigateToSearch() {
 
 @ExperimentalMaterial3Api
 internal fun NavGraphBuilder.searchNavGraph(
+    onBackClick: () -> Unit,
     onSearchResultSelect: (id: String, type: SearchResultType) -> Unit,
 ) {
     navigation(
@@ -26,7 +27,10 @@ internal fun NavGraphBuilder.searchNavGraph(
         composable(
             route = SEARCH_ROUTE,
         ) {
-            SearchScreen(onSearchResultSelect = onSearchResultSelect)
+            SearchScreen(
+                onBackClick = onBackClick,
+                onSearchResultSelect = onSearchResultSelect
+            )
         }
     }
 }
