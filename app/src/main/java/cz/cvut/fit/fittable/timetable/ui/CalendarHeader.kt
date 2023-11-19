@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.HorizontalCalendar
@@ -37,9 +40,13 @@ import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.core.yearMonth
 import cz.cvut.fit.fittable.R
+import cz.cvut.fit.fittable.app.ui.theme.FittableTheme
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toLocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -50,6 +57,7 @@ internal fun CalendarHeader(
     today: LocalDate,
     selected: LocalDate,
     onDayClick: (LocalDate) -> Unit,
+    onSearchClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -71,12 +79,22 @@ internal fun CalendarHeader(
                 TextStyle.FULL,
                 Locale.getDefault()
             )
-        CalendarTitle(
-            title = "$monthDisplayName ${state.firstVisibleMonth.yearMonth.year}",
-            onClick = {
-                expanded.value = expanded.value.not()
-            },
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CalendarTitle(
+                title = "$monthDisplayName ${state.firstVisibleMonth.yearMonth.year}",
+                onClick = { expanded.value = expanded.value.not() },
+            )
+            Icon(
+                modifier = Modifier.clickable(onClick = onSearchClick),
+                painter = painterResource(id = R.drawable.ic_search_24),
+                contentDescription = "Search",
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
         AnimatedVisibility(visible = expanded.value) {
             CalendarHeaderInternal(
                 today = today,
@@ -201,6 +219,31 @@ internal fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
                 ),
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.labelMedium
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun CalendarHeaderPreview() {
+    val start = Instant.parse("2023-11-16T16:15:00.000+01:00")
+    val date = start.toLocalDateTime(TimeZone.currentSystemDefault()).date
+    val headerState = HeaderState(
+        monthStart = date,
+        monthEnd = date,
+        today = date,
+        selectedDate = date
+    )
+    Surface {
+        FittableTheme {
+            CalendarHeader(
+                startMonth = headerState.monthStart,
+                endMonth = headerState.monthEnd,
+                today = headerState.today,
+                selected = headerState.selectedDate,
+                onDayClick = {},
+                onSearchClick = {}
             )
         }
     }

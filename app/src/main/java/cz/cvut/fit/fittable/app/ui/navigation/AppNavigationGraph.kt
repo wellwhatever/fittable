@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import cz.cvut.fit.fittable.authorization.ui.navigation.AUTHORIZATION_NAVIGATION_GRAPH
 import cz.cvut.fit.fittable.authorization.ui.navigation.authorizationNavGraph
+import cz.cvut.fit.fittable.search.navigation.navigateToSearch
 import cz.cvut.fit.fittable.search.navigation.searchNavGraph
 import cz.cvut.fit.fittable.timetable.navigation.TIMETABLE_SEARCH_RESULT_ID
 import cz.cvut.fit.fittable.timetable.navigation.TIMETABLE_SEARCH_RESULT_TYPE
@@ -31,6 +32,7 @@ fun AppNavigationGraph(
         )
         timetableNavGraph(
             onEventClick = navHostController::navigateToEventDetail,
+            onSearchClick = navHostController::navigateToSearch
         )
         searchNavGraph(
             onSearchResultSelect = { id, type ->

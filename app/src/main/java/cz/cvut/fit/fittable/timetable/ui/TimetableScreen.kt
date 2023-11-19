@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -39,29 +40,36 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.fittable.R
+import cz.cvut.fit.fittable.app.ui.theme.FittableTheme
 import cz.cvut.fit.fittable.app.ui.theme.md_theme_light_outline
 import cz.cvut.fit.fittable.core.ui.HorizontalGridDivider
 import cz.cvut.fit.fittable.core.ui.Loading
 import cz.cvut.fit.fittable.core.ui.VerticalGridDivider
 import cz.cvut.fit.fittable.shared.core.extensions.formatAsHoursAndMinutes
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableConflictContent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEventContainer
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSingleEvent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSpacer
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.getViewModel
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.hours
 
 private val defaultHourHeight = 64.dp
 
 @Composable
 fun TimetableScreen(
+    onSearchClick: () -> Unit,
     onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
     timetableViewModel: TimetableViewModel = getViewModel(),
@@ -76,7 +84,8 @@ fun TimetableScreen(
                 events = events,
                 headerState = header,
                 onEventClick = onEventClick,
-                onDayClick = timetableViewModel::onDayClick
+                onDayClick = timetableViewModel::onDayClick,
+                onSearchClick = onSearchClick
             )
 
             is TimetableUiState.Error -> TimetableError(
@@ -96,6 +105,7 @@ internal fun TimetableInternal(
     events: List<TimetableItem>,
     onEventClick: (eventId: String) -> Unit,
     onDayClick: (day: LocalDate) -> Unit,
+    onSearchClick: () -> Unit,
     headerState: HeaderState,
     modifier: Modifier = Modifier,
 ) {
@@ -105,7 +115,8 @@ internal fun TimetableInternal(
             endMonth = headerState.monthEnd,
             today = headerState.today,
             selected = headerState.selectedDate,
-            onDayClick = onDayClick
+            onDayClick = onDayClick,
+            onSearchClick = onSearchClick
         )
         TimetableGrid(
             hoursGrid = hoursGrid,
@@ -275,42 +286,40 @@ private fun EventItem(
 ) {
     val height =
         eventHeight?.dp ?: event.convertToHeight(defaultHourHeight.value.roundToInt()).dp
-    Column(
+    Row(
         modifier = modifier
             .height(height)
+            .fillMaxWidth()
             .padding(1.dp)
             .clip(MaterialTheme.shapes.small)
             .background(color = MaterialTheme.colorScheme.primary)
             .clickable(onClick = { onEventClick(event.id) })
-            .padding(8.dp)
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Column {
             Text(
                 text = event.title,
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.titleMedium
             )
-            val startFormatted = event.start.formatAsHoursAndMinutes()
-            val endFormatted = event.end.formatAsHoursAndMinutes()
             Text(
-                text = stringResource(
-                    R.string.timetable_time_duration,
-                    startFormatted,
-                    endFormatted
-                ),
+                text = event.room,
                 color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.labelMedium,
-                textAlign = TextAlign.Start
+                style = MaterialTheme.typography.labelMedium
             )
         }
+        val startFormatted = event.start.formatAsHoursAndMinutes()
+        val endFormatted = event.end.formatAsHoursAndMinutes()
         Text(
-            text = event.room,
+            text = stringResource(
+                R.string.timetable_time_duration,
+                startFormatted,
+                endFormatted
+            ),
             color = MaterialTheme.colorScheme.onPrimary,
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.labelMedium,
+            textAlign = TextAlign.Start
         )
     }
 }
@@ -365,6 +374,48 @@ private fun TimetableError(
         Text(error)
         Button(onClick = onReloadClick) {
             Text(stringResource(id = R.string.timetable_reload_button_hint))
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TimetablePreview() {
+    val start = Instant.parse("2023-11-16T16:15:00.000+01:00")
+    val date = start.toLocalDateTime(TimeZone.currentSystemDefault()).date
+    Surface {
+        FittableTheme {
+            TimetableInternal(
+                hoursGrid = (7..24).map {
+                    TimetableHour("$it:00")
+                },
+                events = listOf(
+                    TimetableEventContainer(
+                        events = listOf(
+                            TimetableConflictContent(
+                                event = TimetableSingleEvent(
+                                    title = "BI-AG1",
+                                    room = "T9:301",
+                                    id = "666",
+                                    start = start,
+                                    end = start + 1.hours
+                                ),
+                            )
+                        ),
+                        start = start,
+                        end = start + 1.hours
+                    )
+                ),
+                headerState = HeaderState(
+                    monthStart = date,
+                    monthEnd = date,
+                    today = date,
+                    selectedDate = date
+                ),
+                onEventClick = { },
+                onDayClick = { },
+                onSearchClick = { }
+            )
         }
     }
 }

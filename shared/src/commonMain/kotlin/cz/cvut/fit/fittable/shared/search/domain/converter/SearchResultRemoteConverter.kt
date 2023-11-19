@@ -7,7 +7,8 @@ class SearchResultRemoteConverter {
     fun toDomain(remote: SearchResultRemote) = with(remote) {
         SearchResult(
             id = id,
-            title = title
+            title = title,
+            type = type
         )
     }
 }
