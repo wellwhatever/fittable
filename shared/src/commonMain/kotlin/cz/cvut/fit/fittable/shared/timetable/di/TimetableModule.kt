@@ -19,15 +19,15 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 internal val timetableModule = module {
-    single {
+    single(named("sirius")) {
         NetworkClient(
             baseUrl = "https://sirius.fit.cvut.cz/api/v1/",
             httpClient = get(named("api")),
         )
     }
+    single { EventsRoute(get(named("sirius"))) }
 
     singleOf(::EventsRepository)
-    singleOf(::EventsRoute)
 
     factoryOf(::GenerateHoursGridUseCase)
     factoryOf(::GetUserEventsUseCase)

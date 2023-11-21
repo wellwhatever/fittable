@@ -92,9 +92,10 @@ fun TimetableScreen(
                 onSearchClick = onSearchClick
             )
 
+            // TODO fix to string conversion here, map it to some specific error!
             is TimetableUiState.Error -> TimetableError(
                 modifier = modifier,
-                error = error,
+                error = error.toString(),
                 onReloadClick = timetableViewModel::onReloadClick
             )
 

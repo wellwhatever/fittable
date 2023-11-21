@@ -7,11 +7,13 @@ import cz.cvut.fit.fittable.shared.search.domain.GetSearchResultsUseCase
 import cz.cvut.fit.fittable.shared.search.domain.converter.SearchResultRemoteConverter
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 internal val searchModule = module {
+    single { SearchRoute(get(named("sirius"))) }
+
     singleOf(::SearchRepository)
-    singleOf(::SearchRoute)
 
     factoryOf(::GetSearchResultsUseCase)
     factoryOf(::GetFilteredDayEventsUseCase)

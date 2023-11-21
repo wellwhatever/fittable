@@ -2,7 +2,7 @@ package cz.cvut.fit.fittable.authorization.data
 
 import android.net.Uri
 import cz.cvut.fit.fittable.app.di.AuthorizationConfiguration
-import cz.cvut.fit.fittable.shared.authorization.data.AuthorizationLocalDataSource
+import cz.cvut.fit.fittable.shared.authorization.data.local.AuthorizationLocalDataSource
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues

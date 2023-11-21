@@ -9,9 +9,8 @@ import kotlinx.datetime.LocalDate
 class EventsRepository internal constructor(
     private val eventsRoute: EventsRoute,
 ) {
-    // TODO hardcoded for now until appManager will give permission to fetch username
     suspend fun getUserEvents(
-        username: String = "petrool2",
+        username: String,
         from: LocalDate,
         to: LocalDate,
     ): Events = eventsRoute.getPersonEvents(username, from, to)

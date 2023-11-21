@@ -1,6 +1,7 @@
 package cz.cvut.fit.fittable.timetable.ui
 
 import androidx.compose.runtime.Stable
+import cz.cvut.fit.fittable.shared.core.remote.ApiException
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import kotlinx.datetime.LocalDate
@@ -14,7 +15,7 @@ sealed interface TimetableUiState {
     ) : TimetableUiState
 
     data class Error(
-        val error: String
+        val error: ApiException
     ) : TimetableUiState
 
     data object Loading : TimetableUiState
