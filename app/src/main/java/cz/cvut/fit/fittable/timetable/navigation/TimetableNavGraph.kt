@@ -91,6 +91,7 @@ internal fun NavGraphBuilder.timetableNavGraph(
                 onEventClick = onEventClick,
                 onSearchClick = onSearchClick,
                 searchResult = if (args != null) {
+                    it.savedStateHandle.remove<String>(TIMETABLE_SEARCH_RESULT_ARG)
                     TimetableArgs(args)
                 } else {
                     null

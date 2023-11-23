@@ -43,6 +43,7 @@ import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.core.yearMonth
 import cz.cvut.fit.fittable.R
 import cz.cvut.fit.fittable.app.ui.theme.FittableTheme
+import cz.cvut.fit.fittable.shared.timetable.domain.model.CalendarBounds
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -236,17 +237,19 @@ private fun CalendarHeaderPreview() {
     val start = Instant.parse("2023-11-16T16:15:00.000+01:00")
     val date = start.toLocalDateTime(TimeZone.currentSystemDefault()).date
     val headerState = HeaderState(
-        monthStart = date,
-        monthEnd = date,
-        today = date,
+        CalendarBounds(
+            monthStart = date,
+            monthEnd = date,
+            today = date,
+        ),
         selectedDate = date
     )
     Surface {
         FittableTheme {
             CalendarHeader(
-                startMonth = headerState.monthStart,
-                endMonth = headerState.monthEnd,
-                today = headerState.today,
+                startMonth = headerState.calendarBounds.monthStart,
+                endMonth = headerState.calendarBounds.monthEnd,
+                today = headerState.calendarBounds.today,
                 selected = headerState.selectedDate,
                 onDayClick = {},
                 onSearchClick = {}

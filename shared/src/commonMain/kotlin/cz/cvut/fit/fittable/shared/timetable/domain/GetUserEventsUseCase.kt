@@ -1,11 +1,9 @@
 package cz.cvut.fit.fittable.shared.timetable.domain
 
-import cz.cvut.fit.fittable.shared.authorization.data.local.UsernameLocalDataSource
 import cz.cvut.fit.fittable.shared.core.remote.HttpExceptionDomain
 import cz.cvut.fit.fittable.shared.timetable.data.EventsRepository
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
 import cz.cvut.fit.fittable.shared.timetable.domain.model.EventDomain
-import kotlinx.coroutines.flow.first
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -16,11 +14,13 @@ import kotlin.time.Duration.Companion.minutes
 class GetUserEventsUseCase(
     private val eventsRepository: EventsRepository,
     private val eventsConverterRemote: EventsConverterRemote,
-    private val usernameLocalDataSource: UsernameLocalDataSource
 ) {
     @Throws(CancellationException::class, HttpExceptionDomain::class)
-    suspend operator fun invoke(from: LocalDate, to: LocalDate): List<EventDomain> {
-        val username = usernameLocalDataSource.usernameFlow.first()
+    suspend operator fun invoke(
+        username: String,
+        from: LocalDate,
+        to: LocalDate
+    ): List<EventDomain> {
         val events = eventsRepository.getUserEvents(from = from, to = to, username = username)
         return eventsConverterRemote.toDomain(events)
     }

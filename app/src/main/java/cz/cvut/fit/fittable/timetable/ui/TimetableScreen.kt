@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,6 +53,7 @@ import cz.cvut.fit.fittable.core.ui.HorizontalGridDivider
 import cz.cvut.fit.fittable.core.ui.Loading
 import cz.cvut.fit.fittable.core.ui.VerticalGridDivider
 import cz.cvut.fit.fittable.shared.core.extensions.formatAsHoursAndMinutes
+import cz.cvut.fit.fittable.shared.timetable.domain.model.CalendarBounds
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableConflictContent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEventContainer
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
@@ -92,15 +95,37 @@ fun TimetableScreen(
                 onSearchClick = onSearchClick
             )
 
-            // TODO fix to string conversion here, map it to some specific error!
-            is TimetableUiState.Error -> TimetableError(
-                modifier = modifier,
-                error = error.toString(),
-                onReloadClick = timetableViewModel::onReloadClick
-            )
+            is TimetableUiState.Error -> {
+                TimetableError(
+                    modifier = modifier,
+                    error = this,
+                    onReloadClick = timetableViewModel::onReloadClick,
+                    onContinueClick = timetableViewModel::onContinueClick
+                )
+            }
 
             TimetableUiState.Loading -> Loading()
         }
+    }
+}
+
+@Composable
+private fun TimetableError(
+    error: TimetableUiState.Error,
+    onReloadClick: () -> Unit,
+    onContinueClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    when (error) {
+        TimetableUiState.Error.NoPermission -> TimetableNoPermission(
+            modifier = modifier,
+            onContinueClick = onContinueClick
+        )
+
+        TimetableUiState.Error.UnknownError -> TimetableUnknownError(
+            modifier = modifier,
+            onReloadClick = onReloadClick
+        )
     }
 }
 
@@ -116,9 +141,9 @@ internal fun TimetableInternal(
 ) {
     Column(modifier = modifier) {
         CalendarHeader(
-            startMonth = headerState.monthStart,
-            endMonth = headerState.monthEnd,
-            today = headerState.today,
+            startMonth = headerState.calendarBounds.monthStart,
+            endMonth = headerState.calendarBounds.monthEnd,
+            today = headerState.calendarBounds.today,
             selected = headerState.selectedDate,
             onDayClick = onDayClick,
             onSearchClick = onSearchClick
@@ -367,18 +392,58 @@ private fun HourGridItem(
 }
 
 @Composable
-private fun TimetableError(
-    error: String,
+private fun TimetableUnknownError(
     onReloadClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.fillMaxHeight(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Text(error)
+        Text(text = stringResource(id = R.string.timetable_unknown_error))
+        Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onReloadClick) {
             Text(stringResource(id = R.string.timetable_reload_button_hint))
+        }
+    }
+}
+
+@Composable
+private fun TimetableNoPermission(
+    onContinueClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_lock_person_64),
+            contentDescription = stringResource(
+                R.string.timetable_error_no_permission
+            ),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = stringResource(id = R.string.timetable_error_no_permission_message_title),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(id = R.string.timetable_error_no_permission_message_body),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onContinueClick) {
+            Text(stringResource(id = R.string.timetable_error_no_permission_button_hint))
         }
     }
 }
@@ -412,9 +477,11 @@ private fun TimetablePreview() {
                     )
                 ),
                 headerState = HeaderState(
-                    monthStart = date,
-                    monthEnd = date,
-                    today = date,
+                    calendarBounds = CalendarBounds(
+                        monthStart = date,
+                        monthEnd = date,
+                        today = date,
+                    ),
                     selectedDate = date
                 ),
                 onEventClick = { },

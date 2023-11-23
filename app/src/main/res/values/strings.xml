@@ -9,10 +9,17 @@
 
     <string name="timetable_reload_button_hint">Reload</string>
     <string name="timetable_header_title_description">Expand calendar title</string>
+    <string name="timetable_unknown_error">Unknown error occurred, please try again!</string>
+    <string name="timetable_error_no_permission">No permission</string>
+    <string name="timetable_error_no_permission_message_title">You don\'t have permission to access this resource</string>
+    <string name="timetable_error_no_permission_message_body">We are sorry, but your account doesn\'t have sufficient permissions to display this calendar view.</string>
+    <string name="timetable_error_no_permission_button_hint">Continue</string>
+
     <string name="event_detail_parallel">parallel</string>
     <string name="event_detail_capacity">capacity</string>
     <string name="event_detail_students">students</string>
     <string name="event_detail_location">Location</string>
     <string name="event_detail_course">Course</string>
     <string name="search_back">Search back</string>
+
 </resources>

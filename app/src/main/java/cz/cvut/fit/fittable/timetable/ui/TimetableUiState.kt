@@ -2,6 +2,8 @@ package cz.cvut.fit.fittable.timetable.ui
 
 import androidx.compose.runtime.Stable
 import cz.cvut.fit.fittable.shared.core.remote.ApiException
+import cz.cvut.fit.fittable.shared.core.remote.HttpExceptionDomain
+import cz.cvut.fit.fittable.shared.timetable.domain.model.CalendarBounds
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import kotlinx.datetime.LocalDate
@@ -14,17 +16,26 @@ sealed interface TimetableUiState {
         val header: HeaderState
     ) : TimetableUiState
 
-    data class Error(
-        val error: ApiException
-    ) : TimetableUiState
+
+    sealed interface Error : TimetableUiState {
+        data object NoPermission : Error
+        data object UnknownError : Error
+    }
 
     data object Loading : TimetableUiState
 }
 
 @Stable
 data class HeaderState(
-    val monthStart: LocalDate,
-    val monthEnd: LocalDate,
-    val today: LocalDate,
+    val calendarBounds: CalendarBounds,
     val selectedDate: LocalDate,
 )
+
+internal fun ApiException.mapTimetableException(): TimetableUiState.Error =
+    when {
+        this is HttpExceptionDomain && code == 403 -> {
+            TimetableUiState.Error.NoPermission
+        }
+
+        else -> TimetableUiState.Error.UnknownError
+    }

@@ -9,7 +9,7 @@ import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetCoursesEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetRoomEventsUseCase
-import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableCalendarBoundsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetUserEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterDomain
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
@@ -32,7 +32,7 @@ internal val timetableModule = module {
     factoryOf(::GenerateHoursGridUseCase)
     factoryOf(::GetUserEventsUseCase)
     factoryOf(::GetDayEventsGridUseCase)
-    factoryOf(::GetTimetableHeaderUseCase)
+    factoryOf(::GetTimetableCalendarBoundsUseCase)
     factoryOf(::GetRoomEventsUseCase)
     factoryOf(::GetCoursesEventsUseCase)
 

@@ -25,7 +25,7 @@ class GetFilteredDayEventsUseCase internal constructor(
         val events = when (type) {
             SearchResultType.COURSE -> getCoursesEvents(course = id, from = from, to = to)
 
-            SearchResultType.PERSON -> getUserEvents(from = from, to = to)
+            SearchResultType.PERSON -> getUserEvents(username = id, from = from, to = to)
 
             SearchResultType.ROOM -> getRoomEvents(room = id, from = from, to = to)
         }

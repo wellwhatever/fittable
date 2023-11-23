@@ -3,20 +3,21 @@ package cz.cvut.fit.fittable.timetable.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cz.cvut.fit.fittable.shared.core.remote.ApiException
+import cz.cvut.fit.fittable.shared.core.util.todayDate
 import cz.cvut.fit.fittable.shared.search.domain.GetFilteredDayEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
-import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableHeaderUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableCalendarBoundsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import cz.cvut.fit.fittable.timetable.navigation.TimetableArgs
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
@@ -24,50 +25,32 @@ class TimetableViewModel(
     private val generateHoursGrid: GenerateHoursGridUseCase,
     private val getDayEvents: GetDayEventsGridUseCase,
     private val getFilteredDayEvents: GetFilteredDayEventsUseCase,
-    private val getTimetableHeader: GetTimetableHeaderUseCase
+    private val getCalendarBounds: GetTimetableCalendarBoundsUseCase
 ) : ViewModel() {
-
     private val searchResult = MutableStateFlow<TimetableArgs?>(null)
     private val hours = MutableStateFlow<List<TimetableHour>?>(null)
     private val error = MutableStateFlow<ApiException?>(null)
+    private val selectedDate = MutableStateFlow(todayDate())
+    private val events = MutableStateFlow<List<TimetableItem>>(emptyList())
 
-    private val selectedDate = MutableStateFlow(
-        with(getTimetableHeader()) {
-            HeaderState(
-                monthStart = monthStart,
-                monthEnd = monthEnd,
-                today = today,
-                selectedDate = selectedDate
-            )
-        }
-    )
+    private val calendarBounds = flowOf(getCalendarBounds())
 
-    private val events: Flow<List<TimetableItem>> =
-        combine(selectedDate, searchResult) { date, search ->
-            if (search == null) {
-                getDayEvents(date.selectedDate)
-            } else {
-                getFilteredDayEvents(
-                    type = search.searchResult.eventCategory,
-                    id = search.searchResult.eventId,
-                    day = date.selectedDate
-                )
-            }
-        }.catch {
-            if (it is ApiException) {
-                error.value = it
-            }
-        }
+    private val headerState = combine(calendarBounds, selectedDate) { bounds, selectedDate ->
+        HeaderState(
+            calendarBounds = bounds,
+            selectedDate = selectedDate
+        )
+    }
 
-    val uiState =
+    val uiState: StateFlow<TimetableUiState> =
         combine(
             events,
             hours,
             error,
-            selectedDate,
+            headerState,
         ) { events, hours, error, header ->
             when {
-                error != null -> TimetableUiState.Error(error)
+                error != null -> error.mapTimetableException()
                 hours.isNullOrEmpty() || events.isEmpty() -> TimetableUiState.Loading
                 else -> TimetableUiState.Content(
                     hoursGrid = hours,
@@ -83,6 +66,35 @@ class TimetableViewModel(
 
     init {
         fetchHoursGrid()
+        combineEvents()
+    }
+
+    private fun combineEvents() {
+        viewModelScope.launch {
+            combine(selectedDate, searchResult) { date, search ->
+                events.value = getEvents(date, search)
+            }.collect()
+        }
+    }
+
+    private suspend fun getEvents(
+        date: LocalDate,
+        search: TimetableArgs?
+    ): List<TimetableItem> {
+        return try {
+            if (search == null) {
+                getDayEvents(date)
+            } else {
+                getFilteredDayEvents(
+                    day = date,
+                    type = search.searchResult.eventCategory,
+                    id = search.searchResult.eventId
+                )
+            }
+        } catch (exception: ApiException) {
+            error.value = exception
+            emptyList()
+        }
     }
 
     private fun fetchHoursGrid() {
@@ -92,22 +104,17 @@ class TimetableViewModel(
     }
 
     fun onReloadClick() {
-        viewModelScope.launch {
-            error.value = null
-            with(getTimetableHeader()) {
-                this@TimetableViewModel.selectedDate.value = HeaderState(
-                    monthStart = monthStart,
-                    monthEnd = monthEnd,
-                    today = today,
-                    selectedDate = selectedDate
-                )
-            }
-        }
+        error.value = null
+    }
+
+    fun onContinueClick() {
+        error.value = null
+        searchResult.value = null
     }
 
     fun onDayClick(day: LocalDate) {
         viewModelScope.launch {
-            selectedDate.update { it.copy(selectedDate = day) }
+            selectedDate.value = day
         }
     }
 
