@@ -12,7 +12,7 @@ class SaveUsernameUseCase internal constructor(
 ) {
     suspend operator fun invoke() {
         val token = authorizationLocalDataSource.authorizationTokenFlow.first()
-        val username = authorizationRoute.getUserInformation(token)
+        val username = authorizationRoute.getTokenInformation(token)
         usernameLocalDataSource.updateUsername(username.userName)
     }
 }

@@ -13,7 +13,7 @@ data class TokenInformation(
     @SerialName("client_id")
     val clientId: String,
     @SerialName("exp")
-    val exp: Int,
+    val exp: Long,
     @SerialName("scope")
     val scope: List<String>,
     @SerialName("user_name")

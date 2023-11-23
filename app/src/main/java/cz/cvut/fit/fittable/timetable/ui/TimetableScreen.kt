@@ -76,12 +76,13 @@ fun TimetableScreen(
     searchResult: TimetableArgs?,
     onSearchClick: () -> Unit,
     onEventClick: (eventId: String) -> Unit,
+    navigateToAuthorization: () -> Unit,
     modifier: Modifier = Modifier,
-    timetableViewModel: TimetableViewModel = getViewModel(),
+    viewModel: TimetableViewModel = getViewModel(),
 ) {
-    val state = timetableViewModel.uiState.collectAsStateWithLifecycle()
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
 
-    searchResult?.let { timetableViewModel.setSearchResult(it) }
+    searchResult?.let { viewModel.setSearchResult(it) }
 
     with(state.value) {
         when (this) {
@@ -91,7 +92,7 @@ fun TimetableScreen(
                 events = events,
                 headerState = header,
                 onEventClick = onEventClick,
-                onDayClick = timetableViewModel::onDayClick,
+                onDayClick = viewModel::onDayClick,
                 onSearchClick = onSearchClick
             )
 
@@ -99,8 +100,9 @@ fun TimetableScreen(
                 TimetableError(
                     modifier = modifier,
                     error = this,
-                    onReloadClick = timetableViewModel::onReloadClick,
-                    onContinueClick = timetableViewModel::onContinueClick
+                    onReloadClick = viewModel::onReloadClick,
+                    onContinueClick = viewModel::onContinueClick,
+                    navigateToAuthorization = navigateToAuthorization
                 )
             }
 
@@ -114,6 +116,7 @@ private fun TimetableError(
     error: TimetableUiState.Error,
     onReloadClick: () -> Unit,
     onContinueClick: () -> Unit,
+    navigateToAuthorization: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (error) {
@@ -126,6 +129,8 @@ private fun TimetableError(
             modifier = modifier,
             onReloadClick = onReloadClick
         )
+
+        TimetableUiState.Error.Unauthorized -> navigateToAuthorization()
     }
 }
 

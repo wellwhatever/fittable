@@ -4,10 +4,10 @@ import cz.cvut.fit.fittable.shared.authorization.data.remote.model.TokenInformat
 import cz.cvut.fit.fittable.shared.core.remote.NetworkClient
 import io.ktor.http.HttpMethod
 
-internal class AuthorizationRoute(
+class AuthorizationRoute internal constructor(
     private val client: NetworkClient,
 ) {
-    suspend fun getUserInformation(token: String): TokenInformation = client.request(
+    suspend fun getTokenInformation(token: String): TokenInformation = client.request(
         path = checkTokenRoute,
         method = HttpMethod.Get
     ) {

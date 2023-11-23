@@ -3,6 +3,8 @@ package cz.cvut.fit.fittable.authorization.data
 import android.net.Uri
 import cz.cvut.fit.fittable.app.di.AuthorizationConfiguration
 import cz.cvut.fit.fittable.shared.authorization.data.local.AuthorizationLocalDataSource
+import cz.cvut.fit.fittable.shared.authorization.data.remote.AuthorizationRoute
+import kotlinx.coroutines.flow.Flow
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
@@ -10,10 +12,14 @@ import net.openid.appauth.ResponseTypeValues
 class AuthorizationRepository(
     private val authorizationConfiguration: AuthorizationConfiguration,
     private val authorizationServiceConfiguration: AuthorizationServiceConfiguration,
-    private val authorizationLocalDataSource: AuthorizationLocalDataSource,
+    private val authorizationRoute: AuthorizationRoute,
+    authorizationLocalDataSource: AuthorizationLocalDataSource,
 ) {
-    fun getAuthorizationToken() =
+    val authorizationToken: Flow<String?> =
         authorizationLocalDataSource.authorizationTokenFlow
+
+    suspend fun getTokenExpiration(token: String): Long =
+        authorizationRoute.getTokenInformation(token).exp
 
     fun extractAuthorizationToken(data: String) = getAccessTokenFromUri(data)
     fun composeAuthorizationRequest(): AuthorizationRequest =

@@ -25,7 +25,7 @@ class TimetableViewModel(
     private val generateHoursGrid: GenerateHoursGridUseCase,
     private val getDayEvents: GetDayEventsGridUseCase,
     private val getFilteredDayEvents: GetFilteredDayEventsUseCase,
-    private val getCalendarBounds: GetTimetableCalendarBoundsUseCase
+    getCalendarBounds: GetTimetableCalendarBoundsUseCase
 ) : ViewModel() {
     private val searchResult = MutableStateFlow<TimetableArgs?>(null)
     private val hours = MutableStateFlow<List<TimetableHour>?>(null)

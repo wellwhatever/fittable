@@ -7,8 +7,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import cz.cvut.fit.fittable.authorization.ui.navigation.AUTHORIZATION_NAVIGATION_GRAPH
 import cz.cvut.fit.fittable.authorization.ui.navigation.authorizationNavGraph
+import cz.cvut.fit.fittable.authorization.ui.navigation.navigateToAuthorizationNavGraph
 import cz.cvut.fit.fittable.search.navigation.navigateToSearch
 import cz.cvut.fit.fittable.search.navigation.searchNavGraph
+import cz.cvut.fit.fittable.timetable.navigation.TIMETABLE_NAVIGATION_GRAPH
 import cz.cvut.fit.fittable.timetable.navigation.TIMETABLE_SEARCH_RESULT_ARG
 import cz.cvut.fit.fittable.timetable.navigation.TimetableSearchResultArgs
 import cz.cvut.fit.fittable.timetable.navigation.navigateToEventDetail
@@ -25,16 +27,19 @@ fun AppNavigationGraph(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = AUTHORIZATION_NAVIGATION_GRAPH,
+        startDestination = TIMETABLE_NAVIGATION_GRAPH,
         modifier = modifier,
     ) {
-        authorizationNavGraph(
-            onSuccessfulTokenReceive =
-            navHostController::navigateToTimetable,
-        )
         timetableNavGraph(
             onEventClick = navHostController::navigateToEventDetail,
-            onSearchClick = navHostController::navigateToSearch
+            onSearchClick = navHostController::navigateToSearch,
+            navigateToAuthorization = navHostController::navigateToAuthorizationNavGraph,
+            nestedGraphs = {
+                authorizationNavGraph(
+                    onSuccessfulTokenReceive =
+                    navHostController::navigateToTimetable,
+                )
+            }
         )
         searchNavGraph(
             onBackClick = navHostController::popBackStack,

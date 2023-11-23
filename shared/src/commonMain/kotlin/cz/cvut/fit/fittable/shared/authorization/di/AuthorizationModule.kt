@@ -5,12 +5,12 @@ import cz.cvut.fit.fittable.shared.authorization.data.local.UsernameLocalDataSou
 import cz.cvut.fit.fittable.shared.authorization.data.remote.AuthorizationRoute
 import cz.cvut.fit.fittable.shared.authorization.domain.SaveUsernameUseCase
 import cz.cvut.fit.fittable.shared.core.remote.NetworkClient
-import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val authorizationModule = module {
-    singleOf(::SaveUsernameUseCase)
+    factoryOf(::SaveUsernameUseCase)
     single(named("auth")) {
         NetworkClient(
             baseUrl = "https://auth.fit.cvut.cz/oauth/",

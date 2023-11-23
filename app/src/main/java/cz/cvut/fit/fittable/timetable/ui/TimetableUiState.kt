@@ -20,6 +20,7 @@ sealed interface TimetableUiState {
     sealed interface Error : TimetableUiState {
         data object NoPermission : Error
         data object UnknownError : Error
+        data object Unauthorized : Error
     }
 
     data object Loading : TimetableUiState
@@ -35,6 +36,10 @@ internal fun ApiException.mapTimetableException(): TimetableUiState.Error =
     when {
         this is HttpExceptionDomain && code == 403 -> {
             TimetableUiState.Error.NoPermission
+        }
+
+        this is HttpExceptionDomain && code == 400 -> {
+            TimetableUiState.Error.Unauthorized
         }
 
         else -> TimetableUiState.Error.UnknownError

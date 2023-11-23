@@ -11,7 +11,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import cz.cvut.fit.fittable.detail.EventDetailScreen
 import cz.cvut.fit.fittable.shared.search.data.remote.model.SearchResultType
-import cz.cvut.fit.fittable.timetable.ui.TimetableScreen
+import cz.cvut.fit.fittable.route.ui.TimetableRoute
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -66,6 +66,7 @@ fun NavController.navigateToEventDetail(eventId: String) {
 internal fun NavGraphBuilder.timetableNavGraph(
     onEventClick: (eventId: String) -> Unit,
     onSearchClick: () -> Unit,
+    navigateToAuthorization: () -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit = {},
 ) {
     navigation(
@@ -87,10 +88,11 @@ internal fun NavGraphBuilder.timetableNavGraph(
                 .getStateFlow(TIMETABLE_SEARCH_RESULT_ARG, null).collectAsStateWithLifecycle()
 
             val args = searchResultFlow.value
-            TimetableScreen(
+            TimetableRoute(
                 onEventClick = onEventClick,
                 onSearchClick = onSearchClick,
-                searchResult = if (args != null) {
+                navigateToAuthorization = navigateToAuthorization,
+                searchArgs = if (args != null) {
                     it.savedStateHandle.remove<String>(TIMETABLE_SEARCH_RESULT_ARG)
                     TimetableArgs(args)
                 } else {
