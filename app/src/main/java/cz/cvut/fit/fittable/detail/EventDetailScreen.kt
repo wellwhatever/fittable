@@ -4,9 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,10 +35,14 @@ fun EventDetailScreen(
 
     with(state.value) {
         when (this) {
-            is EventDetailState.Loading -> Loading()
-            is EventDetailState.Error -> {
-                // TODO add error state with refresh to this screen
-            }
+            is EventDetailState.Loading -> Loading(
+                modifier = modifier,
+            )
+
+            is EventDetailState.Error -> EventDetailError(
+                onReloadClick = viewModel::onReloadClick,
+                modifier = modifier
+            )
 
             is EventDetailState.Content -> EventDetailInternal(
                 modifier = modifier
@@ -43,6 +50,35 @@ fun EventDetailScreen(
                     .fillMaxWidth(),
                 detail = eventDetail
             )
+        }
+    }
+}
+
+@Composable
+private fun EventDetailError(
+    onReloadClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.baseline_error_outline_24),
+            tint = MaterialTheme.colorScheme.primary,
+            contentDescription = "error"
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = stringResource(id = R.string.timetable_unknown_error),
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onReloadClick) {
+            Text(stringResource(id = R.string.timetable_reload_button_hint))
         }
     }
 }

@@ -3,7 +3,7 @@ package cz.cvut.fit.fittable.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cz.cvut.fit.fittable.shared.core.remote.HttpExceptionDomain
+import cz.cvut.fit.fittable.shared.core.remote.ApiException
 import cz.cvut.fit.fittable.shared.detail.domain.GetEventByIdUseCase
 import cz.cvut.fit.fittable.shared.detail.domain.GetTeacherUseCase
 import cz.cvut.fit.fittable.shared.detail.domain.model.EventDetail
@@ -23,18 +23,17 @@ class EventDetailViewModel(
 ) : ViewModel() {
     private val topicArgs: EventDetailArgs = EventDetailArgs(savedStateHandle)
 
-    private val error = MutableStateFlow<String?>(null)
+    private val error = MutableStateFlow<ApiException?>(null)
     private val eventDetail = MutableStateFlow<EventDetail?>(null)
     private val teachers = MutableStateFlow<List<Teacher>?>(null)
 
     val uiState: StateFlow<EventDetailState> = combine(
         eventDetail,
-        teachers,
         error
-    ) { event, teachers, error ->
+    ) { event, error ->
         // TODO fix teachers when scopes will be received from CTU
         when {
-            error != null -> EventDetailState.Error(error)
+            error != null -> EventDetailState.Error
             event == null -> EventDetailState.Loading
             else -> EventDetailState.Content(event, emptyList())
         }
@@ -60,10 +59,15 @@ class EventDetailViewModel(
 //                    }
 //                    teachers.value = teachersAsync.awaitAll()
                 }
-            } catch (exception: HttpExceptionDomain) {
-                error.value = exception.message
+            } catch (exception: ApiException) {
+                error.value = exception
             }
         }
+    }
+
+    fun onReloadClick() {
+        error.value = null
+        fetchEventDetails()
     }
 }
 
@@ -74,6 +78,6 @@ sealed interface EventDetailState {
         val teachers: List<Teacher>
     ) : EventDetailState
 
-    data class Error(val message: String) : EventDetailState
+    data object Error : EventDetailState
     data object Loading : EventDetailState
 }
