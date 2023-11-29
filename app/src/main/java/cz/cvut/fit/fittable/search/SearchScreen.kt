@@ -43,10 +43,10 @@ fun SearchScreen(
     with(state.value) {
         SearchScreenInternal(
             modifier = modifier,
-            query = this.query,
+            query = query,
             onQueryChanged = viewModel::onQueryChanged,
             onSearch = viewModel::onQueryChanged,
-            searchResults = this.searchResults,
+            searchResults = searchResults,
             onSearchResultSelect = onSearchResultSelect,
             onClearQueryClick = viewModel::onClearQueryClick,
             onBackClick = onBackClick

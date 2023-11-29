@@ -46,7 +46,7 @@ fun EventDetailScreen(
         with(state.value) {
             when (this) {
                 is EventDetailState.Loading -> Loading(
-                    modifier = modifier,
+                    modifier = modifier.fillMaxSize(),
                 )
 
                 is EventDetailState.Error -> EventDetailError(
@@ -71,10 +71,7 @@ private fun EventDetailTopBar(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center
-    ) {
+    Column(modifier = modifier) {
         Row(
             modifier = Modifier
                 .heightIn(min = 48.dp)
