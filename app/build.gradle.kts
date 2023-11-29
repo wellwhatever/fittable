@@ -56,6 +56,7 @@ dependencies {
         implementation(libs.kotlin.coroutinesAndroid)
         implementation(libs.kotlin.datetime)
         implementation(libs.calendar)
+        implementation("me.onebone:toolbar-compose:2.3.5")
     }
 
     implementation(project(":shared"))

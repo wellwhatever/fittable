@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -51,11 +52,15 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toLocalDateTime
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.CollapsingToolbarScaffoldScope
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-internal fun CalendarHeader(
+internal fun CollapsingCalendarHeader(
     startMonth: LocalDate,
     endMonth: LocalDate,
     today: LocalDate,
@@ -63,58 +68,68 @@ internal fun CalendarHeader(
     onDayClick: (LocalDate) -> Unit,
     onSearchClick: () -> Unit,
     modifier: Modifier = Modifier,
+    content: @Composable CollapsingToolbarScaffoldScope.() -> Unit
 ) {
-    val expanded = remember { mutableStateOf(false) }
-    val daysOfWeek = remember { mutableStateOf(daysOfWeek()) }
-    val state = rememberCalendarState(
-        startMonth = startMonth.toJavaLocalDate().yearMonth,
-        endMonth = endMonth.toJavaLocalDate().yearMonth,
-        firstVisibleMonth = today.toJavaLocalDate().yearMonth,
-        firstDayOfWeek = daysOfWeek.value.first()
+    CollapsingToolbarScaffold(
+        modifier = modifier,
+        state = rememberCollapsingToolbarScaffoldState(),
+        scrollStrategy = ScrollStrategy.EnterAlways,
+        toolbar = {
+            val expanded = remember { mutableStateOf(false) }
+            val daysOfWeek = remember { mutableStateOf(daysOfWeek()) }
+            val state = rememberCalendarState(
+                startMonth = startMonth.toJavaLocalDate().yearMonth,
+                endMonth = endMonth.toJavaLocalDate().yearMonth,
+                firstVisibleMonth = today.toJavaLocalDate().yearMonth,
+                firstDayOfWeek = daysOfWeek.value.first()
+            )
+            Column(
+                modifier = modifier
+                    .heightIn(min = 48.dp)
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.primary)
+                    .padding(horizontal = 8.dp)
+            ) {
+                val monthDisplayName =
+                    state.firstVisibleMonth.yearMonth.month.getDisplayName(
+                        TextStyle.FULL,
+                        Locale.getDefault()
+                    )
+                Row(
+                    modifier = Modifier
+                        .height(48.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CalendarTitle(
+                        title = "$monthDisplayName ${state.firstVisibleMonth.yearMonth.year}",
+                        onClick = { expanded.value = expanded.value.not() },
+                    )
+                    Icon(
+                        modifier = Modifier.clickable(
+                            onClick = onSearchClick,
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = rememberRipple(bounded = false)
+                        ),
+                        painter = painterResource(id = R.drawable.ic_search_24),
+                        contentDescription = "Search",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+                AnimatedVisibility(visible = expanded.value) {
+                    CalendarHeaderInternal(
+                        today = today,
+                        selectedDay = selected,
+                        daysOfWeek = daysOfWeek.value,
+                        onDayClick = onDayClick,
+                        calendarState = state
+                    )
+                }
+            }
+        },
+        body = content
     )
-    Column(
-        modifier = modifier
-            .heightIn(min = 48.dp)
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.primary)
-            .padding(horizontal = 8.dp),
-        verticalArrangement = Arrangement.Center
-    ) {
-        val monthDisplayName =
-            state.firstVisibleMonth.yearMonth.month.getDisplayName(
-                TextStyle.FULL,
-                Locale.getDefault()
-            )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            CalendarTitle(
-                title = "$monthDisplayName ${state.firstVisibleMonth.yearMonth.year}",
-                onClick = { expanded.value = expanded.value.not() },
-            )
-            Icon(
-                modifier = Modifier.clickable(
-                    onClick = onSearchClick,
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple(bounded = false)
-                ),
-                painter = painterResource(id = R.drawable.ic_search_24),
-                contentDescription = "Search",
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-        AnimatedVisibility(visible = expanded.value) {
-            CalendarHeaderInternal(
-                today = today,
-                selectedDay = selected,
-                daysOfWeek = daysOfWeek.value,
-                onDayClick = onDayClick,
-                calendarState = state
-            )
-        }
-    }
 }
 
 @Composable
@@ -249,14 +264,21 @@ private fun CalendarHeaderPreview() {
     )
     Surface {
         FittableTheme {
-            CalendarHeader(
-                startMonth = headerState.calendarBounds.monthStart,
-                endMonth = headerState.calendarBounds.monthEnd,
-                today = headerState.calendarBounds.today,
-                selected = headerState.selectedDate,
-                onDayClick = {},
-                onSearchClick = {}
-            )
+            CollapsingToolbarScaffold(
+                modifier = Modifier,
+                state = rememberCollapsingToolbarScaffoldState(),
+                scrollStrategy = ScrollStrategy.EnterAlways,
+                toolbar = {
+                    CollapsingCalendarHeader(
+                        startMonth = headerState.calendarBounds.monthStart,
+                        endMonth = headerState.calendarBounds.monthEnd,
+                        today = headerState.calendarBounds.today,
+                        selected = headerState.selectedDate,
+                        onDayClick = {},
+                        onSearchClick = {}
+                    ) {}
+                }
+            ) {}
         }
     }
 }

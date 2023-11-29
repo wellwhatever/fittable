@@ -144,15 +144,15 @@ internal fun TimetableInternal(
     headerState: HeaderState,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        CalendarHeader(
-            startMonth = headerState.calendarBounds.monthStart,
-            endMonth = headerState.calendarBounds.monthEnd,
-            today = headerState.calendarBounds.today,
-            selected = headerState.selectedDate,
-            onDayClick = onDayClick,
-            onSearchClick = onSearchClick
-        )
+    CollapsingCalendarHeader(
+        modifier = modifier,
+        startMonth = headerState.calendarBounds.monthStart,
+        endMonth = headerState.calendarBounds.monthEnd,
+        today = headerState.calendarBounds.today,
+        selected = headerState.selectedDate,
+        onDayClick = onDayClick,
+        onSearchClick = onSearchClick
+    ) {
         TimetableGrid(
             hoursGrid = hoursGrid,
             events = events,

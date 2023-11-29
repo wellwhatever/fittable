@@ -2,6 +2,7 @@ package cz.cvut.fit.fittable.route.domain
 
 import cz.cvut.fit.fittable.authorization.data.AuthorizationRepository
 import cz.cvut.fit.fittable.shared.core.remote.ApiException
+import cz.cvut.fit.fittable.shared.core.remote.HttpExceptionDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
@@ -28,7 +29,11 @@ class GetAuthorizationStateUseCase(
                 AuthorizationState.Unauthorized
             }
         } catch (exception: ApiException) {
-            AuthorizationState.UnauthorizedOffline
+            if (exception is HttpExceptionDomain) {
+                AuthorizationState.Unauthorized
+            } else {
+                AuthorizationState.UnauthorizedOffline
+            }
         }
     }
 
