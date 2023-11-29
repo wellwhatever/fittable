@@ -3,7 +3,7 @@ package cz.cvut.fit.fittable.shared.timetable.domain.converter
 import cz.cvut.fit.fittable.shared.timetable.domain.model.EventDomain
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSingleEvent
 
-class EventsConverterDomain {
+class EventConverterDomain {
     fun toTimetableItem(domain: EventDomain) = with(domain) {
         TimetableSingleEvent(
             title = title,

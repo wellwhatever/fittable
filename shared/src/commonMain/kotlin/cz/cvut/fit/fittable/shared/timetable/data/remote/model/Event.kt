@@ -21,7 +21,7 @@ data class Event(
     @SerialName("links")
     val links: Links? = null,
     @SerialName("name")
-    val name: String?,
+    val name: String? = null,
     @SerialName("occupied")
     val occupied: Int,
     @SerialName("original_data")

@@ -1,8 +1,8 @@
 package cz.cvut.fit.fittable.shared.timetable.domain
 
 import cz.cvut.fit.fittable.shared.core.remote.HttpExceptionDomain
-import cz.cvut.fit.fittable.shared.timetable.data.EventsRepository
-import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
+import cz.cvut.fit.fittable.shared.timetable.data.EventsCacheRepository
+import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventConverterRemote
 import cz.cvut.fit.fittable.shared.timetable.domain.model.EventDomain
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -12,8 +12,8 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
 class GetUserEventsUseCase(
-    private val eventsRepository: EventsRepository,
-    private val eventsConverterRemote: EventsConverterRemote,
+    private val eventsRepository: EventsCacheRepository,
+    private val eventConverterRemote: EventConverterRemote,
 ) {
     @Throws(CancellationException::class, HttpExceptionDomain::class)
     suspend operator fun invoke(
@@ -22,7 +22,7 @@ class GetUserEventsUseCase(
         to: LocalDate
     ): List<EventDomain> {
         val events = eventsRepository.getUserEvents(from = from, to = to, username = username)
-        return eventsConverterRemote.toDomain(events)
+        return events.map { eventConverterRemote.toDomain(it) }
     }
 
     private fun generateFakeEvents(): List<EventDomain> {

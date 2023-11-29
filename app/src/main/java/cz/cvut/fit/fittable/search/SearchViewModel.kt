@@ -2,8 +2,10 @@ package cz.cvut.fit.fittable.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cz.cvut.fit.fittable.shared.core.remote.ApiException
 import cz.cvut.fit.fittable.shared.search.domain.GetSearchResultsUseCase
 import cz.cvut.fit.fittable.shared.search.domain.model.SearchResult
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.combine
@@ -16,9 +18,15 @@ class SearchViewModel(
     private val getSearchResults: GetSearchResultsUseCase
 ) : ViewModel(), SearchScreenActions {
     private val _searchQuery = MutableStateFlow("")
-    private val searchResults = _searchQuery.debounce(0.5.seconds).mapLatest { query ->
-        getSearchResults(query)
-    }
+    private val searchResults: Flow<List<SearchResult>> =
+        _searchQuery.debounce(0.5.seconds).mapLatest { query ->
+            try {
+                getSearchResults(query)
+            } catch (exception: ApiException) {
+                // do nothing, skip search if error occurred, try again
+                emptyList()
+            }
+        }
 
     val uiState = combine(_searchQuery, searchResults) { query, results ->
         SearchScreenState(

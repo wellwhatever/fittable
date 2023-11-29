@@ -1,6 +1,6 @@
 package cz.cvut.fit.fittable.shared.timetable.domain
 
-import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterDomain
+import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventConverterDomain
 import cz.cvut.fit.fittable.shared.timetable.domain.model.EventDomain
 import cz.cvut.fit.fittable.shared.timetable.domain.model.MergedEvents
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableConflictContent
@@ -17,7 +17,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 
 internal class EventConflictMerger(
-    private val eventsConverterDomain: EventsConverterDomain
+    private val eventConverterDomain: EventConverterDomain
 ) {
 
     suspend fun mergeConflicts(events: List<EventDomain>, day: LocalDate): List<TimetableItem> {
@@ -68,7 +68,7 @@ internal class EventConflictMerger(
                 TimetableConflictContent(
                     spacerStart = startSpacer,
                     spacerEnd = endSpacer,
-                    event = eventsConverterDomain.toTimetableItem(conflict)
+                    event = eventConverterDomain.toTimetableItem(conflict)
                 )
             }
             TimetableEventContainer(

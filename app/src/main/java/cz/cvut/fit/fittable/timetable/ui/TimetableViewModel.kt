@@ -3,10 +3,13 @@ package cz.cvut.fit.fittable.timetable.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cz.cvut.fit.fittable.shared.core.remote.ApiException
+import cz.cvut.fit.fittable.shared.core.remote.HttpExceptionDomain
 import cz.cvut.fit.fittable.shared.core.util.todayDate
 import cz.cvut.fit.fittable.shared.search.domain.GetFilteredDayEventsUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.CachePersonalEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GenerateHoursGridUseCase
-import cz.cvut.fit.fittable.shared.timetable.domain.GetDayEventsGridUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.GetCachedEventsUseCase
+import cz.cvut.fit.fittable.shared.timetable.domain.GetPersonalDayEventsGridUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetTimetableCalendarBoundsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
@@ -23,8 +26,10 @@ import kotlinx.datetime.LocalDate
 
 class TimetableViewModel(
     private val generateHoursGrid: GenerateHoursGridUseCase,
-    private val getDayEvents: GetDayEventsGridUseCase,
+    private val getDayEvents: GetPersonalDayEventsGridUseCase,
     private val getFilteredDayEvents: GetFilteredDayEventsUseCase,
+    private val cachePersonalEvents: CachePersonalEventsUseCase,
+    private val getCachedEvents: GetCachedEventsUseCase,
     getCalendarBounds: GetTimetableCalendarBoundsUseCase
 ) : ViewModel() {
     private val searchResult = MutableStateFlow<TimetableArgs?>(null)
@@ -67,6 +72,17 @@ class TimetableViewModel(
     init {
         fetchHoursGrid()
         combineEvents()
+        cacheEvents()
+    }
+
+    private fun cacheEvents() {
+        viewModelScope.launch {
+            try {
+                cachePersonalEvents()
+            } catch (exception: ApiException) {
+                // no-op if cache is failed
+            }
+        }
     }
 
     private fun combineEvents() {
@@ -92,8 +108,13 @@ class TimetableViewModel(
                 )
             }
         } catch (exception: ApiException) {
-            error.value = exception
-            emptyList()
+            when (exception) {
+                !is HttpExceptionDomain -> getCachedEvents(date)
+                else -> {
+                    error.value = exception
+                    emptyList()
+                }
+            }
         }
     }
 

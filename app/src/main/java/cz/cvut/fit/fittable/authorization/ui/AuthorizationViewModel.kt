@@ -39,6 +39,6 @@ class AuthorizationViewModel internal constructor(
     }
 
     override fun onReceiveTokenError(error: String) {
-        TODO("onActivityResultError display error here")
+        // TODO("onActivityResultError display error here")
     }
 }

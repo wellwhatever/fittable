@@ -1,0 +1,26 @@
+import kotlin.Boolean;
+
+CREATE TABLE eventEntity (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    room TEXT NOT NULL,
+    start TEXT NOT NULL,
+    ends TEXT NOT NULL,
+    deleted INTEGER AS Boolean NOT NULL,
+    eventType TEXT NOT NULL,
+    occupied INTEGER NOT NULL,
+    parallel TEXT NOT NULL,
+    sequenceNumber INTEGER NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM eventEntity;
+
+deleteAll:
+DELETE FROM eventEntity;
+
+insertEntity:
+INSERT INTO eventEntity(id, title, room, start, ends, deleted, eventType, occupied, parallel, sequenceNumber)
+VALUES ?;
+
