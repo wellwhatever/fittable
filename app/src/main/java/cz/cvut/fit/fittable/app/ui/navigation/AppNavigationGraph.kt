@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import cz.cvut.fit.fittable.authorization.ui.navigation.AUTHORIZATION_NAVIGATION_GRAPH
 import cz.cvut.fit.fittable.authorization.ui.navigation.authorizationNavGraph
 import cz.cvut.fit.fittable.authorization.ui.navigation.navigateToAuthorizationNavGraph
 import cz.cvut.fit.fittable.search.navigation.navigateToSearch
@@ -34,6 +33,7 @@ fun AppNavigationGraph(
             onEventClick = navHostController::navigateToEventDetail,
             onSearchClick = navHostController::navigateToSearch,
             navigateToAuthorization = navHostController::navigateToAuthorizationNavGraph,
+            onBack = navHostController::popBackStack,
             nestedGraphs = {
                 authorizationNavGraph(
                     onSuccessfulTokenReceive =

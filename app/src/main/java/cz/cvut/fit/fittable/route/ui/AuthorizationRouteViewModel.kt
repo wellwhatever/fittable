@@ -18,6 +18,7 @@ class AuthorizationRouteViewModel(
             when (it) {
                 is AuthorizationState.Authorized -> AuthorizationRouteUiState.Authorized
                 AuthorizationState.Unauthorized -> AuthorizationRouteUiState.Unauthorized
+                AuthorizationState.UnauthorizedOffline -> AuthorizationRouteUiState.Offline
             }
         }.stateIn(
             viewModelScope,
@@ -30,6 +31,7 @@ class AuthorizationRouteViewModel(
 sealed interface AuthorizationRouteUiState {
     data object Authorized : AuthorizationRouteUiState
     data object Unauthorized : AuthorizationRouteUiState
+    data object Offline : AuthorizationRouteUiState
 
     data object Loading : AuthorizationRouteUiState
 }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -73,9 +74,11 @@ internal fun CalendarHeader(
     )
     Column(
         modifier = modifier
+            .heightIn(min = 48.dp)
             .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.primary)
             .padding(horizontal = 8.dp),
+        verticalArrangement = Arrangement.Center
     ) {
         val monthDisplayName =
             state.firstVisibleMonth.yearMonth.month.getDisplayName(

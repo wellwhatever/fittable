@@ -10,8 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import cz.cvut.fit.fittable.detail.EventDetailScreen
-import cz.cvut.fit.fittable.shared.search.data.remote.model.SearchResultType
 import cz.cvut.fit.fittable.route.ui.TimetableRoute
+import cz.cvut.fit.fittable.shared.search.data.remote.model.SearchResultType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -67,6 +67,7 @@ internal fun NavGraphBuilder.timetableNavGraph(
     onEventClick: (eventId: String) -> Unit,
     onSearchClick: () -> Unit,
     navigateToAuthorization: () -> Unit,
+    onBack: () -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit = {},
 ) {
     navigation(
@@ -106,7 +107,7 @@ internal fun NavGraphBuilder.timetableNavGraph(
                 navArgument(EVENT_ID_ARG) { type = NavType.StringType },
             ),
         ) {
-            EventDetailScreen()
+            EventDetailScreen(onBack = onBack)
         }
         nestedGraphs()
     }

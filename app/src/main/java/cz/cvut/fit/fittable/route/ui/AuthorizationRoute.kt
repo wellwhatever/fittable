@@ -22,7 +22,8 @@ fun TimetableRoute(
 
     when (authorization) {
         is AuthorizationRouteUiState.Loading -> Loading()
-        is AuthorizationRouteUiState.Authorized -> TimetableScreen(
+        is AuthorizationRouteUiState.Authorized,
+        is AuthorizationRouteUiState.Offline -> TimetableScreen(
             searchResult = searchArgs,
             onSearchClick = onSearchClick,
             onEventClick = onEventClick,

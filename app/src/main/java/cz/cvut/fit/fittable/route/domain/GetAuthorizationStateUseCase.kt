@@ -28,7 +28,7 @@ class GetAuthorizationStateUseCase(
                 AuthorizationState.Unauthorized
             }
         } catch (exception: ApiException) {
-            AuthorizationState.Unauthorized
+            AuthorizationState.UnauthorizedOffline
         }
     }
 
@@ -44,4 +44,5 @@ sealed interface AuthorizationState {
     data class Authorized(val token: String) : AuthorizationState
 
     data object Unauthorized : AuthorizationState
+    data object UnauthorizedOffline : AuthorizationState
 }
