@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -48,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.fittable.R
 import cz.cvut.fit.fittable.app.ui.theme.FittableTheme
-import cz.cvut.fit.fittable.app.ui.theme.md_theme_light_outline
 import cz.cvut.fit.fittable.core.ui.HorizontalGridDivider
 import cz.cvut.fit.fittable.core.ui.Loading
 import cz.cvut.fit.fittable.core.ui.VerticalGridDivider
@@ -70,6 +70,7 @@ import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.hours
 
 private val defaultHourHeight = 64.dp
+private val gridStartOffset = 80.dp
 
 @Composable
 fun TimetableScreen(
@@ -199,7 +200,7 @@ private fun TimetableGrid(
         Box(
             modifier = modifier
         ) {
-            VerticalGridDivider(modifier = Modifier.padding(start = 100.dp))
+            VerticalGridDivider(modifier = Modifier.padding(start = gridStartOffset))
             TimetableHoursGrid(hours = hoursGrid, state = stateGrid)
             TimetableEventsGrid(
                 events = events,
@@ -248,7 +249,7 @@ private fun TimetableEventsGrid(
                 when (it) {
                     is TimetableSpacer -> EventSpacer(eventSpacer = it)
                     is TimetableEventContainer -> TimetableConflict(
-                        modifier = Modifier.padding(start = 100.dp),
+                        modifier = Modifier.padding(start = gridStartOffset),
                         conflict = it,
                         onEventClick = onEventClick
                     )
@@ -382,16 +383,14 @@ private fun HourGridItem(
             .padding(start = 16.dp)
             .height(hourSize)
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.Top
     ) {
         Text(
-            modifier = Modifier
-                .weight(0.2f)
-                .padding(end = 8.dp),
             text = hour,
-            color = md_theme_light_outline
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        Spacer(modifier = Modifier.width(12.dp))
         HorizontalGridDivider()
     }
 }
