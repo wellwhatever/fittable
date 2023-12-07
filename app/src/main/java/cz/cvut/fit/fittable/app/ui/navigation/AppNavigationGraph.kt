@@ -22,6 +22,7 @@ import kotlinx.serialization.json.Json
 @Composable
 fun AppNavigationGraph(
     navHostController: NavHostController,
+    onShowSnackBar: suspend (String, String?) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -39,7 +40,8 @@ fun AppNavigationGraph(
                     onSuccessfulTokenReceive =
                     navHostController::navigateToTimetable,
                 )
-            }
+            },
+            onShowSnackBar = onShowSnackBar,
         )
         searchNavGraph(
             onBackClick = navHostController::popBackStack,

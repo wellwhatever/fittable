@@ -3,7 +3,7 @@ package cz.cvut.fit.fittable.timetable.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cz.cvut.fit.fittable.shared.core.remote.ApiException
-import cz.cvut.fit.fittable.shared.core.remote.HttpExceptionDomain
+import cz.cvut.fit.fittable.shared.core.remote.NoInternetException
 import cz.cvut.fit.fittable.shared.core.util.todayDate
 import cz.cvut.fit.fittable.shared.search.domain.GetFilteredDayEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.CachePersonalEventsUseCase
@@ -37,15 +37,18 @@ class TimetableViewModel(
     private val error = MutableStateFlow<ApiException?>(null)
     private val selectedDate = MutableStateFlow(todayDate())
     private val events = MutableStateFlow<List<TimetableItem>>(emptyList())
+    private val showNoInternetSnackBar = MutableStateFlow(false)
 
     private val calendarBounds = flowOf(getCalendarBounds())
 
-    private val headerState = combine(calendarBounds, selectedDate) { bounds, selectedDate ->
-        HeaderState(
-            calendarBounds = bounds,
-            selectedDate = selectedDate
-        )
-    }
+    private val headerState =
+        combine(calendarBounds, selectedDate, searchResult) { bounds, selectedDate, filters ->
+            HeaderState(
+                calendarBounds = bounds,
+                selectedDate = selectedDate,
+                hasActiveFilter = filters != null
+            )
+        }
 
     val uiState: StateFlow<TimetableUiState> =
         combine(
@@ -53,14 +56,16 @@ class TimetableViewModel(
             hours,
             error,
             headerState,
-        ) { events, hours, error, header ->
+            showNoInternetSnackBar
+        ) { events, hours, error, header, showSnackBar ->
             when {
                 error != null -> error.mapTimetableException()
                 hours.isNullOrEmpty() || events.isEmpty() -> TimetableUiState.Loading
                 else -> TimetableUiState.Content(
                     hoursGrid = hours,
                     events = events,
-                    header = header
+                    header = header,
+                    showNoConnectionSnackBar = showSnackBar
                 )
             }
         }.stateIn(
@@ -106,16 +111,30 @@ class TimetableViewModel(
                     type = search.searchResult.eventCategory,
                     id = search.searchResult.eventId
                 )
+            }.also {
+                dismissNoInternetSnackBar()
             }
         } catch (exception: ApiException) {
             when (exception) {
-                !is HttpExceptionDomain -> getCachedEvents(date)
+                is NoInternetException -> {
+                    showNoInternetSnackBar()
+                    getCachedEvents(date)
+                }
+
                 else -> {
                     error.value = exception
                     emptyList()
                 }
             }
         }
+    }
+
+    private fun showNoInternetSnackBar() {
+        showNoInternetSnackBar.value = true
+    }
+
+    private fun dismissNoInternetSnackBar() {
+        showNoInternetSnackBar.value = false
     }
 
     private fun fetchHoursGrid() {
@@ -125,7 +144,10 @@ class TimetableViewModel(
     }
 
     fun onReloadClick() {
-        error.value = null
+        viewModelScope.launch {
+            error.value = null
+            events.value = getEvents(selectedDate.value, searchResult.value)
+        }
     }
 
     fun onContinueClick() {
@@ -137,6 +159,10 @@ class TimetableViewModel(
         viewModelScope.launch {
             selectedDate.value = day
         }
+    }
+
+    fun onFilterRemoveClick() {
+        searchResult.value = null
     }
 
     internal fun setSearchResult(args: TimetableArgs) {

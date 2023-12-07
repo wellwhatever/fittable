@@ -78,6 +78,7 @@ fun TimetableScreen(
     onSearchClick: () -> Unit,
     onEventClick: (eventId: String) -> Unit,
     navigateToAuthorization: () -> Unit,
+    onShowSnackBar: suspend (String, String?) -> Boolean,
     modifier: Modifier = Modifier,
     viewModel: TimetableViewModel = getViewModel(),
 ) {
@@ -94,7 +95,10 @@ fun TimetableScreen(
                 headerState = header,
                 onEventClick = onEventClick,
                 onDayClick = viewModel::onDayClick,
-                onSearchClick = onSearchClick
+                onSearchClick = onSearchClick,
+                showSnackBar = showNoConnectionSnackBar,
+                onShowSnackBar = onShowSnackBar,
+                onFilterRemoveClick = viewModel::onFilterRemoveClick
             )
 
             is TimetableUiState.Error -> {
@@ -142,9 +146,16 @@ internal fun TimetableInternal(
     onEventClick: (eventId: String) -> Unit,
     onDayClick: (day: LocalDate) -> Unit,
     onSearchClick: () -> Unit,
+    onFilterRemoveClick: () -> Unit,
     headerState: HeaderState,
+    showSnackBar: Boolean,
+    onShowSnackBar: suspend (String, String?) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
+    ShowNoInternetSnackBar(
+        showSnackBar = showSnackBar,
+        onShowSnackBar = onShowSnackBar
+    )
     CollapsingCalendarHeader(
         modifier = modifier,
         startMonth = headerState.calendarBounds.monthStart,
@@ -152,13 +163,29 @@ internal fun TimetableInternal(
         today = headerState.calendarBounds.today,
         selected = headerState.selectedDate,
         onDayClick = onDayClick,
-        onSearchClick = onSearchClick
+        onSearchClick = onSearchClick,
+        onFilterRemoveClick = onFilterRemoveClick,
+        hasActiveFilter = headerState.hasActiveFilter
     ) {
         TimetableGrid(
             hoursGrid = hoursGrid,
             events = events,
             onEventClick = onEventClick
         )
+    }
+}
+
+@Composable
+private fun ShowNoInternetSnackBar(
+    showSnackBar: Boolean,
+    onShowSnackBar: suspend (String, String?) -> Boolean,
+) {
+    val message = stringResource(id = R.string.timetable_offline_mode_snackbar_warning_message)
+    val action = stringResource(id = R.string.timetable_offline_mode_snackbar_warning_action)
+    LaunchedEffect(showSnackBar) {
+        if (showSnackBar) {
+            onShowSnackBar(message, action)
+        }
     }
 }
 
@@ -486,11 +513,15 @@ private fun TimetablePreview() {
                         monthEnd = date,
                         today = date,
                     ),
-                    selectedDate = date
+                    selectedDate = date,
+                    hasActiveFilter = true
                 ),
                 onEventClick = { },
                 onDayClick = { },
-                onSearchClick = { }
+                onSearchClick = { },
+                onFilterRemoveClick = {},
+                showSnackBar = false,
+                onShowSnackBar = { _, _ -> true }
             )
         }
     }

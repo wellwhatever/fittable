@@ -13,7 +13,8 @@ sealed interface TimetableUiState {
     data class Content(
         val hoursGrid: List<TimetableHour>,
         val events: List<TimetableItem>,
-        val header: HeaderState
+        val header: HeaderState,
+        val showNoConnectionSnackBar: Boolean,
     ) : TimetableUiState
 
 
@@ -30,6 +31,7 @@ sealed interface TimetableUiState {
 data class HeaderState(
     val calendarBounds: CalendarBounds,
     val selectedDate: LocalDate,
+    val hasActiveFilter: Boolean,
 )
 
 internal fun ApiException.mapTimetableException(): TimetableUiState.Error =

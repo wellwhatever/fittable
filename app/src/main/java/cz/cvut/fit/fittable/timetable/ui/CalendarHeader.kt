@@ -65,8 +65,10 @@ internal fun CollapsingCalendarHeader(
     endMonth: LocalDate,
     today: LocalDate,
     selected: LocalDate,
+    hasActiveFilter: Boolean,
     onDayClick: (LocalDate) -> Unit,
     onSearchClick: () -> Unit,
+    onFilterRemoveClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable CollapsingToolbarScaffoldScope.() -> Unit
 ) {
@@ -93,7 +95,7 @@ internal fun CollapsingCalendarHeader(
                 val monthDisplayName =
                     state.firstVisibleMonth.yearMonth.month.getDisplayName(
                         TextStyle.FULL,
-                        Locale.getDefault()
+                        Locale.ENGLISH
                     )
                 Row(
                     modifier = Modifier
@@ -106,16 +108,30 @@ internal fun CollapsingCalendarHeader(
                         title = "$monthDisplayName ${state.firstVisibleMonth.yearMonth.year}",
                         onClick = { expanded.value = expanded.value.not() },
                     )
-                    Icon(
-                        modifier = Modifier.clickable(
-                            onClick = onSearchClick,
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple(bounded = false)
-                        ),
-                        painter = painterResource(id = R.drawable.ic_search_24),
-                        contentDescription = "Search",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        if (hasActiveFilter) {
+                            Icon(
+                                modifier = Modifier.clickable(
+                                    onClick = onFilterRemoveClick,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = rememberRipple(bounded = false)
+                                ),
+                                painter = painterResource(R.drawable.baseline_filter_alt_off_24),
+                                contentDescription = "remove filter",
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                        Icon(
+                            modifier = Modifier.clickable(
+                                onClick = onSearchClick,
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = rememberRipple(bounded = false)
+                            ),
+                            painter = painterResource(id = R.drawable.ic_search_24),
+                            contentDescription = "Search",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 }
                 AnimatedVisibility(visible = expanded.value) {
                     CalendarHeaderInternal(
@@ -260,7 +276,8 @@ private fun CalendarHeaderPreview() {
             monthEnd = date,
             today = date,
         ),
-        selectedDate = date
+        selectedDate = date,
+        hasActiveFilter = false
     )
     Surface {
         FittableTheme {
@@ -275,7 +292,9 @@ private fun CalendarHeaderPreview() {
                         today = headerState.calendarBounds.today,
                         selected = headerState.selectedDate,
                         onDayClick = {},
-                        onSearchClick = {}
+                        onSearchClick = {},
+                        onFilterRemoveClick = {},
+                        hasActiveFilter = true
                     ) {}
                 }
             ) {}

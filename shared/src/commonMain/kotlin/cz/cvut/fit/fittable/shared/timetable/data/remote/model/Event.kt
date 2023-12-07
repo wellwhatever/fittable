@@ -17,7 +17,7 @@ data class Event(
     @SerialName("event_type")
     val eventType: EventType,
     @SerialName("id")
-    val id: Int,
+    val id: Long,
     @SerialName("links")
     val links: Links? = null,
     @SerialName("name")

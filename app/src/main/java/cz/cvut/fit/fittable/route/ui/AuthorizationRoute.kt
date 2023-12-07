@@ -15,6 +15,7 @@ fun TimetableRoute(
     onSearchClick: () -> Unit,
     onEventClick: (eventId: String) -> Unit,
     navigateToAuthorization: () -> Unit,
+    onShowSnackBar: suspend (String, String?) -> Boolean,
     modifier: Modifier = Modifier,
     viewModel: AuthorizationRouteViewModel = getViewModel(),
 ) {
@@ -28,7 +29,8 @@ fun TimetableRoute(
             onSearchClick = onSearchClick,
             onEventClick = onEventClick,
             modifier = modifier,
-            navigateToAuthorization = navigateToAuthorization
+            navigateToAuthorization = navigateToAuthorization,
+            onShowSnackBar = onShowSnackBar,
         )
 
         else -> navigateToAuthorization()

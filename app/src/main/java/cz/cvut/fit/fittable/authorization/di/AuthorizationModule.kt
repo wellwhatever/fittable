@@ -19,7 +19,7 @@ val authorizationModule = module {
     single {
         AuthorizationConfiguration(
             clientId = "69be8dc8-2117-4735-adc0-19102e8ef456",
-            scope = "urn:ctu:oauth:sirius:personal:read",
+            scope = "urn:ctu:oauth:sirius:personal:read urn:ctu:oauth:sirius:limited-by-idm:read cvut:sirius:limited-by-idm:read",
             redirectUri = "fit-timetable://oauth/callback",
         )
     }

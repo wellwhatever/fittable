@@ -22,4 +22,7 @@
     <string name="event_detail_course">Course</string>
     <string name="search_back">Search back</string>
 
+    <string name="timetable_offline_mode_snackbar_warning_message">You\'re in offline mode, only cached data will be displayed!</string>
+    <string name="timetable_offline_mode_snackbar_warning_action">Ok</string>
+
 </resources>

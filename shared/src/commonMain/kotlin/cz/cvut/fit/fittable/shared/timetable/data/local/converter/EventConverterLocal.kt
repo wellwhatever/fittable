@@ -10,7 +10,7 @@ class EventConverterLocal {
     fun toRemote(local: EventEntity): Event =
         with(local) {
             Event(
-                id = id.toInt(),
+                id = id,
                 links = Links(
                     course = local.title,
                     room = local.room

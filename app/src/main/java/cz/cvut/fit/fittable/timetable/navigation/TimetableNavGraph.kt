@@ -68,6 +68,7 @@ internal fun NavGraphBuilder.timetableNavGraph(
     onSearchClick: () -> Unit,
     navigateToAuthorization: () -> Unit,
     onBack: () -> Unit,
+    onShowSnackBar: suspend (String, String?) -> Boolean,
     nestedGraphs: NavGraphBuilder.() -> Unit = {},
 ) {
     navigation(
@@ -98,7 +99,8 @@ internal fun NavGraphBuilder.timetableNavGraph(
                     TimetableArgs(args)
                 } else {
                     null
-                }
+                },
+                onShowSnackBar = onShowSnackBar
             )
         }
         composable(
