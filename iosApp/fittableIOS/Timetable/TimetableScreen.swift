@@ -94,7 +94,6 @@ struct TimetableScreen: View {
     @ViewBuilder func eventContainer(
         container : TimetableEventContainer
     ) -> some View {
-        let height = container.convertToHeight(hourHeight: Int32(defaultHourHeight))
         HStack{
             ForEach(container.events.indices, id: \.self){ index in
                 let event = container.events[index]
@@ -141,6 +140,9 @@ struct TimetableScreen: View {
         .padding(CGFloat(itemPadding))
         .background(colorScheme.primary)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+        .onTapGesture {
+            viewModel.onEventClick(id: event.id)
+        }
     }
     
     @ViewBuilder func hoursGrid(

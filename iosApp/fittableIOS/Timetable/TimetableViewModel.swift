@@ -8,11 +8,14 @@
 import Foundation
 import shared
 import Combine
+import Stinsen
 
 extension TimetableScreen{
     @MainActor class ViewModel : ObservableObject{
         let generateHourseUseCase = TimetableDependencyProvider().generateHoursGridUseCase
         let getEventsUseCase = TimetableDependencyProvider().getDayEventsUseCase
+        
+        @RouterObject var mainCoordinator : NavigationRouter<MainCoordinator>!
         
         private var cancellables = Set<AnyCancellable>()
         @Published
@@ -55,6 +58,10 @@ extension TimetableScreen{
         
         func onDateSelected(date: Date){
             selectedDate = convertToKotlinDateTime(swiftDate: date)
+        }
+        
+        func onEventClick(id: String){
+            mainCoordinator.coordinator.routeToEventDetail(id: id)
         }
     }
 }
