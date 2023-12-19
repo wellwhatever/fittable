@@ -14,6 +14,7 @@ final class MainCoordinator: NavigationCoordinatable{
     
     @Root var authorizationRoute = makeAuthorization
     @Route(.fullScreen) var timetableRoute = makeTimetable
+    @Route(.fullScreen) var eventDetailRoute = makeDetail
     
     init(){
         self.stack = NavigationStack(initial: \MainCoordinator.authorizationRoute)
@@ -22,16 +23,23 @@ final class MainCoordinator: NavigationCoordinatable{
     func routeToTimetable(){
         self.popToRoot().route(to: \.timetableRoute)
     }
+    
+    func routeToEventDetail(id : String){
+        self.route(to: \.eventDetailRoute, id)
+    }
 }
 
 extension MainCoordinator{
-    @ViewBuilder func makeAuthorization() -> some View{
+    @ViewBuilder func makeAuthorization() -> some View {
         AuthorizationScreen()
     }
-    @ViewBuilder func makeSearch() -> some View{
+    @ViewBuilder func makeSearch() -> some View {
         EmptyView()
     }
-    @ViewBuilder func makeTimetable() -> some View{
+    @ViewBuilder func makeTimetable() -> some View {
         TimetableScreen()
+    }
+    @ViewBuilder func makeDetail(id: String) -> some View {
+        EventDetailScreen(id: id)
     }
 }

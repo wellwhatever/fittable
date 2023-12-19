@@ -12,12 +12,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.fittable.R
 import cz.cvut.fit.fittable.core.ui.Loading
+import cz.cvut.fit.fittable.shared.core.extensions.formatAsHoursAndMinutes
 import cz.cvut.fit.fittable.shared.detail.domain.model.EventDetail
 import org.koin.androidx.compose.getViewModel
 
@@ -40,7 +43,10 @@ fun EventDetailScreen(
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
 
+    val topBarState = (state.value as? EventDetailState.Content)
     EventDetailTopBar(
+        lecture = topBarState?.eventDetail?.course.orEmpty(),
+        lectureNumber = topBarState?.eventDetail?.sequenceNumber.orEmpty(),
         onBackClick = onBack,
     ) {
         with(state.value) {
@@ -67,6 +73,8 @@ fun EventDetailScreen(
 
 @Composable
 private fun EventDetailTopBar(
+    lecture: String,
+    lectureNumber: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
@@ -89,6 +97,18 @@ private fun EventDetailTopBar(
                 painter = painterResource(id = R.drawable.baseline_arrow_back_24),
                 contentDescription = "back",
                 tint = MaterialTheme.colorScheme.onPrimary
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(
+                text = lecture,
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = "#$lectureNumber",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.bodyMedium
             )
         }
         content()
@@ -133,9 +153,10 @@ private fun EventDetailInternal(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        EventTitle(
-            course = detail.course,
-            sequenceNumber = detail.sequenceNumber
+        EventDate(
+            startsDate = detail.startsDate.toString(),
+            startsTime = detail.starts.formatAsHoursAndMinutes(),
+            endsTime = detail.ends.formatAsHoursAndMinutes(),
         )
         Location(
             room = detail.room
@@ -149,9 +170,10 @@ private fun EventDetailInternal(
 }
 
 @Composable
-private fun EventTitle(
-    course: String,
-    sequenceNumber: String,
+private fun EventDate(
+    startsDate: String,
+    startsTime: String,
+    endsTime: String,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -165,16 +187,13 @@ private fun EventTitle(
         )
         Spacer(modifier = Modifier.width(24.dp))
         Text(
-            text = course,
-            style = MaterialTheme.typography.headlineSmall
+            text = startsDate,
+            style = MaterialTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             modifier = Modifier.weight(1f),
-            text = stringResource(
-                id = R.string.event_detail_lectures_count,
-                sequenceNumber
-            ),
+            text = "$startsTime-$endsTime",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.outline,
             textAlign = TextAlign.End

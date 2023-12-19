@@ -81,7 +81,8 @@ private fun SearchScreenInternal(
                 Text(
                     text = stringResource(id = R.string.search_text_field_placeholder),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.outline
+                    color = MaterialTheme.colorScheme.outline,
+                    maxLines = 1
                 )
             },
             trailingIcon = @Composable {

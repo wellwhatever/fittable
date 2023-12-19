@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		215C991B2B32313600E7F18F /* EventDetailScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215C991A2B32313600E7F18F /* EventDetailScreen.swift */; };
+		215C991D2B32315D00E7F18F /* EventDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215C991C2B32315D00E7F18F /* EventDetailViewModel.swift */; };
 		216E41A72AE48023003F91E1 /* fittableIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216E41A62AE48023003F91E1 /* fittableIOSApp.swift */; };
 		216E41A92AE48023003F91E1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216E41A82AE48023003F91E1 /* ContentView.swift */; };
 		216E41AB2AE48025003F91E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 216E41AA2AE48025003F91E1 /* Assets.xcassets */; };
@@ -47,6 +49,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		215C991A2B32313600E7F18F /* EventDetailScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailScreen.swift; sourceTree = "<group>"; };
+		215C991C2B32315D00E7F18F /* EventDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailViewModel.swift; sourceTree = "<group>"; };
 		216E41A32AE48023003F91E1 /* fittableIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fittableIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		216E41A62AE48023003F91E1 /* fittableIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = fittableIOSApp.swift; sourceTree = "<group>"; };
 		216E41A82AE48023003F91E1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -98,6 +102,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		215C99192B32311900E7F18F /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				215C991A2B32313600E7F18F /* EventDetailScreen.swift */,
+				215C991C2B32315D00E7F18F /* EventDetailViewModel.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
 		216E419A2AE48023003F91E1 = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +134,7 @@
 		216E41A52AE48023003F91E1 /* fittableIOS */ = {
 			isa = PBXGroup;
 			children = (
+				215C99192B32311900E7F18F /* Detail */,
 				21991A662B2F4D05007B9BED /* Timetable */,
 				21991A632B29F5E8007B9BED /* Info.plist */,
 				21991A5A2B265FDA007B9BED /* Core */,
@@ -382,7 +396,9 @@
 				21991A5D2B266008007B9BED /* Colors.swift in Sources */,
 				21991A592B265DA9007B9BED /* AuthorizationScreen.swift in Sources */,
 				21991A4F2B265AA3007B9BED /* MainCoordinator.swift in Sources */,
+				215C991D2B32315D00E7F18F /* EventDetailViewModel.swift in Sources */,
 				216E41A72AE48023003F91E1 /* fittableIOSApp.swift in Sources */,
+				215C991B2B32313600E7F18F /* EventDetailScreen.swift in Sources */,
 				21991A6A2B2F6565007B9BED /* TimetableViewModel.swift in Sources */,
 				21991A682B2F4D15007B9BED /* TimetableScreen.swift in Sources */,
 			);

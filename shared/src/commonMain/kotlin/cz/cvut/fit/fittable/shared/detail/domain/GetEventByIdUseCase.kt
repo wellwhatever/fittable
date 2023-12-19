@@ -16,7 +16,9 @@ class GetEventByIdUseCase(
                 occupied = occupied,
                 eventType = eventType,
                 parallel = parallel,
-                teacherUsernames = links?.teachers.orEmpty()
+                teacherUsernames = links?.teachers.orEmpty(),
+                starts = startsAt,
+                ends = endsAt
             )
         }
 
