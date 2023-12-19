@@ -432,7 +432,12 @@ private fun TimetableUnknownError(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = stringResource(id = R.string.timetable_unknown_error))
+        Text(
+            text = stringResource(id = R.string.timetable_unknown_error),
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.headlineMedium,
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onReloadClick) {
             Text(stringResource(id = R.string.timetable_reload_button_hint))
