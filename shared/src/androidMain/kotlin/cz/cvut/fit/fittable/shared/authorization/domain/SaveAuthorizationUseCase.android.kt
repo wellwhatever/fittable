@@ -1,15 +1,17 @@
-package cz.cvut.fit.fittable.authorization.domain
+package cz.cvut.fit.fittable.shared.authorization.domain
 
-import cz.cvut.fit.fittable.authorization.data.AuthorizationRepository
 import cz.cvut.fit.fittable.shared.authorization.data.local.AuthorizationLocalDataSource
-import cz.cvut.fit.fittable.shared.authorization.domain.SaveUsernameUseCase
+import cz.cvut.fit.fittable.shared.authorization.data.remote.AuthorizationRepository
+import cz.cvut.fit.fittable.shared.core.remote.ApiException
+import kotlin.coroutines.cancellation.CancellationException
 
-class SaveAuthorizationTokenUseCase(
+actual class SaveAuthorizationTokenUseCase(
     private val authorizationRepository: AuthorizationRepository,
     private val authorizationLocalDataSource: AuthorizationLocalDataSource,
     private val saveUsernameUseCase: SaveUsernameUseCase
 ) {
-    suspend operator fun invoke(rawData: String) {
+    @Throws(CancellationException::class, ApiException::class)
+    actual suspend operator fun invoke(rawData: String) {
         val token = authorizationRepository.extractAuthorizationToken(rawData)
         authorizationLocalDataSource.updateAuthorizationToken(token.orEmpty())
         saveUsernameUseCase()

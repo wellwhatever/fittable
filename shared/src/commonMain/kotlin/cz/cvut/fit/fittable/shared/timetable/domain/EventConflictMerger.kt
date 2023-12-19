@@ -114,7 +114,7 @@ internal class EventConflictMerger(
 
     companion object {
         private val schoolDayStart = 7.hours
-        private val schoolDayEnd = 21.hours
+        private val schoolDayEnd = 22.hours
     }
 }
 

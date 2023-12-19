@@ -341,6 +341,29 @@ private fun TimetableHoursGrid(
 }
 
 @Composable
+private fun HourGridItem(
+    hour: String,
+    modifier: Modifier = Modifier,
+    hourSize: Dp = defaultHourHeight,
+) {
+    Row(
+        modifier = modifier
+            .padding(start = 16.dp)
+            .height(hourSize)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.Top
+    ) {
+        Text(
+            text = hour,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        HorizontalGridDivider()
+    }
+}
+
+@Composable
 private fun EventItem(
     event: TimetableSingleEvent,
     onEventClick: (eventId: String) -> Unit,
@@ -397,29 +420,6 @@ private fun EventSpacer(
             eventSpacer.convertToHeight(defaultHourHeight.value.toInt()).dp
         )
     )
-}
-
-@Composable
-private fun HourGridItem(
-    hour: String,
-    modifier: Modifier = Modifier,
-    hourSize: Dp = defaultHourHeight,
-) {
-    Row(
-        modifier = modifier
-            .padding(start = 16.dp)
-            .height(hourSize)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.Top
-    ) {
-        Text(
-            text = hour,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        HorizontalGridDivider()
-    }
 }
 
 @Composable

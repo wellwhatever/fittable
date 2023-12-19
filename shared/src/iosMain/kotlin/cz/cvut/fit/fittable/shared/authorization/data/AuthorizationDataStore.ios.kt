@@ -16,7 +16,7 @@ fun dataStore(dataStoreName: String): DataStore<Preferences> = createDataStore(
             directory = NSDocumentDirectory,
             inDomain = NSUserDomainMask,
             appropriateForURL = null,
-            create = false,
+            create = true,
             error = null,
         )
         requireNotNull(documentDirectory).path + "/$dataStoreName"

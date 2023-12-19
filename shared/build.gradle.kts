@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
@@ -5,6 +6,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("app.cash.sqldelight")
+    id("co.touchlab.skie")
 }
 
 repositories {
@@ -77,6 +79,14 @@ kotlin {
             }
         }
     }
+
+    targets.filterIsInstance<KotlinNativeTarget>().forEach{
+        it.binaries.filterIsInstance<org.jetbrains.kotlin.gradle.plugin.mpp.Framework>()
+            .forEach { lib ->
+                lib.isStatic = false
+                lib.linkerOpts.add("-lsqlite3")
+            }
+    }
 }
 
 android {
@@ -101,4 +111,5 @@ sqldelight {
             generateAsync.set(true)
         }
     }
+    linkSqlite.set(true)
 }

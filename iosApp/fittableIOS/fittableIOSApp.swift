@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import shared
 
 @main
 struct fittableIOSApp: App {
+    init(){
+        DiHelperKt.doInitKoin()
+    }
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        WindowGroup{
+            MainCoordinator().view()
         }
     }
 }

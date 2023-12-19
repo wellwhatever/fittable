@@ -14,6 +14,19 @@
 		216E41B82AE48025003F91E1 /* fittableIOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216E41B72AE48025003F91E1 /* fittableIOSTests.swift */; };
 		216E41C22AE48025003F91E1 /* fittableIOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216E41C12AE48025003F91E1 /* fittableIOSUITests.swift */; };
 		216E41C42AE48025003F91E1 /* fittableIOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216E41C32AE48025003F91E1 /* fittableIOSUITestsLaunchTests.swift */; };
+		21991A4C2B265885007B9BED /* Stinsen in Frameworks */ = {isa = PBXBuildFile; productRef = 21991A4B2B265885007B9BED /* Stinsen */; };
+		21991A4F2B265AA3007B9BED /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21991A4E2B265AA3007B9BED /* MainCoordinator.swift */; };
+		21991A552B265D59007B9BED /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 21991A542B265D59007B9BED /* AppAuth */; };
+		21991A572B265D59007B9BED /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = 21991A562B265D59007B9BED /* AppAuthCore */; };
+		21991A592B265DA9007B9BED /* AuthorizationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21991A582B265DA9007B9BED /* AuthorizationScreen.swift */; };
+		21991A5D2B266008007B9BED /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21991A5C2B266008007B9BED /* Colors.swift */; };
+		21991A5F2B28F122007B9BED /* AuthorizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21991A5E2B28F122007B9BED /* AuthorizationViewModel.swift */; };
+		21991A622B29F344007B9BED /* OAuthSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 21991A612B29F344007B9BED /* OAuthSwift */; };
+		21991A682B2F4D15007B9BED /* TimetableScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21991A672B2F4D15007B9BED /* TimetableScreen.swift */; };
+		21991A6A2B2F6565007B9BED /* TimetableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21991A692B2F6565007B9BED /* TimetableViewModel.swift */; };
+		21991A6D2B3075FA007B9BED /* CalendarView in Frameworks */ = {isa = PBXBuildFile; productRef = 21991A6C2B3075FA007B9BED /* CalendarView */; };
+		21991A702B30885A007B9BED /* KotlinDatetimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21991A6F2B30885A007B9BED /* KotlinDatetimeConverter.swift */; };
+		21991A732B30A839007B9BED /* SwiftUICalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 21991A722B30A839007B9BED /* SwiftUICalendar */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +57,14 @@
 		216E41BD2AE48025003F91E1 /* fittableIOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = fittableIOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		216E41C12AE48025003F91E1 /* fittableIOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = fittableIOSUITests.swift; sourceTree = "<group>"; };
 		216E41C32AE48025003F91E1 /* fittableIOSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = fittableIOSUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		21991A4E2B265AA3007B9BED /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		21991A582B265DA9007B9BED /* AuthorizationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScreen.swift; sourceTree = "<group>"; };
+		21991A5C2B266008007B9BED /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		21991A5E2B28F122007B9BED /* AuthorizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationViewModel.swift; sourceTree = "<group>"; };
+		21991A632B29F5E8007B9BED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		21991A672B2F4D15007B9BED /* TimetableScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableScreen.swift; sourceTree = "<group>"; };
+		21991A692B2F6565007B9BED /* TimetableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableViewModel.swift; sourceTree = "<group>"; };
+		21991A6F2B30885A007B9BED /* KotlinDatetimeConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KotlinDatetimeConverter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +72,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21991A622B29F344007B9BED /* OAuthSwift in Frameworks */,
+				21991A6D2B3075FA007B9BED /* CalendarView in Frameworks */,
+				21991A552B265D59007B9BED /* AppAuth in Frameworks */,
+				21991A4C2B265885007B9BED /* Stinsen in Frameworks */,
+				21991A732B30A839007B9BED /* SwiftUICalendar in Frameworks */,
+				21991A572B265D59007B9BED /* AppAuthCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +121,11 @@
 		216E41A52AE48023003F91E1 /* fittableIOS */ = {
 			isa = PBXGroup;
 			children = (
+				21991A662B2F4D05007B9BED /* Timetable */,
+				21991A632B29F5E8007B9BED /* Info.plist */,
+				21991A5A2B265FDA007B9BED /* Core */,
+				21991A502B265B79007B9BED /* Authorization */,
+				21991A4D2B265A63007B9BED /* Navigation */,
 				216E41A62AE48023003F91E1 /* fittableIOSApp.swift */,
 				216E41A82AE48023003F91E1 /* ContentView.swift */,
 				216E41AA2AE48025003F91E1 /* Assets.xcassets */,
@@ -127,6 +159,57 @@
 			path = fittableIOSUITests;
 			sourceTree = "<group>";
 		};
+		21991A4D2B265A63007B9BED /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				21991A4E2B265AA3007B9BED /* MainCoordinator.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		21991A502B265B79007B9BED /* Authorization */ = {
+			isa = PBXGroup;
+			children = (
+				21991A582B265DA9007B9BED /* AuthorizationScreen.swift */,
+				21991A5E2B28F122007B9BED /* AuthorizationViewModel.swift */,
+			);
+			path = Authorization;
+			sourceTree = "<group>";
+		};
+		21991A5A2B265FDA007B9BED /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				21991A6E2B308844007B9BED /* Utils */,
+				21991A5B2B265FE1007B9BED /* Ui */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		21991A5B2B265FE1007B9BED /* Ui */ = {
+			isa = PBXGroup;
+			children = (
+				21991A5C2B266008007B9BED /* Colors.swift */,
+			);
+			path = Ui;
+			sourceTree = "<group>";
+		};
+		21991A662B2F4D05007B9BED /* Timetable */ = {
+			isa = PBXGroup;
+			children = (
+				21991A672B2F4D15007B9BED /* TimetableScreen.swift */,
+				21991A692B2F6565007B9BED /* TimetableViewModel.swift */,
+			);
+			path = Timetable;
+			sourceTree = "<group>";
+		};
+		21991A6E2B308844007B9BED /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				21991A6F2B30885A007B9BED /* KotlinDatetimeConverter.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -144,6 +227,14 @@
 			dependencies = (
 			);
 			name = fittableIOS;
+			packageProductDependencies = (
+				21991A4B2B265885007B9BED /* Stinsen */,
+				21991A542B265D59007B9BED /* AppAuth */,
+				21991A562B265D59007B9BED /* AppAuthCore */,
+				21991A612B29F344007B9BED /* OAuthSwift */,
+				21991A6C2B3075FA007B9BED /* CalendarView */,
+				21991A722B30A839007B9BED /* SwiftUICalendar */,
+			);
 			productName = fittableIOS;
 			productReference = 216E41A32AE48023003F91E1 /* fittableIOS.app */;
 			productType = "com.apple.product-type.application";
@@ -216,6 +307,13 @@
 				Base,
 			);
 			mainGroup = 216E419A2AE48023003F91E1;
+			packageReferences = (
+				21991A4A2B265885007B9BED /* XCRemoteSwiftPackageReference "stinsen" */,
+				21991A532B265D59007B9BED /* XCRemoteSwiftPackageReference "AppAuth-iOS" */,
+				21991A602B29F344007B9BED /* XCRemoteSwiftPackageReference "OAuthSwift" */,
+				21991A6B2B3075FA007B9BED /* XCRemoteSwiftPackageReference "CalendarView" */,
+				21991A712B30A839007B9BED /* XCRemoteSwiftPackageReference "SwiftUICalendar" */,
+			);
 			productRefGroup = 216E41A42AE48023003F91E1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -278,8 +376,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21991A702B30885A007B9BED /* KotlinDatetimeConverter.swift in Sources */,
+				21991A5F2B28F122007B9BED /* AuthorizationViewModel.swift in Sources */,
 				216E41A92AE48023003F91E1 /* ContentView.swift in Sources */,
+				21991A5D2B266008007B9BED /* Colors.swift in Sources */,
+				21991A592B265DA9007B9BED /* AuthorizationScreen.swift in Sources */,
+				21991A4F2B265AA3007B9BED /* MainCoordinator.swift in Sources */,
 				216E41A72AE48023003F91E1 /* fittableIOSApp.swift in Sources */,
+				21991A6A2B2F6565007B9BED /* TimetableViewModel.swift in Sources */,
+				21991A682B2F4D15007B9BED /* TimetableScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,6 +546,7 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = fittableIOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -475,6 +581,7 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = fittableIOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -610,6 +717,82 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		21991A4A2B265885007B9BED /* XCRemoteSwiftPackageReference "stinsen" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rundfunk47/stinsen";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		21991A532B265D59007B9BED /* XCRemoteSwiftPackageReference "AppAuth-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/openid/AppAuth-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		21991A602B29F344007B9BED /* XCRemoteSwiftPackageReference "OAuthSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/OAuthSwift/OAuthSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		21991A6B2B3075FA007B9BED /* XCRemoteSwiftPackageReference "CalendarView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jantimar/CalendarView";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		21991A712B30A839007B9BED /* XCRemoteSwiftPackageReference "SwiftUICalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/GGJJack/SwiftUICalendar";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.14;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		21991A4B2B265885007B9BED /* Stinsen */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21991A4A2B265885007B9BED /* XCRemoteSwiftPackageReference "stinsen" */;
+			productName = Stinsen;
+		};
+		21991A542B265D59007B9BED /* AppAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21991A532B265D59007B9BED /* XCRemoteSwiftPackageReference "AppAuth-iOS" */;
+			productName = AppAuth;
+		};
+		21991A562B265D59007B9BED /* AppAuthCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21991A532B265D59007B9BED /* XCRemoteSwiftPackageReference "AppAuth-iOS" */;
+			productName = AppAuthCore;
+		};
+		21991A612B29F344007B9BED /* OAuthSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21991A602B29F344007B9BED /* XCRemoteSwiftPackageReference "OAuthSwift" */;
+			productName = OAuthSwift;
+		};
+		21991A6C2B3075FA007B9BED /* CalendarView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21991A6B2B3075FA007B9BED /* XCRemoteSwiftPackageReference "CalendarView" */;
+			productName = CalendarView;
+		};
+		21991A722B30A839007B9BED /* SwiftUICalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21991A712B30A839007B9BED /* XCRemoteSwiftPackageReference "SwiftUICalendar" */;
+			productName = SwiftUICalendar;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 216E419B2AE48023003F91E1 /* Project object */;
 }

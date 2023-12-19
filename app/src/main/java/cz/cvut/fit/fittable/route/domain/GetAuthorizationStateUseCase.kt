@@ -1,6 +1,6 @@
 package cz.cvut.fit.fittable.route.domain
 
-import cz.cvut.fit.fittable.authorization.data.AuthorizationRepository
+import cz.cvut.fit.fittable.shared.authorization.data.remote.AuthorizationRepository
 import cz.cvut.fit.fittable.shared.core.remote.ApiException
 import cz.cvut.fit.fittable.shared.core.remote.HttpExceptionDomain
 import kotlinx.coroutines.flow.Flow
