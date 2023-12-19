@@ -1,6 +1,6 @@
 package cz.cvut.fit.fittable.shared.authorization.di
 
-import cz.cvut.fit.fittable.shared.authorization.data.AuthorizationLocalDataSource
+import cz.cvut.fit.fittable.shared.authorization.data.local.AuthorizationLocalDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens

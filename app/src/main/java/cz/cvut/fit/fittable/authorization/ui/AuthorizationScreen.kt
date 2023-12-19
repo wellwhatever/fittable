@@ -82,23 +82,24 @@ private fun AuthorizationContent(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        // TODO fix this image!!!
         Image(
             modifier = Modifier.padding(16.dp),
-            painter = painterResource(id = R.drawable.ic_unitable_logo_title),
+            painter = painterResource(id = R.drawable.ic_unitable_logo),
             contentDescription =
             stringResource(id = R.string.authorization_screen_title),
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            modifier = Modifier.padding(horizontal = 32.dp),
+            modifier = Modifier.padding(horizontal = 80.dp),
             text = stringResource(id = R.string.authorization_screen_message),
             style = MaterialTheme.typography.titleSmall,
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            modifier = Modifier.padding(horizontal = 32.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(horizontal = 32.dp)
+                .fillMaxWidth(),
             onClick = onAuthorizeClick,
         ) {
             Text(

@@ -1,21 +1,29 @@
 package cz.cvut.fit.fittable.shared.timetable.domain
 
-import cz.cvut.fit.fittable.shared.timetable.data.EventsRepository
-import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventsConverterRemote
+import cz.cvut.fit.fittable.shared.core.remote.ApiException
+import cz.cvut.fit.fittable.shared.timetable.data.EventsCacheRepository
+import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventConverterRemote
 import cz.cvut.fit.fittable.shared.timetable.domain.model.EventDomain
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
 class GetUserEventsUseCase(
-    private val eventsRepository: EventsRepository,
-    private val eventsConverterRemote: EventsConverterRemote
+    private val eventsRepository: EventsCacheRepository,
+    private val eventConverterRemote: EventConverterRemote,
 ) {
-    suspend operator fun invoke(from: LocalDate, to: LocalDate): List<EventDomain> {
-        val events = eventsRepository.getUserEvents(from, to)
-        return eventsConverterRemote.toDomain(events)
+    @Throws(CancellationException::class, ApiException::class)
+    suspend operator fun invoke(
+        username: String,
+        from: LocalDate,
+        to: LocalDate
+    ): List<EventDomain> {
+//        val events = eventsRepository.getUserEvents(from = from, to = to, username = username)
+//        return events.map { eventConverterRemote.toDomain(it) }
+        return generateFakeEvents()
     }
 
     private fun generateFakeEvents(): List<EventDomain> {
@@ -35,25 +43,11 @@ class GetUserEventsUseCase(
 
         return listOf(
             EventDomain(
-                title = "Bi-KSP",
-                room = "T9-301",
-                start = event1start,
-                end = event1end,
-                id = "1"
-            ),
-            EventDomain(
-                title = "Bi-AMP",
-                room = "T9-202",
-                start = event2start,
-                end = event2end,
-                id = "2"
-            ),
-            EventDomain(
-                title = "Bi-AMP",
-                room = "T9-202",
-                start = event3start,
-                end = event3end,
-                id = "3"
+                title = "Bi-KSP", room = "T9-301", start = event1start, end = event1end, id = "1"
+            ), EventDomain(
+                title = "Bi-AMP", room = "T9-202", start = event2start, end = event2end, id = "2"
+            ), EventDomain(
+                title = "Bi-AMP", room = "T9-202", start = event3start, end = event3end, id = "3"
             )
         )
     }

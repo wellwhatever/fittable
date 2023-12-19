@@ -1,11 +1,17 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
-// TODO extract this to convention plugins
-
 plugins {
-    id("org.jetbrains.kotlin.multiplatform")
+    kotlin("multiplatform")
     id("com.android.library")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("app.cash.sqldelight")
+    id("co.touchlab.skie")
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -40,6 +46,8 @@ kotlin {
                 implementation(libs.kotlin.coroutinesCore)
                 implementation(libs.kotlin.serialization)
                 implementation(libs.kotlin.datetime)
+                implementation(libs.sqlDelight.common)
+                implementation(libs.sqlDelight.coroutines)
             }
         }
 
@@ -52,6 +60,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(libs.ktor.android)
+                implementation(libs.sqlDelight.android)
             }
         }
 
@@ -66,8 +75,17 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.ktor.ios)
+                implementation(libs.sqlDelight.ios)
             }
         }
+    }
+
+    targets.filterIsInstance<KotlinNativeTarget>().forEach{
+        it.binaries.filterIsInstance<org.jetbrains.kotlin.gradle.plugin.mpp.Framework>()
+            .forEach { lib ->
+                lib.isStatic = false
+                lib.linkerOpts.add("-lsqlite3")
+            }
     }
 }
 
@@ -84,4 +102,14 @@ android {
 }
 dependencies {
     implementation(libs.animation.graphics.android)
+}
+
+sqldelight {
+    databases {
+        create("TimetableDatabase") {
+            packageName.set("cz.cvut.fit.fittable")
+            generateAsync.set(true)
+        }
+    }
+    linkSqlite.set(true)
 }

@@ -3,7 +3,7 @@ package cz.cvut.fit.fittable.authorization.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cz.cvut.fit.fittable.authorization.domain.CreateLoginRequestUseCase
-import cz.cvut.fit.fittable.authorization.domain.SaveAuthorizationTokenUseCase
+import cz.cvut.fit.fittable.shared.authorization.domain.SaveAuthorizationTokenUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -39,6 +39,6 @@ class AuthorizationViewModel internal constructor(
     }
 
     override fun onReceiveTokenError(error: String) {
-        TODO("onActivityResultError display error here")
+        // TODO("onActivityResultError display error here")
     }
 }

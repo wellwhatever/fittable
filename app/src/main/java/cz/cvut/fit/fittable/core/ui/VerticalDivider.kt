@@ -19,7 +19,7 @@ private const val DIVIDER_ALPHA = 0.12f
 @Composable
 fun VerticalGridDivider(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DIVIDER_ALPHA),
+    color: Color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = DIVIDER_ALPHA),
     thickness: Dp = 1.dp
 ) {
     Box(
@@ -37,6 +37,6 @@ fun RowScope.HorizontalGridDivider() {
             .weight(1f)
             .fillMaxWidth(),
         thickness = 1.dp,
-        color = MaterialTheme.colorScheme.onSurface.copy(alpha = DIVIDER_ALPHA)
+        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = DIVIDER_ALPHA)
     )
 }

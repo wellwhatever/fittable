@@ -18,16 +18,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -37,36 +40,51 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.cvut.fit.fittable.R
-import cz.cvut.fit.fittable.app.ui.theme.md_theme_light_outline
+import cz.cvut.fit.fittable.app.ui.theme.FittableTheme
 import cz.cvut.fit.fittable.core.ui.HorizontalGridDivider
 import cz.cvut.fit.fittable.core.ui.Loading
 import cz.cvut.fit.fittable.core.ui.VerticalGridDivider
 import cz.cvut.fit.fittable.shared.core.extensions.formatAsHoursAndMinutes
-import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEvent
+import cz.cvut.fit.fittable.shared.timetable.domain.model.CalendarBounds
+import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableConflictContent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableEventContainer
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableHour
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSingleEvent
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableSpacer
+import cz.cvut.fit.fittable.timetable.navigation.TimetableArgs
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.getViewModel
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.hours
 
 private val defaultHourHeight = 64.dp
+private val gridStartOffset = 80.dp
 
 @Composable
 fun TimetableScreen(
+    searchResult: TimetableArgs?,
+    onSearchClick: () -> Unit,
     onEventClick: (eventId: String) -> Unit,
+    navigateToAuthorization: () -> Unit,
+    onShowSnackBar: suspend (String, String?) -> Boolean,
     modifier: Modifier = Modifier,
-    timetableViewModel: TimetableViewModel = getViewModel(),
+    viewModel: TimetableViewModel = getViewModel(),
 ) {
-    val state = timetableViewModel.uiState.collectAsStateWithLifecycle()
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
+
+    searchResult?.let { viewModel.setSearchResult(it) }
 
     with(state.value) {
         when (this) {
@@ -76,17 +94,48 @@ fun TimetableScreen(
                 events = events,
                 headerState = header,
                 onEventClick = onEventClick,
-                onDayClick = timetableViewModel::onDayClick
+                onDayClick = viewModel::onDayClick,
+                onSearchClick = onSearchClick,
+                showSnackBar = showNoConnectionSnackBar,
+                onShowSnackBar = onShowSnackBar,
+                onFilterRemoveClick = viewModel::onFilterRemoveClick
             )
 
-            is TimetableUiState.Error -> TimetableError(
-                modifier = modifier,
-                error = error,
-                onReloadClick = timetableViewModel::onReloadClick
-            )
+            is TimetableUiState.Error -> {
+                TimetableError(
+                    modifier = modifier,
+                    error = this,
+                    onReloadClick = viewModel::onReloadClick,
+                    onContinueClick = viewModel::onContinueClick,
+                    navigateToAuthorization = navigateToAuthorization
+                )
+            }
 
             TimetableUiState.Loading -> Loading()
         }
+    }
+}
+
+@Composable
+private fun TimetableError(
+    error: TimetableUiState.Error,
+    onReloadClick: () -> Unit,
+    onContinueClick: () -> Unit,
+    navigateToAuthorization: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    when (error) {
+        TimetableUiState.Error.NoPermission -> TimetableNoPermission(
+            modifier = modifier,
+            onContinueClick = onContinueClick
+        )
+
+        TimetableUiState.Error.UnknownError -> TimetableUnknownError(
+            modifier = modifier,
+            onReloadClick = onReloadClick
+        )
+
+        TimetableUiState.Error.Unauthorized -> navigateToAuthorization()
     }
 }
 
@@ -96,22 +145,47 @@ internal fun TimetableInternal(
     events: List<TimetableItem>,
     onEventClick: (eventId: String) -> Unit,
     onDayClick: (day: LocalDate) -> Unit,
+    onSearchClick: () -> Unit,
+    onFilterRemoveClick: () -> Unit,
     headerState: HeaderState,
+    showSnackBar: Boolean,
+    onShowSnackBar: suspend (String, String?) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        CalendarHeader(
-            startMonth = headerState.monthStart,
-            endMonth = headerState.monthEnd,
-            today = headerState.today,
-            selected = headerState.selectedDate,
-            onDayClick = onDayClick
-        )
+    ShowNoInternetSnackBar(
+        showSnackBar = showSnackBar,
+        onShowSnackBar = onShowSnackBar
+    )
+    CollapsingCalendarHeader(
+        modifier = modifier,
+        startMonth = headerState.calendarBounds.monthStart,
+        endMonth = headerState.calendarBounds.monthEnd,
+        today = headerState.calendarBounds.today,
+        selected = headerState.selectedDate,
+        onDayClick = onDayClick,
+        onSearchClick = onSearchClick,
+        onFilterRemoveClick = onFilterRemoveClick,
+        hasActiveFilter = headerState.hasActiveFilter
+    ) {
         TimetableGrid(
             hoursGrid = hoursGrid,
             events = events,
             onEventClick = onEventClick
         )
+    }
+}
+
+@Composable
+private fun ShowNoInternetSnackBar(
+    showSnackBar: Boolean,
+    onShowSnackBar: suspend (String, String?) -> Boolean,
+) {
+    val message = stringResource(id = R.string.timetable_offline_mode_snackbar_warning_message)
+    val action = stringResource(id = R.string.timetable_offline_mode_snackbar_warning_action)
+    LaunchedEffect(showSnackBar) {
+        if (showSnackBar) {
+            onShowSnackBar(message, action)
+        }
     }
 }
 
@@ -153,7 +227,7 @@ private fun TimetableGrid(
         Box(
             modifier = modifier
         ) {
-            VerticalGridDivider(modifier = Modifier.padding(start = 100.dp))
+            VerticalGridDivider(modifier = Modifier.padding(start = gridStartOffset))
             TimetableHoursGrid(hours = hoursGrid, state = stateGrid)
             TimetableEventsGrid(
                 events = events,
@@ -202,7 +276,7 @@ private fun TimetableEventsGrid(
                 when (it) {
                     is TimetableSpacer -> EventSpacer(eventSpacer = it)
                     is TimetableEventContainer -> TimetableConflict(
-                        modifier = Modifier.padding(start = 100.dp),
+                        modifier = Modifier.padding(start = gridStartOffset),
                         conflict = it,
                         onEventClick = onEventClick
                     )
@@ -267,6 +341,29 @@ private fun TimetableHoursGrid(
 }
 
 @Composable
+private fun HourGridItem(
+    hour: String,
+    modifier: Modifier = Modifier,
+    hourSize: Dp = defaultHourHeight,
+) {
+    Row(
+        modifier = modifier
+            .padding(start = 16.dp)
+            .height(hourSize)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.Top
+    ) {
+        Text(
+            text = hour,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        HorizontalGridDivider()
+    }
+}
+
+@Composable
 private fun EventItem(
     event: TimetableSingleEvent,
     onEventClick: (eventId: String) -> Unit,
@@ -275,42 +372,40 @@ private fun EventItem(
 ) {
     val height =
         eventHeight?.dp ?: event.convertToHeight(defaultHourHeight.value.roundToInt()).dp
-    Column(
+    Row(
         modifier = modifier
             .height(height)
+            .fillMaxWidth()
             .padding(1.dp)
             .clip(MaterialTheme.shapes.small)
             .background(color = MaterialTheme.colorScheme.primary)
             .clickable(onClick = { onEventClick(event.id) })
-            .padding(8.dp)
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Column {
             Text(
                 text = event.title,
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.titleMedium
             )
-            val startFormatted = event.start.formatAsHoursAndMinutes()
-            val endFormatted = event.end.formatAsHoursAndMinutes()
             Text(
-                text = stringResource(
-                    R.string.timetable_time_duration,
-                    startFormatted,
-                    endFormatted
-                ),
+                text = event.room,
                 color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.labelMedium,
-                textAlign = TextAlign.Start
+                style = MaterialTheme.typography.labelMedium
             )
         }
+        val startFormatted = event.start.formatAsHoursAndMinutes()
+        val endFormatted = event.end.formatAsHoursAndMinutes()
         Text(
-            text = event.room,
+            text = stringResource(
+                R.string.timetable_time_duration,
+                startFormatted,
+                endFormatted
+            ),
             color = MaterialTheme.colorScheme.onPrimary,
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.labelMedium,
+            textAlign = TextAlign.Start
         )
     }
 }
@@ -328,43 +423,106 @@ private fun EventSpacer(
 }
 
 @Composable
-private fun HourGridItem(
-    hour: String,
-    modifier: Modifier = Modifier,
-    hourSize: Dp = defaultHourHeight,
-) {
-    Row(
-        modifier = modifier
-            .padding(start = 16.dp)
-            .height(hourSize)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.Top
-    ) {
-        Text(
-            modifier = Modifier
-                .weight(0.2f)
-                .padding(end = 8.dp),
-            text = hour,
-            color = md_theme_light_outline
-        )
-        HorizontalGridDivider()
-    }
-}
-
-@Composable
-private fun TimetableError(
-    error: String,
+private fun TimetableUnknownError(
     onReloadClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.fillMaxHeight(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Text(error)
+        Text(text = stringResource(id = R.string.timetable_unknown_error))
+        Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onReloadClick) {
             Text(stringResource(id = R.string.timetable_reload_button_hint))
+        }
+    }
+}
+
+@Composable
+private fun TimetableNoPermission(
+    onContinueClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_lock_person_64),
+            contentDescription = stringResource(
+                R.string.timetable_error_no_permission
+            ),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = stringResource(id = R.string.timetable_error_no_permission_message_title),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(id = R.string.timetable_error_no_permission_message_body),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onContinueClick) {
+            Text(stringResource(id = R.string.timetable_error_no_permission_button_hint))
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun TimetablePreview() {
+    val start = Instant.parse("2023-11-16T16:15:00.000+01:00")
+    val date = start.toLocalDateTime(TimeZone.currentSystemDefault()).date
+    Surface {
+        FittableTheme {
+            TimetableInternal(
+                hoursGrid = (7..24).map {
+                    TimetableHour("$it:00")
+                },
+                events = listOf(
+                    TimetableEventContainer(
+                        events = listOf(
+                            TimetableConflictContent(
+                                event = TimetableSingleEvent(
+                                    title = "BI-AG1",
+                                    room = "T9:301",
+                                    id = "666",
+                                    start = start,
+                                    end = start + 1.hours
+                                ),
+                            )
+                        ),
+                        start = start,
+                        end = start + 1.hours
+                    )
+                ),
+                headerState = HeaderState(
+                    calendarBounds = CalendarBounds(
+                        monthStart = date,
+                        monthEnd = date,
+                        today = date,
+                    ),
+                    selectedDate = date,
+                    hasActiveFilter = true
+                ),
+                onEventClick = { },
+                onDayClick = { },
+                onSearchClick = { },
+                onFilterRemoveClick = {},
+                showSnackBar = false,
+                onShowSnackBar = { _, _ -> true }
+            )
         }
     }
 }

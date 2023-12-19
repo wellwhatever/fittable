@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cz.cvut.fit.fittable.shared.data.createDataStore
 
-fun dataStore(context: Context): DataStore<Preferences> =
+fun dataStore(context: Context, dataStoreName: String): DataStore<Preferences> =
     createDataStore(
-        producePath = { context.filesDir.resolve(dataStoreFileName).absolutePath },
+        producePath = { context.filesDir.resolve(dataStoreName).absolutePath },
     )

@@ -13,6 +13,8 @@ plugins {
     id("com.google.gms.google-services") version libs.versions.gms apply false
     id("com.google.devtools.ksp") version libs.versions.ksp apply false
     id("org.jetbrains.kotlin.plugin.serialization") version libs.versions.kotlin apply false
+    id("app.cash.sqldelight") version libs.versions.sqlDelightGradle apply false
+    id("co.touchlab.skie") version libs.versions.skie apply false
     // TODO solve this!
 //    kotlin.ksp,kotlin.serialization
 //    id(libs.plugins.android.application.get().pluginId)

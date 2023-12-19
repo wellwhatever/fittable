@@ -6,9 +6,11 @@ compileSdk = "34"
 targetSdk = "34"
 
 # Gradle plugins
-androidGradlePlugin = "8.1.2"
+androidGradlePlugin = "8.1.4"
 firebaseGradlePlugin = "2.9.9"
 gms = "4.3.15"
+sqlDelightGradle = "2.0.0"
+skie = "0.6.0"
 
 # AndroidX
 androidCore = "1.12.0"
@@ -26,10 +28,9 @@ ktor = "2.3.5"
 okhttp = "4.11.0"
 serialization = "1.6.0"
 
-# Room
-room = "2.5.2"
-
+# Persistance
 datastore = "1.1.0-alpha05"
+sqlDelight = "2.0.0"
 
 # Compose
 composeBom = "2023.09.02"
@@ -125,13 +126,13 @@ ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-android = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-ios = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 
-# Room
-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 
+# Persistance
 datastore = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
+sqlDelight-common = { module = "app.cash.sqldelight:runtime", version.ref = "sqlDelight" }
+sqlDelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
+sqlDelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqlDelight-ios = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
@@ -166,6 +167,9 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+sqlDelight = { id = "com.squareup.sqldelight", version.ref = "sqlDelightGradle" }
+skie = { id = "co.touchlab.skie", version.ref = "skie" }
 
 [bundles]
 kotlin = [
@@ -212,10 +216,6 @@ unitTesting = [
     "kotlin-coroutinesTest",
     "turbine"
 ]
-
-room = ["room-runtime", "room-ktx"]
-room-ksp = ["room-compiler"]
-room-testing = ["room-testing"]
 
 navigation = [
     "compose-navigation",
