@@ -35,8 +35,10 @@ extension TimetableScreen{
                 do{
                     events = try await getEventsUseCase.invoke(day: date != nil ? date! : todayDate())
                 }catch {
-                    if(error is HttpExceptionDomain){
-                        print("\((error as! HttpExceptionDomain).code)")
+                    if let httpException = error as? HttpExceptionDomain {
+                        if(httpException.code == 401){
+                            mainCoordinator.coordinator.popLast()
+                        }
                     }
                     print("Ops!!!")
                 }
