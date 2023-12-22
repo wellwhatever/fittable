@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import cz.cvut.fit.fittable.detail.EventDetailScreen
 import cz.cvut.fit.fittable.route.ui.TimetableRoute
 import cz.cvut.fit.fittable.shared.search.data.remote.model.SearchResultType
+import cz.cvut.fit.fittable.shared.timetable.data.TimetableSearchResultArgs
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -35,14 +36,6 @@ internal class EventDetailArgs(val eventId: String) {
                 )
             )
 }
-
-@Serializable
-class TimetableSearchResultArgs(
-    @SerialName("event_category")
-    val eventCategory: SearchResultType,
-    @SerialName("event_id")
-    val eventId: String,
-)
 
 class TimetableArgs(
     val searchResult: TimetableSearchResultArgs

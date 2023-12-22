@@ -9,9 +9,9 @@ import cz.cvut.fit.fittable.authorization.ui.navigation.authorizationNavGraph
 import cz.cvut.fit.fittable.authorization.ui.navigation.navigateToAuthorizationNavGraph
 import cz.cvut.fit.fittable.search.navigation.navigateToSearch
 import cz.cvut.fit.fittable.search.navigation.searchNavGraph
+import cz.cvut.fit.fittable.shared.timetable.data.TimetableSearchResultArgs
 import cz.cvut.fit.fittable.timetable.navigation.TIMETABLE_NAVIGATION_GRAPH
 import cz.cvut.fit.fittable.timetable.navigation.TIMETABLE_SEARCH_RESULT_ARG
-import cz.cvut.fit.fittable.timetable.navigation.TimetableSearchResultArgs
 import cz.cvut.fit.fittable.timetable.navigation.navigateToEventDetail
 import cz.cvut.fit.fittable.timetable.navigation.navigateToTimetable
 import cz.cvut.fit.fittable.timetable.navigation.timetableNavGraph

@@ -1,5 +1,6 @@
 package cz.cvut.fit.fittable.shared.search.domain
 
+import cz.cvut.fit.fittable.shared.core.remote.ApiException
 import cz.cvut.fit.fittable.shared.search.data.remote.model.SearchResultType
 import cz.cvut.fit.fittable.shared.timetable.domain.EventConflictMerger
 import cz.cvut.fit.fittable.shared.timetable.domain.EventsDayBoundsCalculator
@@ -8,6 +9,7 @@ import cz.cvut.fit.fittable.shared.timetable.domain.GetRoomEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.GetUserEventsUseCase
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
 import kotlinx.datetime.LocalDate
+import kotlin.coroutines.cancellation.CancellationException
 
 class GetFilteredDayEventsUseCase internal constructor(
     private val getCoursesEvents: GetCoursesEventsUseCase,
@@ -16,6 +18,7 @@ class GetFilteredDayEventsUseCase internal constructor(
     private val eventsDayBoundsCalculator: EventsDayBoundsCalculator,
     private val eventsMerger: EventConflictMerger
 ) {
+    @Throws(CancellationException::class, ApiException::class)
     suspend operator fun invoke(
         type: SearchResultType,
         id: String,

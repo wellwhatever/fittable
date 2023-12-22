@@ -8,13 +8,18 @@
 import Foundation
 import Stinsen
 import SwiftUI
+import shared
+import Combine
 
 final class MainCoordinator: NavigationCoordinatable{
     var stack = NavigationStack(initial: \MainCoordinator.authorizationRoute)
     
+    var selectedSearchResult = CurrentValueSubject<TimetableSearchResultArgs?, Never>(nil)
+    
     @Root var authorizationRoute = makeAuthorization
     @Route(.fullScreen) var timetableRoute = makeTimetable
     @Route(.fullScreen) var eventDetailRoute = makeDetail
+    @Route(.push) var searchScreen = makeSearch
     
     init(){
         self.stack = NavigationStack(initial: \MainCoordinator.authorizationRoute)
@@ -27,6 +32,15 @@ final class MainCoordinator: NavigationCoordinatable{
     func routeToEventDetail(id : String){
         self.route(to: \.eventDetailRoute, id)
     }
+    
+    func routeToSearch(){
+        self.route(to: \.searchScreen)
+    }
+    
+    func onSearchResultPicked(result: TimetableSearchResultArgs){
+        selectedSearchResult.send(result)
+        self.popLast()
+    }
 }
 
 extension MainCoordinator{
@@ -34,7 +48,7 @@ extension MainCoordinator{
         AuthorizationScreen()
     }
     @ViewBuilder func makeSearch() -> some View {
-        EmptyView()
+        SearchScreen()
     }
     @ViewBuilder func makeTimetable() -> some View {
         TimetableScreen()

@@ -13,6 +13,7 @@ struct TimetableScreen: View {
     private let defaultHourHeight = 64.0
     private let gridStartOffset = 80.0
     
+    @State var safeAreaInsets: EdgeInsets = .init()
     @ObservedObject var controller: CalendarController = CalendarController()
     @StateObject var viewModel = ViewModel()
     @State var focusDate: YearMonthDay? = YearMonthDay.current
@@ -24,12 +25,15 @@ struct TimetableScreen: View {
     var body: some View {
         VStack(spacing: 0){
             header()
+            
             content(
                 hours: viewModel.hours,
                 events: viewModel.events
             )
+            
             Spacer()
         }
+        .ignoresSafeArea(edges: .bottom)
     }
     
     @ViewBuilder func content(
@@ -38,7 +42,7 @@ struct TimetableScreen: View {
     ) -> some View {
         ZStack{
             if(hours != nil){
-                hoursGrid(hours: hours!).padding(.top, 8)
+                hoursGrid(hours: hours!)
                 HStack(spacing: 0){
                     Divider()
                         .padding(.leading, gridStartOffset * 2)
@@ -48,7 +52,7 @@ struct TimetableScreen: View {
                 }
             }
             if(events != nil){
-                eventsList(events: viewModel.events!).padding(.top, 8)
+                eventsList(events: viewModel.events!)
             }
         }
     }
@@ -56,8 +60,11 @@ struct TimetableScreen: View {
     @ViewBuilder func eventsList(
         events: Array<TimetableItem>
     ) -> some View {
-        ScrollView{
+        ScrollView(showsIndicators: false) {
             VStack(spacing: 0){
+                Spacer()
+                    .frame(width: 4)
+                
                 ForEach(events.indices, id: \.self) { index in
                     let item = events[index]
                     switch item {
@@ -78,7 +85,6 @@ struct TimetableScreen: View {
                 )
             })
             .onPreferenceChange(ViewOffsetKey.self) { value in
-                print("offset >> \(value)")
                 offset = value
             }
         }.coordinateSpace(name: "scroll")
@@ -88,26 +94,31 @@ struct TimetableScreen: View {
         spacer: TimetableSpacer
     ) -> some View {
         let height = spacer.convertToHeight(hourHeight: Int32(defaultHourHeight))
-        Spacer().frame(height: CGFloat(height))
+        Spacer()
+            .frame(height: CGFloat(height))
     }
     
     @ViewBuilder func eventContainer(
         container : TimetableEventContainer
     ) -> some View {
-        HStack{
+        HStack(spacing: 0){
             ForEach(container.events.indices, id: \.self){ index in
                 let event = container.events[index]
                 VStack(spacing: 0){
                     if(event.spacerStart != nil){
                         eventSpacer(spacer: event.spacerStart!)
                     }
-                    eventItem(event: event.event).padding(.horizontal, 4)
+                    eventItem(event: event.event)
+                        .padding(.horizontal, 4)
                     if(event.spacerEnd != nil){
                         eventSpacer(spacer: event.spacerEnd!)
                     }
-                }.padding(.leading, gridStartOffset)
+                }
+                .frame(maxWidth: .infinity)
             }
         }
+        .padding(.leading, gridStartOffset)
+        .frame(maxWidth: .infinity)
     }
     
     @ViewBuilder func eventItem(
@@ -119,7 +130,7 @@ struct TimetableScreen: View {
             VStack(alignment: .leading){
                 Text(event.title)
                     .foregroundColor(colorScheme.onPrimary)
-                    .font(.title2)
+                    .font(.title3)
                 Spacer().frame(maxWidth: .infinity)
                 Text(event.room)
                     .foregroundColor(colorScheme.onPrimary)
@@ -135,9 +146,9 @@ struct TimetableScreen: View {
                 Spacer().frame(maxHeight: .infinity)
             }
         }
-        .frame(maxWidth: .infinity)
         .frame(height: CGFloat(height))
         .padding(CGFloat(itemPadding))
+        .padding(.top, 8)
         .background(colorScheme.primary)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .onTapGesture {
@@ -148,8 +159,10 @@ struct TimetableScreen: View {
     @ViewBuilder func hoursGrid(
         hours: Array<TimetableHour>
     ) -> some View{
-        ScrollView{
+        ScrollView(showsIndicators: false) {
             VStack(spacing: 0){
+                Spacer()
+                    .frame(width: 4)
                 ForEach(hours, id: \.self){ item in
                     hourGridItem(hour: item.hour)
                         .frame(maxWidth: .infinity)
@@ -167,50 +180,77 @@ struct TimetableScreen: View {
                 .font(.footnote)
                 .foregroundColor(colorScheme.outline)
                 .frame(width: 50)
-            Spacer().frame(width: 12)
-            VStack{
+            
+            Spacer()
+                .frame(width: 12)
+            
+            VStack(spacing: 0){
                 Divider()
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
             }
-        }.frame(height: defaultHourHeight, alignment: .top)
+        }
+        .frame(height: defaultHourHeight, alignment: .top)
     }
     
     @ViewBuilder func header() -> some View{
         VStack{
             HStack{
-                Text("\(monthToString(month:controller.yearMonth.month)) \(String(controller.yearMonth.year))")
-                    .font(.title)
-                    .foregroundColor(colorScheme.onPrimary)
-                    .padding(.leading, 12)
-                Spacer().frame(width: 8)
-                Image("ArrowDown")
-                    .foregroundColor(colorScheme.onPrimary)
-                    .rotationEffect(.degrees(iconRotation))
+                HStack{
+                    Text("\(monthToString(month:controller.yearMonth.month)) \(String(controller.yearMonth.year))")
+                        .font(.title)
+                        .foregroundColor(colorScheme.onPrimary)
+                    
+                    Image("ArrowDown")
+                        .foregroundColor(colorScheme.onPrimary)
+                        .rotationEffect(.degrees(iconRotation))
+                    
+                    Spacer()
+                }
+                .frame(height: 64)
+                .onTapGesture {
+                    withAnimation {
+                        showCalendar = !showCalendar
+                        if(iconRotation == 0.0){
+                            iconRotation = 180.0
+                        } else {
+                            iconRotation = 0.0
+                        }
+                    }
+                    
+                }
                 Spacer()
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 64)
-            .onTapGesture {
-                showCalendar = !showCalendar
-                if(iconRotation == 0.0){
-                    iconRotation = 180.0
-                }else{
-                    iconRotation = 0.0
+                HStack{
+                    if(viewModel.search != nil){
+                        Image("RemoveFilter")
+                            .foregroundColor(colorScheme.onPrimary)
+                            .onTapGesture {
+                                viewModel.removeFilter()
+                            }
+                    }
+                    
+                    Image("Search")
+                        .foregroundColor(colorScheme.onPrimary)
+                        .onTapGesture {
+                            viewModel.onSearchClick()
+                        }
                 }
             }
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity)
+            .frame(height: 64)
             
             if(showCalendar){
-                calendar().frame(maxHeight: 300)
+                calendar()
+                    .frame(maxHeight: 300)
             }
-            
         }
         .background(colorScheme.primary)
     }
     
     @ViewBuilder func calendar() -> some View {
         GeometryReader { reader in
-            VStack {
+            VStack(spacing: 0) {
                 CalendarView(controller, startWithMonday: true, headerSize: .fixHeight(40.0)) { week in
                     Text("\(week.shortString)")
                         .font(.headline)
@@ -227,6 +267,12 @@ struct TimetableScreen: View {
                                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
                                 .font(.system(size: 10, weight: .bold, design: .default))
                                 .foregroundColor(colorScheme.onPrimary)
+                                .onTapGesture{
+                                    focusDate = (date != focusDate ? date : nil)
+                                    if(date.date != nil){
+                                        viewModel.onDateSelected(date: date.date!)
+                                    }
+                                }
                         }else if(date == focusDate){
                             Circle()
                                 .padding(4)
