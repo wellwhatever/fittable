@@ -34,7 +34,6 @@ struct EventDetailScreen: View {
     @ViewBuilder func TopBar(detail: EventDetail_) -> some View{
         HStack(spacing: 24){
             Image("ArrowBack")
-                .padding(.leading, 12)
                 .foregroundColor(colorScheme.onPrimary)
             
             Text(detail.course)
@@ -49,6 +48,7 @@ struct EventDetailScreen: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: 64)
+        .padding(.horizontal, 16)
         .onTapGesture {
             viewModel.onArrowBackClick()
         }
@@ -71,7 +71,7 @@ struct EventDetailScreen: View {
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-
+    
     @ViewBuilder
     func EventDetailInternal(detail: EventDetail_) -> some View {
         VStack(spacing: 16) {
@@ -82,7 +82,7 @@ struct EventDetailScreen: View {
             Capacity(occupied: detail.occupied.description, capacity: detail.capacity.description, parallel: detail.parallel)
         }
     }
-
+    
     @ViewBuilder
     func EventDate(startsDate: String, startsTime: String, endsTime: String) -> some View {
         HStack(alignment: .center, spacing: 16) {
@@ -100,7 +100,7 @@ struct EventDetailScreen: View {
                 .multilineTextAlignment(.trailing)
         }
     }
-
+    
     @ViewBuilder
     func Location(room: String) -> some View {
         HStack(alignment: .center, spacing: 16) {
@@ -113,7 +113,7 @@ struct EventDetailScreen: View {
             Spacer()
         }
     }
-
+    
     @ViewBuilder
     func Capacity(occupied: String, capacity: String, parallel: String) -> some View {
         HStack(alignment: .center, spacing: 16) {

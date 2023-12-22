@@ -11,10 +11,10 @@ import OAuthSwift
 struct AuthorizationScreen: View {
     @StateObject var viewModel = ViewModel()
     var body: some View {
-        t()
+        AuthorizationScreenInternal()
     }
     
-    @ViewBuilder func t() -> some View {
+    @ViewBuilder func AuthorizationScreenInternal() -> some View {
         VStack(alignment: .center){
             Spacer().frame(height: 64)
             Image("FittableLogo")
@@ -36,7 +36,6 @@ struct AuthorizationScreen: View {
             
             let notification = Notification(name: OAuthSwift.didHandleCallbackURL, object: nil,
                                             userInfo: ["OAuthSwiftCallbackNotificationOptionsURLKey": url])
-            
             
             NotificationCenter.default.post(notification)
         }
