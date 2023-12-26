@@ -23,6 +23,7 @@ internal fun provideAuthHttpClient(
         json(
             Json {
                 ignoreUnknownKeys = true
+                isLenient = true
             },
         )
     }
@@ -32,7 +33,7 @@ internal fun provideAuthHttpClient(
                 val token = authorizationLocalDataSource.authorizationTokenFlow.first()
                 BearerTokens(
                     accessToken = token,
-                    refreshToken = token, // TODO double check it with CTU documentation!!!
+                    refreshToken = token,
                 )
             }
         }
