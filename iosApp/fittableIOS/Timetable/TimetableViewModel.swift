@@ -84,11 +84,27 @@ extension TimetableScreen{
             }
         }
         
-        private func fetchEvents(date : Kotlinx_datetimeLocalDate? = nil){
+        private func fetchEvents(date: Kotlinx_datetimeLocalDate? = nil){
             Task{
                 do{
                     events = try await getEventsUseCase.invoke(day: date != nil ? date! : todayDate())
                 }catch {
+                    if let httpException = error as? HttpExceptionDomain {
+                        if(httpException.code == 401){
+                            mainCoordinator.coordinator.popLast()
+                        }
+                    } else if let err = error as? URLError, err.code  == URLError.Code.notConnectedToInternet {
+                        fetchCachedEvents(date: date)
+                    }
+                }
+            }
+        }
+        
+        private func fetchCachedEvents(date: Kotlinx_datetimeLocalDate? = nil){
+            Task {
+                do {
+                    events = try await getCachedEventsUseCase.invoke(day: date != nil ? date! : todayDate())
+                } catch {
                     if let httpException = error as? HttpExceptionDomain {
                         if(httpException.code == 401){
                             mainCoordinator.coordinator.popLast()
