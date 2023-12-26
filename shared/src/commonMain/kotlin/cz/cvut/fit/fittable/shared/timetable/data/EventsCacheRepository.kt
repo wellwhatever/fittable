@@ -17,26 +17,31 @@ class EventsCacheRepository internal constructor(
     private val usernameLocalDataSource: UsernameLocalDataSource,
     private val eventsRoute: EventsRoute,
 ) {
-
     suspend fun getCachedEvents(
         from: LocalDate,
         to: LocalDate,
     ) = getCachedEventsInRange(from, to)
+
+    suspend fun cacheEvents(
+        from: LocalDate,
+        to: LocalDate,
+    ) {
+        val username = usernameLocalDataSource.usernameFlow.first()
+        val events = eventsRoute.getPersonEvents(username, from, to)
+        eventsLocalDataSource.refreshEvents(events.events)
+    }
 
     suspend fun getPersonalEvents(
         from: LocalDate,
         to: LocalDate,
     ): List<Event> {
         val username = usernameLocalDataSource.usernameFlow.first()
-        val events = eventsRoute.getPersonEvents(username, from, to)
-        eventsLocalDataSource.refreshEvents(events.events)
-
-        return getCachedEventsInRange(from, to)
+        return eventsRoute.getPersonEvents(username, from, to).events
     }
 
     private suspend fun getCachedEventsInRange(from: LocalDate, to: LocalDate): List<Event> {
         val cachedEvents = eventsLocalDataSource.getEventsFlow().firstOrNull().orEmpty()
-        val selectedRange = from..< to
+        val selectedRange = from..<to
         val cachedEventsInRange = cachedEvents.filter {
             val starts = it.startsAt.toLocalDateTime(TimeZone.currentSystemDefault()).date
             val ends = it.endsAt.toLocalDateTime(TimeZone.currentSystemDefault()).date

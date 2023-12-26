@@ -25,7 +25,7 @@
     <string name="timetable_offline_mode_snackbar_warning_message">You\'re in offline mode, only cached data will be displayed!</string>
     <string name="timetable_offline_mode_snackbar_warning_action">OK</string>
 
-    <string name="search_text_field_placeholder">Search courses, rooms, people…</string>
-    <string name="search_no_results">No results,\n please try another query</string>
+    <string name="search_text_field_placeholder">courses, rooms, people…</string>
+    <string name="search_no_results">No results</string>
 
 </resources>

@@ -12,5 +12,14 @@ enum class EventType {
     LABORATORY,
 
     @SerialName("lecture")
-    LECTURE
+    LECTURE,
+
+    @SerialName("assessment")
+    ASSESSMENT,
+
+    @SerialName("exam")
+    EXAM,
+
+    @SerialName("course_event")
+    EVENT
 }

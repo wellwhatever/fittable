@@ -1,6 +1,7 @@
 package cz.cvut.fit.fittable.shared.timetable.data.remote.model
 
 import cz.cvut.fit.fittable.shared.timetable.data.remote.serializer.InstantAsStringSerializer
+import cz.cvut.fit.fittable.shared.timetable.data.remote.serializer.OptionalSerializer
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -21,6 +22,7 @@ data class Event(
     @SerialName("links")
     val links: Links? = null,
     @SerialName("name")
+    @Serializable(with = OptionalSerializer::class)
     val name: String? = null,
     @SerialName("occupied")
     val occupied: Int,
