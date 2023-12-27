@@ -71,7 +71,6 @@ class EventDetailViewModel(
     }
 }
 
-
 sealed interface EventDetailState {
     data class Content(
         val eventDetail: EventDetail,

@@ -1,12 +1,10 @@
 package cz.cvut.fit.fittable.shared
 
-import kotlin.test.Test
-import kotlin.test.assertTrue
 //
-//class IosGreetingTest {
+// class IosGreetingTest {
 //
 //    @Test
 //    fun testExample() {
 //        assertTrue(Greeting().greet().contains("iOS"), "Check iOS is mentioned")
 //    }
-//}
+// }

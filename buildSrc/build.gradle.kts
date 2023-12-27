@@ -9,7 +9,6 @@ repositories {
 }
 
 dependencies {
-    // TODO find out why compileOnly is not working here!!!
     implementation(libs.android.gradlePlugin)
     implementation(libs.kotlin.gradlePlugin)
     implementation(libs.firebase.gradlePlugin)

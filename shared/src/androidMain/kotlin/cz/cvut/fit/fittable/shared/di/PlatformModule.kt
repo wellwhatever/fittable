@@ -15,7 +15,7 @@ actual val platformModule = module {
     single(named("authorization")) { dataStore(get(), authorizationDataStoreFileName) }
     single(named("username")) { dataStore(get(), usernameDataStoreFileName) }
     single(named("default")) { provideHttpClient() }
-    
+
     singleOf(::DriverFactory)
     factoryOf(::SaveAuthorizationTokenUseCase)
 }

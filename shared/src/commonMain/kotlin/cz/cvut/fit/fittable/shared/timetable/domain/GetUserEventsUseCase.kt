@@ -43,11 +43,25 @@ class GetUserEventsUseCase(
 
         return listOf(
             EventDomain(
-                title = "Bi-KSP", room = "T9-301", start = event1start, end = event1end, id = "1"
-            ), EventDomain(
-                title = "Bi-AMP", room = "T9-202", start = event2start, end = event2end, id = "2"
-            ), EventDomain(
-                title = "Bi-AMP", room = "T9-202", start = event3start, end = event3end, id = "3"
+                title = "Bi-KSP",
+                room = "T9-301",
+                start = event1start,
+                end = event1end,
+                id = "1"
+            ),
+            EventDomain(
+                title = "Bi-AMP",
+                room = "T9-202",
+                start = event2start,
+                end = event2end,
+                id = "2"
+            ),
+            EventDomain(
+                title = "Bi-AMP",
+                room = "T9-202",
+                start = event3start,
+                end = event3end,
+                id = "3"
             )
         )
     }

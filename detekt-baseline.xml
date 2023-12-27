@@ -1,0 +1,59 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:EventDetailScreen.kt${ }</ID>
+    <ID>Filename:DatabaseProvider.kt$cz.cvut.fit.fittable.shared.sqldelight.DatabaseProvider.kt</ID>
+    <ID>Filename:DbDriverProvider.kt$cz.cvut.fit.fittable.shared.sqldelight.DbDriverProvider.kt</ID>
+    <ID>Filename:InstantSerializer.kt$cz.cvut.fit.fittable.shared.timetable.data.remote.serializer.InstantSerializer.kt</ID>
+    <ID>Filename:SaveAuthorizationUseCase.android.kt$cz.cvut.fit.fittable.shared.authorization.domain.SaveAuthorizationUseCase.android.kt</ID>
+    <ID>Filename:TimetableSearchResult.kt$cz.cvut.fit.fittable.shared.timetable.data.TimetableSearchResult.kt</ID>
+    <ID>InstanceOfCheckForException:GetAuthorizationStateUseCase.kt$GetAuthorizationStateUseCase$exception is HttpExceptionDomain</ID>
+    <ID>LongMethod:CalendarHeader.kt$@Composable internal fun CollapsingCalendarHeader( startMonth: LocalDate, endMonth: LocalDate, today: LocalDate, selected: LocalDate, hasActiveFilter: Boolean, onDayClick: (LocalDate) -&gt; Unit, onSearchClick: () -&gt; Unit, onFilterRemoveClick: () -&gt; Unit, modifier: Modifier = Modifier, content: @Composable CollapsingToolbarScaffoldScope.() -&gt; Unit )</ID>
+    <ID>MagicNumber:CalendarHeader.kt$180f</ID>
+    <ID>MagicNumber:DateTimeExtensions.kt$5</ID>
+    <ID>MagicNumber:GetTimetableCalendarBoundsUseCase.kt$GetTimetableCalendarBoundsUseCase$2000</ID>
+    <ID>MagicNumber:TimetableItem.kt$TimetableItem$60f</ID>
+    <ID>MagicNumber:TimetableUiState.kt$400</ID>
+    <ID>MagicNumber:TimetableUiState.kt$403</ID>
+    <ID>MatchingDeclarationName:DatabaseProvider.kt$DriverFactory</ID>
+    <ID>MatchingDeclarationName:DbDriverProvider.kt$DriverFactory</ID>
+    <ID>MatchingDeclarationName:InstantSerializer.kt$InstantAsStringSerializer : KSerializer</ID>
+    <ID>MatchingDeclarationName:SaveAuthorizationTokenUseCase.ios.kt$SaveAuthorizationTokenUseCase</ID>
+    <ID>MatchingDeclarationName:SaveAuthorizationUseCase.android.kt$SaveAuthorizationTokenUseCase</ID>
+    <ID>MatchingDeclarationName:TimetableSearchResult.kt$TimetableSearchResultArgs</ID>
+    <ID>MaxLineLength:AuthorizationModule.kt$scope = "urn:ctu:oauth:sirius:personal:read urn:ctu:oauth:sirius:limited-by-idm:read cvut:sirius:limited-by-idm:read"</ID>
+    <ID>MaxLineLength:CalendarHeader.kt$isSelected -&gt; MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.7f) to MaterialTheme.colorScheme.onTertiary</ID>
+    <ID>MaximumLineLength:AuthorizationModule.kt$ </ID>
+    <ID>MaximumLineLength:CalendarHeader.kt$ </ID>
+    <ID>MemberNameEqualsClassName:EventsRoute.kt$EventsRoute.Companion$private const val eventsRoute = "events"</ID>
+    <ID>MemberNameEqualsClassName:SearchRoute.kt$SearchRoute.Companion$private const val searchRoute = "search"</ID>
+    <ID>SwallowedException:SearchViewModel.kt$SearchViewModel$exception: ApiException</ID>
+    <ID>SwallowedException:TimetableViewModel.kt$TimetableViewModel$exception: ApiException</ID>
+    <ID>TooManyFunctions:TimetableScreen.kt$cz.cvut.fit.fittable.timetable.ui.TimetableScreen.kt</ID>
+    <ID>TooManyFunctions:TimetableViewModel.kt$TimetableViewModel : ViewModel</ID>
+    <ID>TopLevelPropertyNaming:AuthorizationLocalDataSource.kt$internal const val authorizationDataStoreFileName = "authorization.preferences_pb"</ID>
+    <ID>TopLevelPropertyNaming:AuthorizationNavGraph.kt$const val AUTHORIZATION_NAVIGATION_GRAPH = "auth_nav_graph"</ID>
+    <ID>TopLevelPropertyNaming:AuthorizationNavGraph.kt$const val AUTHORIZATION_ROUTE = "auth_route"</ID>
+    <ID>TopLevelPropertyNaming:SearchNavGraph.kt$internal const val SEARCH_NAVIGATION_GRAPH = "search_nav_graph"</ID>
+    <ID>TopLevelPropertyNaming:SearchNavGraph.kt$internal const val SEARCH_ROUTE = "search_route"</ID>
+    <ID>TopLevelPropertyNaming:TimetableNavGraph.kt$internal const val EVENT_DETAIL_ROUTE = "event_detail_route"</ID>
+    <ID>TopLevelPropertyNaming:TimetableNavGraph.kt$internal const val EVENT_ID_ARG = "eventId"</ID>
+    <ID>TopLevelPropertyNaming:TimetableNavGraph.kt$internal const val TIMETABLE_NAVIGATION_GRAPH = "timetable_nav_graph"</ID>
+    <ID>TopLevelPropertyNaming:TimetableNavGraph.kt$internal const val TIMETABLE_ROUTE = "timetable_route"</ID>
+    <ID>TopLevelPropertyNaming:TimetableNavGraph.kt$internal const val TIMETABLE_SEARCH_RESULT_ARG = "search_result_id"</ID>
+    <ID>TopLevelPropertyNaming:UsernameLocalDataSource.kt$internal const val usernameDataStoreFileName = "username.preferences_pb"</ID>
+    <ID>TopLevelPropertyNaming:VerticalDivider.kt$private const val DIVIDER_ALPHA = 0.12f</ID>
+    <ID>UnusedParameter:EventDetailScreen.kt$modifier: Modifier = Modifier</ID>
+    <ID>UnusedParameter:EventDetailScreen.kt$teachers: List&lt;String&gt;</ID>
+    <ID>UnusedPrivateMember:EventDetailScreen.kt$@Composable private fun Teachers( teachers: List&lt;String&gt;, modifier: Modifier = Modifier, )</ID>
+    <ID>UnusedPrivateProperty:EventDetailViewModel.kt$EventDetailViewModel$private val getTeacher: GetTeacherUseCase</ID>
+    <ID>UnusedPrivateProperty:EventDetailViewModel.kt$EventDetailViewModel$private val teachers = MutableStateFlow&lt;List&lt;Teacher&gt;?&gt;(null)</ID>
+    <ID>UnusedPrivateProperty:EventsRoute.kt$EventsRoute.Companion$private const val teachersRoute = "teachers"</ID>
+    <ID>UnusedPrivateProperty:GetUserEventsUseCase.kt$GetUserEventsUseCase$private val eventConverterRemote: EventConverterRemote</ID>
+    <ID>UnusedPrivateProperty:GetUserEventsUseCase.kt$GetUserEventsUseCase$private val eventsRepository: EventsCacheRepository</ID>
+    <ID>UnusedPrivateProperty:GetUserEventsUseCase.kt$GetUserEventsUseCase$val duration1 = event1end - event1start</ID>
+    <ID>UnusedPrivateProperty:GetUserEventsUseCase.kt$GetUserEventsUseCase$val event2duration = event2end - event2start</ID>
+    <ID>UnusedPrivateProperty:GetUserEventsUseCase.kt$GetUserEventsUseCase$val event3duration = event3end - event3start</ID>
+  </CurrentIssues>
+</SmellBaseline>

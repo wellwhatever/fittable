@@ -25,5 +25,4 @@ class GetEventByIdUseCase(
                 ends = endsAt
             )
         }
-
 }

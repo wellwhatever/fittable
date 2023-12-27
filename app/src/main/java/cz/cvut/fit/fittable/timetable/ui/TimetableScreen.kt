@@ -255,14 +255,17 @@ private fun TimetableEventsGrid(
             when {
                 item == null || prevItem == null -> fadeIn() togetherWith fadeOut()
                 item.day > prevItem.day -> slideInHorizontally(
-                    initialOffsetX = { it }) + fadeIn() togetherWith slideOutHorizontally(
-                    targetOffsetX = { -it }) + fadeOut()
+                    initialOffsetX = { it }
+                ) + fadeIn() togetherWith slideOutHorizontally(
+                    targetOffsetX = { -it }
+                ) + fadeOut()
 
                 else -> slideInHorizontally(
-                    initialOffsetX = { -it }) + fadeIn() togetherWith slideOutHorizontally(
-                    targetOffsetX = { it }) + fadeOut()
+                    initialOffsetX = { -it }
+                ) + fadeIn() togetherWith slideOutHorizontally(
+                    targetOffsetX = { it }
+                ) + fadeOut()
             }
-
         }
     ) {
         LazyColumn(

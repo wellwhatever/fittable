@@ -1,7 +1,6 @@
 package cz.cvut.fit.fittable.shared.timetable.domain
 
 import cz.cvut.fit.fittable.shared.core.remote.ApiException
-import cz.cvut.fit.fittable.shared.core.remote.HttpExceptionDomain
 import cz.cvut.fit.fittable.shared.timetable.data.EventsCacheRepository
 import cz.cvut.fit.fittable.shared.timetable.domain.converter.EventConverterRemote
 import cz.cvut.fit.fittable.shared.timetable.domain.model.TimetableItem
