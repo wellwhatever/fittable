@@ -48,7 +48,6 @@ internal class EventsRoute(
             }
         }
 
-
     suspend fun getCourseEvents(course: String, from: LocalDate, to: LocalDate): Events =
         client.request(
             path = "$coursesRoute/$course/$eventsRoute",

@@ -11,7 +11,7 @@ class GetSearchResultsUseCase(
     private val searchResultConverter: SearchResultRemoteConverter
 ) {
     @Throws(CancellationException::class, ApiException::class)
-    suspend operator fun invoke(query: String) : List<SearchResult> =
+    suspend operator fun invoke(query: String): List<SearchResult> =
         searchRepository.getSearchResults(query).results.map {
             searchResultConverter.toDomain(it)
         }

@@ -11,6 +11,7 @@ firebaseGradlePlugin = "2.9.9"
 gms = "4.3.15"
 sqlDelightGradle = "2.0.0"
 skie = "0.6.0"
+detekt = "1.23.4"
 
 # AndroidX
 androidCore = "1.12.0"
@@ -73,6 +74,9 @@ android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", ver
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 firebase-gradlePlugin = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseGradlePlugin" }
 android-gms = { module = "com.google.gms:google-services", version.ref = "gms" }
+
+# Lint
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 
 # AndroidX
 androidCore = { module = "androidx.core:core-ktx", version.ref = "androidCore" }

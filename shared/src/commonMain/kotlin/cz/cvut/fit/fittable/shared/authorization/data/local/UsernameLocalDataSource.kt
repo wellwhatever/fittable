@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-
 internal const val usernameDataStoreFileName = "username.preferences_pb"
 
 class UsernameLocalDataSource(

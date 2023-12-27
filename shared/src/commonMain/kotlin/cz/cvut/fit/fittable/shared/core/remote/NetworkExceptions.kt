@@ -1,6 +1,5 @@
 package cz.cvut.fit.fittable.shared.core.remote
 
-
 sealed class ApiException : RuntimeException()
 class UnexpectedException : ApiException()
 class NoInternetException : ApiException()

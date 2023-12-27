@@ -17,7 +17,6 @@ sealed interface TimetableUiState {
         val showNoConnectionSnackBar: Boolean,
     ) : TimetableUiState
 
-
     sealed interface Error : TimetableUiState {
         data object NoPermission : Error
         data object UnknownError : Error

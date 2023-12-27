@@ -50,7 +50,8 @@ internal class EventConflictMerger(
                 MergedEvents(
                     events = event,
                     start = event.minOf { it.start },
-                    end = event.maxOf { it.end })
+                    end = event.maxOf { it.end }
+                )
             }
         }
 
@@ -72,7 +73,9 @@ internal class EventConflictMerger(
                 )
             }
             TimetableEventContainer(
-                events = conflictsWithSpacers, start = event.start, end = event.end
+                events = conflictsWithSpacers,
+                start = event.start,
+                end = event.end
             )
         }
     }

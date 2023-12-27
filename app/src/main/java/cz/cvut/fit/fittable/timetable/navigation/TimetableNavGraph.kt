@@ -11,10 +11,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import cz.cvut.fit.fittable.detail.EventDetailScreen
 import cz.cvut.fit.fittable.route.ui.TimetableRoute
-import cz.cvut.fit.fittable.shared.search.data.remote.model.SearchResultType
 import cz.cvut.fit.fittable.shared.timetable.data.TimetableSearchResultArgs
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -29,12 +26,12 @@ private val urlCharacterEncoding = Charsets.UTF_8.name()
 
 internal class EventDetailArgs(val eventId: String) {
     constructor(savedStateHandle: SavedStateHandle) :
-            this(
-                URLDecoder.decode(
-                    checkNotNull(savedStateHandle[EVENT_ID_ARG]),
-                    urlCharacterEncoding
-                )
+        this(
+            URLDecoder.decode(
+                checkNotNull(savedStateHandle[EVENT_ID_ARG]),
+                urlCharacterEncoding
             )
+        )
 }
 
 class TimetableArgs(
