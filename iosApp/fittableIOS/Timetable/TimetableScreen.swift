@@ -12,6 +12,7 @@ import SwiftUICalendar
 struct TimetableScreen: View {
     private let defaultHourHeight = 64.0
     private let gridStartOffset = 80.0
+    private let dayViewHeight = 80.0
     
     @State var safeAreaInsets: EdgeInsets = .init()
     @ObservedObject var controller: CalendarController = CalendarController()
@@ -62,14 +63,16 @@ struct TimetableScreen: View {
     ) -> some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 0){
+                
                 Spacer()
-                    .frame(width: 4)
+                    .frame(height: dayViewHeight)
                 
                 ForEach(events.indices, id: \.self) { index in
                     let item = events[index]
                     switch item {
                     case let item as TimetableSpacer:
                         eventSpacer(spacer: item)
+                            .frame(maxWidth: .infinity)
                         
                     case let item as TimetableEventContainer:
                         eventContainer(container: item)
@@ -78,6 +81,7 @@ struct TimetableScreen: View {
                         EmptyView() // no-op
                     }
                 }
+                
             }.background( GeometryReader {
                 Color.clear.preference(
                     key: ViewOffsetKey.self,
@@ -159,23 +163,56 @@ struct TimetableScreen: View {
     @ViewBuilder func hoursGrid(
         hours: Array<TimetableHour>
     ) -> some View{
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 0){
-                Spacer()
-                    .frame(width: 4)
-                ForEach(hours, id: \.self){ item in
-                    hourGridItem(hour: item.hour)
-                        .frame(maxWidth: .infinity)
-                        .padding(.leading, 8)
+        VStack(spacing: 0){
+            
+            currentDayItem()
+                .frame(maxWidth: .infinity)
+            
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0){
+                    ForEach(hours, id: \.self){ item in
+                        hourGridItem(hour: item.hour)
+                            .frame(maxWidth: .infinity)
+                            .padding(.leading, 8)
+                    }
+                }.offset(y: -offset)
+            }.disabled(true)
+        }
+    }
+    
+    @ViewBuilder func currentDayItem() -> some View{
+        VStack(alignment: .leading) {
+            HStack {
+                VStack {
+                    Spacer().frame(height: 4)
+                    Text(viewModel.selectedDate.dayOfWeek.name.prefix(3))
+                        .font(.body)
+                    ZStack {
+                        Circle()
+                            .fill(colorScheme.secondary)
+                            .frame(width: 36, height: 36)
+                        Text(String(viewModel.selectedDate.dayOfMonth.description))
+                            .font(.body)
+                            .foregroundColor(colorScheme.onSecondary)
+                    }
                 }
-            }.offset(y: -offset)
-        }.disabled(true)
+            }
+            Spacer().frame(height: 4)
+            VStack(spacing: 0){
+                Divider()
+                    .frame(height: 1)
+                    .frame(maxWidth: .infinity)
+            }
+        }
+        .padding(.leading, 16)
+        .frame(height: dayViewHeight)
+        .frame(maxWidth: .infinity)
     }
     
     @ViewBuilder func hourGridItem(
         hour: String
     ) -> some View{
-        HStack(alignment: .top){
+        HStack(alignment: .top, spacing: 0){
             Text("\(hour)")
                 .font(.footnote)
                 .foregroundColor(colorScheme.outline)

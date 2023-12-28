@@ -21,9 +21,8 @@ class GetUserEventsUseCase(
         from: LocalDate,
         to: LocalDate
     ): List<EventDomain> {
-//        val events = eventsRepository.getUserEvents(from = from, to = to, username = username)
-//        return events.map { eventConverterRemote.toDomain(it) }
-        return generateFakeEvents()
+        val events = eventsRepository.getUserEvents(from = from, to = to, username = username)
+        return events.map { eventConverterRemote.toDomain(it) }
     }
 
     private fun generateFakeEvents(): List<EventDomain> {
