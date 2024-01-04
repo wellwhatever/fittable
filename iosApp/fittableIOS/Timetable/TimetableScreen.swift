@@ -46,6 +46,7 @@ struct TimetableScreen: View {
                 hoursGrid(hours: hours!)
                 HStack(spacing: 0){
                     Divider()
+                        .background(colorScheme.onSurfaceVariant)
                         .padding(.leading, gridStartOffset * 2)
                         .frame(width: 1)
                         .frame(maxHeight: .infinity)
@@ -130,24 +131,30 @@ struct TimetableScreen: View {
     ) -> some View{
         let itemPadding = 8
         let height = event.convertToHeight(hourHeight: Int32(defaultHourHeight)) - Int32(itemPadding * 2)
-        HStack(alignment: .center){
-            VStack(alignment: .leading){
+        HStack(alignment: .center, spacing: 0){
+            VStack(alignment: .leading, spacing: 0){
                 Text(event.title)
                     .foregroundColor(colorScheme.onPrimary)
                     .font(.title3)
-                Spacer().frame(maxWidth: .infinity)
+                
+                Spacer()
+                
                 Text(event.room)
                     .foregroundColor(colorScheme.onPrimary)
                     .font(.subheadline)
             }
-            Spacer().frame(maxWidth: .infinity)
+            
+            Spacer()
+            
             VStack(alignment: .leading){
                 let startFormatted = event.start.formatAsHoursAndMinutes()
                 let endFormatted = event.end.formatAsHoursAndMinutes()
+                
                 Text("\(startFormatted)- \n\(endFormatted)")
                     .foregroundColor(colorScheme.onPrimary)
                     .font(.subheadline)
-                Spacer().frame(maxHeight: .infinity)
+                
+                Spacer()
             }
         }
         .frame(height: CGFloat(height))
@@ -181,9 +188,9 @@ struct TimetableScreen: View {
     }
     
     @ViewBuilder func currentDayItem() -> some View{
-        VStack(alignment: .leading) {
-            HStack {
-                VStack {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 0) {
+                VStack(spacing: 0) {
                     Spacer().frame(height: 4)
                     Text(viewModel.selectedDate.dayOfWeek.name.prefix(3))
                         .font(.body)
@@ -202,6 +209,7 @@ struct TimetableScreen: View {
                 Divider()
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
+                    .background(colorScheme.onSurfaceVariant)
             }
         }
         .padding(.leading, 16)
@@ -225,6 +233,7 @@ struct TimetableScreen: View {
                 Divider()
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
+                    .background(colorScheme.onSurfaceVariant)
             }
         }
         .frame(height: defaultHourHeight, alignment: .top)
@@ -318,7 +327,7 @@ struct TimetableScreen: View {
                             Text("\(date.day)")
                                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
                                 .font(.system(size: 10, weight: .bold, design: .default))
-                                .foregroundColor(colorScheme.onTertiary)
+                                .foregroundColor(colorScheme.onPrimaryContainer)
                         } else {
                             Text("\(date.day)")
                                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)

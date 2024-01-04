@@ -8,7 +8,6 @@ import kotlin.coroutines.cancellation.CancellationException
 class GetEventByIdUseCase(
     private val eventsRepository: EventsCacheRepository
 ) {
-
     @Throws(CancellationException::class, ApiException::class)
     suspend operator fun invoke(eventId: String): EventDetail =
         with(eventsRepository.getEvent(eventId).event) {
