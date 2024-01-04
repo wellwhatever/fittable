@@ -12,6 +12,7 @@ import SwiftUICalendar
 struct TimetableScreen: View {
     private let defaultHourHeight = 64.0
     private let gridStartOffset = 80.0
+    private let dayViewHeight = 80.0
     
     @State var safeAreaInsets: EdgeInsets = .init()
     @ObservedObject var controller: CalendarController = CalendarController()
@@ -45,6 +46,7 @@ struct TimetableScreen: View {
                 hoursGrid(hours: hours!)
                 HStack(spacing: 0){
                     Divider()
+                        .background(colorScheme.onSurfaceVariant)
                         .padding(.leading, gridStartOffset * 2)
                         .frame(width: 1)
                         .frame(maxHeight: .infinity)
@@ -62,14 +64,16 @@ struct TimetableScreen: View {
     ) -> some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 0){
+                
                 Spacer()
-                    .frame(width: 4)
+                    .frame(height: dayViewHeight)
                 
                 ForEach(events.indices, id: \.self) { index in
                     let item = events[index]
                     switch item {
                     case let item as TimetableSpacer:
                         eventSpacer(spacer: item)
+                            .frame(maxWidth: .infinity)
                         
                     case let item as TimetableEventContainer:
                         eventContainer(container: item)
@@ -78,6 +82,7 @@ struct TimetableScreen: View {
                         EmptyView() // no-op
                     }
                 }
+                
             }.background( GeometryReader {
                 Color.clear.preference(
                     key: ViewOffsetKey.self,
@@ -126,24 +131,30 @@ struct TimetableScreen: View {
     ) -> some View{
         let itemPadding = 8
         let height = event.convertToHeight(hourHeight: Int32(defaultHourHeight)) - Int32(itemPadding * 2)
-        HStack(alignment: .center){
-            VStack(alignment: .leading){
+        HStack(alignment: .center, spacing: 0){
+            VStack(alignment: .leading, spacing: 0){
                 Text(event.title)
                     .foregroundColor(colorScheme.onPrimary)
                     .font(.title3)
-                Spacer().frame(maxWidth: .infinity)
+                
+                Spacer()
+                
                 Text(event.room)
                     .foregroundColor(colorScheme.onPrimary)
                     .font(.subheadline)
             }
-            Spacer().frame(maxWidth: .infinity)
+            
+            Spacer()
+            
             VStack(alignment: .leading){
                 let startFormatted = event.start.formatAsHoursAndMinutes()
                 let endFormatted = event.end.formatAsHoursAndMinutes()
+                
                 Text("\(startFormatted)- \n\(endFormatted)")
                     .foregroundColor(colorScheme.onPrimary)
                     .font(.subheadline)
-                Spacer().frame(maxHeight: .infinity)
+                
+                Spacer()
             }
         }
         .frame(height: CGFloat(height))
@@ -159,23 +170,57 @@ struct TimetableScreen: View {
     @ViewBuilder func hoursGrid(
         hours: Array<TimetableHour>
     ) -> some View{
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 0){
-                Spacer()
-                    .frame(width: 4)
-                ForEach(hours, id: \.self){ item in
-                    hourGridItem(hour: item.hour)
-                        .frame(maxWidth: .infinity)
-                        .padding(.leading, 8)
+        VStack(spacing: 0){
+            
+            currentDayItem()
+                .frame(maxWidth: .infinity)
+            
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0){
+                    ForEach(hours, id: \.self){ item in
+                        hourGridItem(hour: item.hour)
+                            .frame(maxWidth: .infinity)
+                            .padding(.leading, 8)
+                    }
+                }.offset(y: -offset)
+            }.disabled(true)
+        }
+    }
+    
+    @ViewBuilder func currentDayItem() -> some View{
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 0) {
+                VStack(spacing: 0) {
+                    Spacer().frame(height: 4)
+                    Text(viewModel.selectedDate.dayOfWeek.name.prefix(3))
+                        .font(.body)
+                    ZStack {
+                        Circle()
+                            .fill(colorScheme.secondary)
+                            .frame(width: 36, height: 36)
+                        Text(String(viewModel.selectedDate.dayOfMonth.description))
+                            .font(.body)
+                            .foregroundColor(colorScheme.onSecondary)
+                    }
                 }
-            }.offset(y: -offset)
-        }.disabled(true)
+            }
+            Spacer().frame(height: 4)
+            VStack(spacing: 0){
+                Divider()
+                    .frame(height: 1)
+                    .frame(maxWidth: .infinity)
+                    .background(colorScheme.onSurfaceVariant)
+            }
+        }
+        .padding(.leading, 16)
+        .frame(height: dayViewHeight)
+        .frame(maxWidth: .infinity)
     }
     
     @ViewBuilder func hourGridItem(
         hour: String
     ) -> some View{
-        HStack(alignment: .top){
+        HStack(alignment: .top, spacing: 0){
             Text("\(hour)")
                 .font(.footnote)
                 .foregroundColor(colorScheme.outline)
@@ -188,6 +233,7 @@ struct TimetableScreen: View {
                 Divider()
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
+                    .background(colorScheme.onSurfaceVariant)
             }
         }
         .frame(height: defaultHourHeight, alignment: .top)
@@ -281,7 +327,7 @@ struct TimetableScreen: View {
                             Text("\(date.day)")
                                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
                                 .font(.system(size: 10, weight: .bold, design: .default))
-                                .foregroundColor(colorScheme.onTertiary)
+                                .foregroundColor(colorScheme.onPrimaryContainer)
                         } else {
                             Text("\(date.day)")
                                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)

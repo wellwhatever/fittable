@@ -64,6 +64,15 @@ kotlin {
             }
         }
 
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.bundles.unitTesting)
+            }
+            tasks.withType<Test>().configureEach {
+                useJUnitPlatform()
+            }
+        }
+
         val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting
@@ -102,6 +111,7 @@ android {
 }
 dependencies {
     implementation(libs.animation.graphics.android)
+    testImplementation(libs.kotest.runner)
 }
 
 sqldelight {

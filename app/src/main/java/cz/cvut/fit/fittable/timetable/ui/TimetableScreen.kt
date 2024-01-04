@@ -22,11 +22,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -71,6 +73,7 @@ import kotlin.time.Duration.Companion.hours
 
 private val defaultHourHeight = 64.dp
 private val gridStartOffset = 80.dp
+private val dayViewHeight = 64.dp
 
 @Composable
 fun TimetableScreen(
@@ -170,7 +173,8 @@ internal fun TimetableInternal(
         TimetableGrid(
             hoursGrid = hoursGrid,
             events = events,
-            onEventClick = onEventClick
+            onEventClick = onEventClick,
+            selectedDay = headerState.selectedDate
         )
     }
 }
@@ -193,6 +197,7 @@ private fun ShowNoInternetSnackBar(
 private fun TimetableGrid(
     hoursGrid: List<TimetableHour>,
     events: List<TimetableItem>,
+    selectedDay: LocalDate,
     onEventClick: (eventId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -228,7 +233,10 @@ private fun TimetableGrid(
             modifier = modifier
         ) {
             VerticalGridDivider(modifier = Modifier.padding(start = gridStartOffset))
-            TimetableHoursGrid(hours = hoursGrid, state = stateGrid)
+            TimetableHoursGrid(
+                hours = hoursGrid,
+                state = stateGrid, selectedDay = selectedDay
+            )
             TimetableEventsGrid(
                 events = events,
                 state = stateTimetable,
@@ -271,7 +279,7 @@ private fun TimetableEventsGrid(
         LazyColumn(
             modifier = modifier,
             state = state,
-            contentPadding = PaddingValues(vertical = 16.dp)
+            contentPadding = PaddingValues(top = dayViewHeight + 16.dp, bottom = 16.dp)
         ) {
             items(
                 items = it
@@ -328,17 +336,21 @@ private fun TimetableConflict(
 @Composable
 private fun TimetableHoursGrid(
     hours: List<TimetableHour>,
+    selectedDay: LocalDate,
     state: LazyListState,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier,
-        state = state,
-        userScrollEnabled = false,
-        contentPadding = PaddingValues(vertical = 16.dp)
-    ) {
-        items(items = hours, key = { item -> item.hour }) {
-            HourGridItem(hour = it.hour)
+    Column {
+        HourGridCurrentDayItem(day = selectedDay)
+        LazyColumn(
+            modifier = modifier,
+            state = state,
+            userScrollEnabled = false,
+            contentPadding = PaddingValues(vertical = 16.dp)
+        ) {
+            items(items = hours, key = { item -> item.hour }) {
+                HourGridItem(hour = it.hour)
+            }
         }
     }
 }
@@ -363,6 +375,56 @@ private fun HourGridItem(
         )
         Spacer(modifier = Modifier.width(12.dp))
         HorizontalGridDivider()
+    }
+}
+
+@Composable
+private fun HourGridCurrentDayItem(
+    day: LocalDate,
+    modifier: Modifier = Modifier,
+    hourSize: Dp = dayViewHeight,
+) {
+    Column(
+        modifier = modifier
+            .height(hourSize)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 16.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier.height(4.dp))
+                Text(
+                    text = day.dayOfWeek.toString().substring(0, 3),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Box(
+                    modifier = modifier
+                        .size(36.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.secondary,
+                            shape = CircleShape
+                        )
+                        .clip(CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = day.dayOfMonth.toString(),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSecondary,
+                    )
+                }
+            }
+        }
+        Spacer(modifier.height(1.dp))
+        Row {
+            HorizontalGridDivider()
+        }
     }
 }
 

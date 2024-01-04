@@ -19,7 +19,6 @@ import kotlin.time.Duration.Companion.hours
 internal class EventConflictMerger(
     private val eventConverterDomain: EventConverterDomain
 ) {
-
     suspend fun mergeConflicts(events: List<EventDomain>, day: LocalDate): List<TimetableItem> {
         // We have to merge conflicted events as they're considered as single element
         val mergedEvents = groupOverlappingEvents(events)

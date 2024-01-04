@@ -18,6 +18,9 @@ struct BaseColor {
     let onSecondary = Color("OnSecondary")
     let onTertiary = Color("OnTertiary")
     let surfaceTint = Color("SurfaceTint")
+    let onSurfaceVariant = Color("OnSurfaceVariant")
+    let onSurfaceInverse = Color("OnSurfaceInverse")
+    let onPrimaryContainer = Color("OnPrimaryContainer")
     
     let whiteish = Color("Whiteish")
     let grey = Color("Grey")
@@ -36,6 +39,9 @@ struct TokenColor {
     let onTertiary: Color
     let secondaryContainer: Color
     let surfaceTint: Color
+    let onSurfaceVariant: Color
+    let onSurfaceInverse: Color
+    let onPrimaryContainer: Color
     
     struct Buttons {
         let primary: Button
@@ -59,5 +65,8 @@ struct TokenColor {
         onTertiary = baseColor.onTertiary
         secondaryContainer = baseColor.secondaryContainer
         surfaceTint = baseColor.surfaceTint
+        onSurfaceVariant = baseColor.onSurfaceVariant.opacity(0.2)
+        onSurfaceInverse = baseColor.onSurfaceInverse
+        onPrimaryContainer = baseColor.onPrimaryContainer
     }
 }

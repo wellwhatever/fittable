@@ -51,11 +51,12 @@ appAuth = "0.11.1"
 # Testing
 junit = "4.13.2"
 junitExt = "1.1.5"
-mockk = "1.13.3"
+mockk = "1.13.8"
 testArchCore = "2.2.0"
 testRunner = "1.5.2"
 testRules = "1.5.0"
 turbine = "0.12.1"
+kotest = "5.8.0"
 
 # Firebase
 firebaseBom = "32.3.1"
@@ -151,6 +152,9 @@ testRules = { module = "androidx.test:rules", version.ref = "testRules" }
 junit = { module = "junit:junit", version.ref = "junit" }
 junitExt = { module = "androidx.test.ext:junit", version.ref = "junitExt" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-property-testing = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 
 # Desugaring
 desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaring" }

@@ -18,8 +18,9 @@ class UsernameLocalDataSource(
         preferences[username].orEmpty()
     }
 
-    suspend fun updateUsername(value: String) =
+    suspend fun updateUsername(value: String) {
         usernameDataStore.edit { preferences ->
             preferences[username] = value
         }
+    }
 }
