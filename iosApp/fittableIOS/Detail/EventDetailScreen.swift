@@ -20,8 +20,8 @@ struct EventDetailScreen: View {
     
     var body: some View {
         VStack(spacing: 0){
+            TopBar(detail: viewModel.event)
             if let detail = viewModel.event {
-                TopBar(detail: detail)
                 EventDetailInternal(detail: detail)
                     .padding(.vertical, 16)
                     .padding(.horizontal, 12)
@@ -31,20 +31,24 @@ struct EventDetailScreen: View {
     }
     
     
-    @ViewBuilder func TopBar(detail: EventDetail_) -> some View{
+    @ViewBuilder func TopBar(detail: EventDetail_?) -> some View{
         HStack(spacing: 24){
             Image("ArrowBack")
                 .foregroundColor(colorScheme.onPrimary)
             
-            Text(detail.course)
-                .font(.title)
-                .foregroundColor(colorScheme.onPrimary)
+            if let course = detail?.course {
+                Text(course)
+                    .font(.title)
+                    .foregroundColor(colorScheme.onPrimary)
+            }
             
             Spacer()
             
-            Text("#\(detail.sequenceNumber)")
-                .font(.body)
-                .foregroundColor(colorScheme.onPrimary)
+            if let sequence = detail?.sequenceNumber {
+                Text("#\(sequence)")
+                    .font(.body)
+                    .foregroundColor(colorScheme.onPrimary)
+            }
         }
         .frame(maxWidth: .infinity)
         .frame(height: 64)

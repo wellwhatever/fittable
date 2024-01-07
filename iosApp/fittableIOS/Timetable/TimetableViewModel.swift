@@ -29,12 +29,25 @@ extension TimetableScreen{
         var events: Array<TimetableItem>? = Array()
         @Published
         var search: TimetableSearchResultArgs? = nil
+        @Published
+        var showSnackBar: Bool = false
         
         init(){
+            cachePersonalEvents()
             fetchHoursGrid()
             observeSelectedDate()
             observeSearchResult()
             observeFilterData()
+        }
+        
+        private func cachePersonalEvents(){
+            Task {
+                do {
+                    try await getCacheEventsUseCase.invoke()
+                } catch{
+                    // no-op
+                }
+            }
         }
         
         private func observeFilterData(){
@@ -93,9 +106,9 @@ extension TimetableScreen{
                         if(httpException.code == 401){
                             mainCoordinator.coordinator.popLast()
                         }
-                    } else if let err = error as? URLError, err.code  == URLError.Code.notConnectedToInternet {
-                        fetchCachedEvents(date: date)
                     }
+                    showSnackBar.toggle()
+                    fetchCachedEvents(date: date)
                 }
             }
         }
