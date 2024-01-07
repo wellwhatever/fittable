@@ -12,6 +12,7 @@
 		215C99202B3306FD00E7F18F /* SearchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215C991F2B3306FD00E7F18F /* SearchScreen.swift */; };
 		215C99222B33070A00E7F18F /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215C99212B33070A00E7F18F /* SearchViewModel.swift */; };
 		215C99242B34CFE000E7F18F /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215C99232B34CFE000E7F18F /* ViewExtension.swift */; };
+		215C99272B4B077100E7F18F /* SwiftUISnackbar in Frameworks */ = {isa = PBXBuildFile; productRef = 215C99262B4B077100E7F18F /* SwiftUISnackbar */; };
 		216E41A72AE48023003F91E1 /* fittableIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216E41A62AE48023003F91E1 /* fittableIOSApp.swift */; };
 		216E41AB2AE48025003F91E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 216E41AA2AE48025003F91E1 /* Assets.xcassets */; };
 		216E41AE2AE48025003F91E1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 216E41AD2AE48025003F91E1 /* Preview Assets.xcassets */; };
@@ -86,6 +87,7 @@
 				21991A4C2B265885007B9BED /* Stinsen in Frameworks */,
 				21991A732B30A839007B9BED /* SwiftUICalendar in Frameworks */,
 				21991A572B265D59007B9BED /* AppAuthCore in Frameworks */,
+				215C99272B4B077100E7F18F /* SwiftUISnackbar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +264,7 @@
 				21991A612B29F344007B9BED /* OAuthSwift */,
 				21991A6C2B3075FA007B9BED /* CalendarView */,
 				21991A722B30A839007B9BED /* SwiftUICalendar */,
+				215C99262B4B077100E7F18F /* SwiftUISnackbar */,
 			);
 			productName = fittableIOS;
 			productReference = 216E41A32AE48023003F91E1 /* fittableIOS.app */;
@@ -341,6 +344,7 @@
 				21991A602B29F344007B9BED /* XCRemoteSwiftPackageReference "OAuthSwift" */,
 				21991A6B2B3075FA007B9BED /* XCRemoteSwiftPackageReference "CalendarView" */,
 				21991A712B30A839007B9BED /* XCRemoteSwiftPackageReference "SwiftUICalendar" */,
+				215C99252B4B077100E7F18F /* XCRemoteSwiftPackageReference "SwiftUISnackbar" */,
 			);
 			productRefGroup = 216E41A42AE48023003F91E1 /* Products */;
 			projectDirPath = "";
@@ -751,6 +755,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		215C99252B4B077100E7F18F /* XCRemoteSwiftPackageReference "SwiftUISnackbar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/zaniluca/SwiftUISnackbar";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		21991A4A2B265885007B9BED /* XCRemoteSwiftPackageReference "stinsen" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rundfunk47/stinsen";
@@ -794,6 +806,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		215C99262B4B077100E7F18F /* SwiftUISnackbar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 215C99252B4B077100E7F18F /* XCRemoteSwiftPackageReference "SwiftUISnackbar" */;
+			productName = SwiftUISnackbar;
+		};
 		21991A4B2B265885007B9BED /* Stinsen */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 21991A4A2B265885007B9BED /* XCRemoteSwiftPackageReference "stinsen" */;

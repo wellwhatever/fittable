@@ -8,6 +8,7 @@
 import SwiftUI
 import shared
 import SwiftUICalendar
+import SwiftUISnackbar
 
 struct TimetableScreen: View {
     private let defaultHourHeight = 64.0
@@ -21,6 +22,7 @@ struct TimetableScreen: View {
     @State var showCalendar = false
     @State var iconRotation = 0.0
     @State private var offset = CGFloat.zero
+    @StateObject var store: SnackbarStore = SnackbarStore()
     let colorScheme = TokenColor()
     
     var body: some View {
@@ -35,6 +37,7 @@ struct TimetableScreen: View {
             Spacer()
         }
         .ignoresSafeArea(edges: .bottom)
+        .snackbar(isShowing: $viewModel.showSnackBar, title: "Offline", text: "You're in offline mode, only cached data will be displayed", style: store.style)
     }
     
     @ViewBuilder func content(
