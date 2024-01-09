@@ -27,13 +27,17 @@ struct TimetableScreen: View {
     
     var body: some View {
         VStack(spacing: 0){
-            header()
-            
-            content(
-                hours: viewModel.hours,
-                events: viewModel.events
-            )
-            
+            if(viewModel.displayNoPermissionError) {
+                Spacer()
+                noPermission()
+            } else {
+                header()
+                
+                content(
+                    hours: viewModel.hours,
+                    events: viewModel.events
+                )
+            }
             Spacer()
         }
         .ignoresSafeArea(edges: .bottom)
@@ -58,6 +62,29 @@ struct TimetableScreen: View {
             }
             if(events != nil){
                 eventsList(events: viewModel.events!)
+            }
+        }
+    }
+    
+    @ViewBuilder func noPermission() -> some View {
+        VStack(spacing: 16) {
+            Text("You dont have persmission to access this resource")
+                .foregroundColor(colorScheme.primary)
+                .multilineTextAlignment(.center)
+                .font(.title)
+            
+            Image("NoPermission")
+                .foregroundColor(colorScheme.primary)
+                .font(.system(size: 60))
+            
+            Button(action: {viewModel.onContinueClick()}){
+                Text("Continue")
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(Color.white)
+                    .padding(.all, 12)
+                    .background(Color.blue)
+                    .clipShape(RoundedRectangle(cornerRadius: 24))
+                    .padding(.horizontal, 48)
             }
         }
     }

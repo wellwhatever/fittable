@@ -31,6 +31,8 @@ extension TimetableScreen{
         var search: TimetableSearchResultArgs? = nil
         @Published
         var showSnackBar: Bool = false
+        @Published
+        var displayNoPermissionError: Bool = false
         
         init(){
             cachePersonalEvents()
@@ -91,8 +93,12 @@ extension TimetableScreen{
             Task{
                 do{
                     events = try await getFilteredEventsUseCase.invoke(type: type, id: id, day: date)
-                } catch{
-                    // Handle
+                } catch let error as NSError{
+                    if let httpException = error.kotlinException as? HttpExceptionDomain {
+                        if(httpException.code == 403){
+                            displayNoPermissionError = true
+                        }
+                    }
                 }
             }
         }
@@ -101,14 +107,16 @@ extension TimetableScreen{
             Task{
                 do{
                     events = try await getEventsUseCase.invoke(day: date != nil ? date! : todayDate())
-                }catch {
-                    if let httpException = error as? HttpExceptionDomain {
+                }catch let error as NSError{
+                    if let httpException = error.kotlinException as? HttpExceptionDomain {
                         if(httpException.code == 401){
                             mainCoordinator.coordinator.popLast()
                         }
                     }
-                    showSnackBar.toggle()
-                    fetchCachedEvents(date: date)
+                    if let noInternet = error.kotlinException as? NoInternetException{
+                        showSnackBar.toggle()
+                        fetchCachedEvents(date: date)
+                    }
                 }
             }
         }
@@ -147,6 +155,12 @@ extension TimetableScreen{
         
         func removeFilter(){
             search = nil
+        }
+        
+        func onContinueClick(){
+            displayNoPermissionError = false
+            search = nil
+            selectedDate = todayDate()
         }
     }
 }
