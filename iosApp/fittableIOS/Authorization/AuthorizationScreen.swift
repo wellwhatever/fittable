@@ -19,7 +19,9 @@ struct AuthorizationScreen: View {
             Spacer().frame(height: 64)
             Image("FittableLogo")
             Spacer().frame(height: 48)
-            Text("Log in with your CTU account")
+            Text("Log into your personal university time table with your CTU account")
+                .padding(.horizontal, 48)
+                .multilineTextAlignment(.center)
             Spacer().frame(height: 64)
             Button(action: {viewModel.onAuthorizationClick()}){
                 Text("Log in")
