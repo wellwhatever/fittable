@@ -47,6 +47,7 @@ fun EventDetailScreen(
         lecture = topBarState?.eventDetail?.course.orEmpty(),
         lectureNumber = topBarState?.eventDetail?.sequenceNumber.orEmpty(),
         onBackClick = onBack,
+        eventType = topBarState?.eventDetail?.eventType?.name.orEmpty()
     ) {
         with(state.value) {
             when (this) {
@@ -74,6 +75,7 @@ fun EventDetailScreen(
 private fun EventDetailTopBar(
     lecture: String,
     lectureNumber: String,
+    eventType: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
@@ -104,11 +106,19 @@ private fun EventDetailTopBar(
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = "#$lectureNumber",
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Row {
+                Text(
+                    text = eventType,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                Text(
+                    text = "#$lectureNumber",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
         content()
     }

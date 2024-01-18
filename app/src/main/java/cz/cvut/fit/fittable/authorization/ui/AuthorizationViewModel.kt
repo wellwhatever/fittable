@@ -33,8 +33,12 @@ class AuthorizationViewModel internal constructor(
 
     override fun onReceiveTokenSuccess(data: String) {
         viewModelScope.launch {
-            saveAuthorizationTokenUseCase(data)
-            _navigateToTimetableScreen.send(data)
+            try {
+                saveAuthorizationTokenUseCase(data)
+                _navigateToTimetableScreen.send(data)
+            } catch (exception: Exception) {
+                // no-op
+            }
         }
     }
 
