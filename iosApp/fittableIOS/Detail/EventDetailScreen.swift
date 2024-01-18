@@ -44,6 +44,14 @@ struct EventDetailScreen: View {
             
             Spacer()
             
+            if let type = detail?.eventType {
+                Text(type.name)
+                    .font(.body)
+                    .foregroundColor(colorScheme.onPrimary)
+                    .scaledToFit()
+                    .lineLimit(1)
+            }
+            
             if let sequence = detail?.sequenceNumber {
                 Text("#\(sequence)")
                     .font(.body)
